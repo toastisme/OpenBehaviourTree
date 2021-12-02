@@ -23,6 +23,8 @@ public class NodeBasedEditor : EditorWindow
     private Vector2 drag;
     private bool drawingLine;
 
+    private Rect detailsPanel;
+
     [MenuItem("Window/Node Based Editor")]
     private static void OpenWindow()
     {
@@ -83,7 +85,22 @@ public class NodeBasedEditor : EditorWindow
         ProcessNodeEvents(Event.current);
         ProcessEvents(Event.current);
 
+        DrawDetailsPanel();
+
         if (GUI.changed) Repaint();
+    }
+
+    private void DrawDetailsPanel(){
+        BeginWindows();
+        detailsPanel = new Rect(position.width*.8f, 0, position.width*.2f, position.height);
+        detailsPanel = GUILayout.Window(1, detailsPanel, DrawDetailInfo, "Details");
+        EndWindows();
+    }
+
+    void DrawDetailInfo(int unusedWindowID)
+    {
+        //GUILayout.Button("Hi");
+        GUI.DragWindow();
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
