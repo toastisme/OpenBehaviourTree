@@ -24,6 +24,8 @@ public class ConnectionPoint
         rect = new Rect(0, 0, node.rect.width -12f, 20f);
     }
 
+    public GUINode GetNode(){return node;}
+
     public void Draw()
     {
         rect.x = node.rect.x + (node.rect.width * 0.5f) - rect.width * 0.5f;

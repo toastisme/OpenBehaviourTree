@@ -358,22 +358,16 @@ public class NodeBasedEditor : EditorWindow
     {
         if (connections != null)
         {
-            List<Connection> connectionsToRemove = new List<Connection>();
-
-            for (int i = 0; i < connections.Count; i++)
-            {
-                if (connections[i].ChildPoint == node.ChildPoint || connections[i].ParentPoint == node.ParentPoint)
-                {
-                    connectionsToRemove.Add(connections[i]);
+            connections.Remove(node.GetParentNode());
+            node.RemoveParentNode();
+            
+            List<Connection> childNodes = node.GetChildNodes();
+            if (childNodes != null){
+                for (int i=childNodes.Count-1; i>0; i--){
+                    node.RemoveChildNode(childNodes[i]);
+                    connections.Remove(childNodes[i]);
                 }
             }
-
-            for (int i = 0; i < connectionsToRemove.Count; i++)
-            {
-                connections.Remove(connectionsToRemove[i]);
-            }
-
-            connectionsToRemove = null;
         }
 
         nodes.Remove(node);
@@ -392,6 +386,10 @@ public class NodeBasedEditor : EditorWindow
         }
 
         connections.Add(new Connection(selectedChildPoint, selectedParentPoint, OnClickRemoveConnection));
+        GUINode parentNode = selectedChildPoint.GetNode();
+        GUINode childNode = selectedParentPoint.GetNode();
+        parentNode.AddChildNode(connections[connections.Count-1]);
+        childNode.SetParentNode(connections[connections.Count-1]);
     }
 
     private void ClearConnectionSelection()

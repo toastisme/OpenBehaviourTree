@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ public class GUINode
 
     public ConnectionPoint ChildPoint;
     public ConnectionPoint ParentPoint;
+    private List<Connection> childNodes;
+    private Connection parentNode;
 
     public GUIStyle style;
     public GUIStyle defaultNodeStyle;
@@ -48,6 +51,8 @@ public class GUINode
         selectedNodeStyle.alignment = TextAnchor.MiddleCenter;
         OnRemoveNode = OnClickRemoveNode;
         this.UpdatePanelDetails = UpdatePanelDetails;
+
+        childNodes = new List<Connection>();
 
     }
 
@@ -138,4 +143,21 @@ public class GUINode
             OnRemoveNode(this);
         }
     }
+
+    public List<Connection> GetChildNodes(){return childNodes;}
+    public Connection GetParentNode(){return parentNode;}
+    public void SetChildNodes(List<Connection> childNodes){this.childNodes = childNodes;}
+    public void AddChildNode(Connection connection){
+        this.childNodes.Add(connection);
+    }
+    public void RemoveChildNode(Connection connection){
+        childNodes.Remove(connection);
+    }
+    public void RemoveParentNode(){
+        this.parentNode = null;
+    }
+    public void SetParentNode(Connection connection){
+        this.parentNode = connection;
+        }
+
 }

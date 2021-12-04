@@ -4,35 +4,46 @@ using UnityEngine;
 
 public class Connection
 {
-    public ConnectionPoint ChildPoint;
-    public ConnectionPoint ParentPoint;
+    public ConnectionPoint childPoint;
+    private GUINode childNode;
+    public ConnectionPoint parentPoint;
+    private GUINode parentNode;
     public Action<Connection> OnClickRemoveConnection;
 
-    public Connection(ConnectionPoint ChildPoint, ConnectionPoint ParentPoint, Action<Connection> OnClickRemoveConnection)
+    public Connection(ConnectionPoint childPoint, ConnectionPoint parentPoint, Action<Connection> OnClickRemoveConnection)
     {
-        this.ChildPoint = ChildPoint;
-        this.ParentPoint = ParentPoint;
+        this.childPoint = childPoint;
+        childNode = childPoint.GetNode();
+        this.parentPoint = parentPoint;
+        parentNode = parentPoint.GetNode();
         this.OnClickRemoveConnection = OnClickRemoveConnection;
     }
 
     public void Draw()
     {
         Handles.DrawBezier(
-            ChildPoint.rect.center,
-            ParentPoint.rect.center,
-            ChildPoint.rect.center,
-            ParentPoint.rect.center,
+            childPoint.rect.center,
+            parentPoint.rect.center,
+            childPoint.rect.center,
+            parentPoint.rect.center,
             Color.white,
             null,
             2f
         );
 
-        if (Handles.Button((ChildPoint.rect.center + ParentPoint.rect.center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
+        if (Handles.Button((childPoint.rect.center + parentPoint.rect.center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
         {
             if (OnClickRemoveConnection != null)
             {
                 OnClickRemoveConnection(this);
             }
         }
+    }
+
+    GUINode GetParentNode(){
+        return parentNode;
+    }
+    GUINode GetChildNode(){
+        return childNode;
     }
 }
