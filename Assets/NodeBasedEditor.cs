@@ -6,6 +6,7 @@ public class NodeBasedEditor : EditorWindow
 {
     // Bookkeeping
     private List<GUINode> nodes;
+    private GUINode selectedNode;
     private List<Connection> connections;
 
     // Styles
@@ -67,6 +68,7 @@ public class NodeBasedEditor : EditorWindow
                               selectedNodeStyle, 
                               inPointStyle, 
                               outPointStyle, 
+                              UpdatePanelDetails,
                               OnClickInPoint, 
                               OnClickOutPoint, 
                               OnClickRemoveNode));
@@ -97,9 +99,17 @@ public class NodeBasedEditor : EditorWindow
         EndWindows();
     }
 
+    public void UpdatePanelDetails(GUINode node){
+        selectedNode = node;
+    }
+
     void DrawDetailInfo(int unusedWindowID)
     {
-        //GUILayout.Button("Hi");
+        if (selectedNode != null){
+            GUILayout.Label("Task: " + selectedNode.GetTask());
+            GUILayout.Label("Name");
+            selectedNode.SetName(GUILayout.TextField(selectedNode.GetName(), 50));
+        }
         GUI.DragWindow();
     }
 
@@ -284,6 +294,7 @@ public class NodeBasedEditor : EditorWindow
                               selectedNodeStyle, 
                               inPointStyle, 
                               outPointStyle, 
+                              UpdatePanelDetails,
                               OnClickInPoint, 
                               OnClickOutPoint, 
                               OnClickRemoveNode));

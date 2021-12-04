@@ -5,7 +5,9 @@ using UnityEngine;
 public class GUINode
 {
     public Rect rect;
-    public string name = "NODE";
+    private string name = "";
+    private string task  = "";
+
     public bool isDragged;
     public bool isSelected;
 
@@ -17,8 +19,9 @@ public class GUINode
     public GUIStyle selectedNodeStyle;
 
     public Action<GUINode> OnRemoveNode;
+    public Action<GUINode> UpdatePanelDetails;
 
-    public GUINode(string _name,
+    public GUINode(string task,
                    Vector2 position, 
                    float width, 
                    float height, 
@@ -26,11 +29,12 @@ public class GUINode
                    GUIStyle selectedStyle, 
                    GUIStyle inPointStyle, 
                    GUIStyle outPointStyle, 
+                   Action<GUINode> UpdatePanelDetails,
                    Action<ConnectionPoint> OnClickInPoint, 
                    Action<ConnectionPoint> OnClickOutPoint, 
                    Action<GUINode> OnClickRemoveNode)
     {
-        name = _name;
+        this.task = task;
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
         inPoint = new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, OnClickInPoint);
@@ -40,6 +44,7 @@ public class GUINode
         defaultNodeStyle.alignment = TextAnchor.MiddleCenter;
         selectedNodeStyle.alignment = TextAnchor.MiddleCenter;
         OnRemoveNode = OnClickRemoveNode;
+        this.UpdatePanelDetails = UpdatePanelDetails;
 
     }
 
@@ -47,6 +52,13 @@ public class GUINode
     public ConnectionPoint GetOutPoint(){return outPoint;}
 
     public string GetName(){return name;}
+    public void SetName(string newName){
+        name = newName;
+    }
+    public string GetTask(){return task;}
+    public void SetTask(string newTask){
+        task = newTask;
+    }
 
     public void Drag(Vector2 delta)
     {
@@ -58,7 +70,7 @@ public class GUINode
         //GUI.color = new Color(255, 0, 0);
         inPoint.Draw();
         outPoint.Draw();
-        GUI.Box(rect, name, style);
+        GUI.Box(rect, task + "\n" + name, style);
     }
 
     public bool ProcessEvents(Event e)
@@ -74,6 +86,7 @@ public class GUINode
                         GUI.changed = true;
                         isSelected = true;
                         style = selectedNodeStyle;
+                        UpdatePanelDetails(this);
                     }
                     else
                     {
