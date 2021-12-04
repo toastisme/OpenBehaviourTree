@@ -5,14 +5,16 @@ using UnityEngine;
 public class GUINode
 {
     public Rect rect;
+    public Rect callNumberRect;
+    private int callNumber = 0;
     private string name = "";
     private string task  = "";
 
     public bool isDragged;
     public bool isSelected;
 
-    public ConnectionPoint inPoint;
-    public ConnectionPoint outPoint;
+    public ConnectionPoint ChildPoint;
+    public ConnectionPoint ParentPoint;
 
     public GUIStyle style;
     public GUIStyle defaultNodeStyle;
@@ -27,18 +29,19 @@ public class GUINode
                    float height, 
                    GUIStyle nodeStyle, 
                    GUIStyle selectedStyle, 
-                   GUIStyle inPointStyle, 
-                   GUIStyle outPointStyle, 
+                   GUIStyle ChildPointStyle, 
+                   GUIStyle ParentPointStyle, 
                    Action<GUINode> UpdatePanelDetails,
-                   Action<ConnectionPoint> OnClickInPoint, 
-                   Action<ConnectionPoint> OnClickOutPoint, 
+                   Action<ConnectionPoint> OnClickChildPoint, 
+                   Action<ConnectionPoint> OnClickParentPoint, 
                    Action<GUINode> OnClickRemoveNode)
     {
         this.task = task;
         rect = new Rect(position.x, position.y, width, height);
+        callNumberRect = new Rect(position.x, position.y -10, width/6, width/6);
         style = nodeStyle;
-        inPoint = new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, OnClickInPoint);
-        outPoint = new ConnectionPoint(this, ConnectionPointType.Out, outPointStyle, OnClickOutPoint);
+        ChildPoint = new ConnectionPoint(this, ConnectionPointType.In, ChildPointStyle, OnClickChildPoint);
+        ParentPoint = new ConnectionPoint(this, ConnectionPointType.Out, ParentPointStyle, OnClickParentPoint);
         defaultNodeStyle = nodeStyle;
         selectedNodeStyle = selectedStyle;
         defaultNodeStyle.alignment = TextAnchor.MiddleCenter;
@@ -48,8 +51,8 @@ public class GUINode
 
     }
 
-    public ConnectionPoint GetInPoint(){return inPoint;}
-    public ConnectionPoint GetOutPoint(){return outPoint;}
+    public ConnectionPoint GetChildPoint(){return ChildPoint;}
+    public ConnectionPoint GetParentPoint(){return ParentPoint;}
 
     public string GetName(){return name;}
     public void SetName(string newName){
@@ -59,18 +62,19 @@ public class GUINode
     public void SetTask(string newTask){
         task = newTask;
     }
-
     public void Drag(Vector2 delta)
     {
         rect.position += delta;
+        callNumberRect.position += delta;
     }
 
     public void Draw()
     {
         //GUI.color = new Color(255, 0, 0);
-        inPoint.Draw();
-        outPoint.Draw();
+        ChildPoint.Draw();
+        ParentPoint.Draw();
         GUI.Box(rect, task + "\n" + name, style);
+        GUI.Box(callNumberRect, callNumber.ToString(), style);
     }
 
     public bool ProcessEvents(Event e)

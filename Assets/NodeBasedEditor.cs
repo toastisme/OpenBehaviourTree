@@ -12,12 +12,12 @@ public class NodeBasedEditor : EditorWindow
     // Styles
     private GUIStyle nodeStyle;
     private GUIStyle selectedNodeStyle;
-    private GUIStyle inPointStyle;
-    private GUIStyle outPointStyle;
+    private GUIStyle ChildPointStyle;
+    private GUIStyle ParentPointStyle;
     private Vector2 nodeSize = new Vector2(200, 100);
 
-    private ConnectionPoint selectedInPoint;
-    private ConnectionPoint selectedOutPoint;
+    private ConnectionPoint selectedChildPoint;
+    private ConnectionPoint selectedParentPoint;
 
     // Movement
     private Vector2 offset;
@@ -45,15 +45,15 @@ public class NodeBasedEditor : EditorWindow
         selectedNodeStyle.border = new RectOffset(12, 12, 12, 12);
         selectedNodeStyle.normal.textColor = Color.white;
 
-        inPointStyle = new GUIStyle();
-        inPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
-        inPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
-        inPointStyle.border = new RectOffset(4, 4, 12, 12);
+        ChildPointStyle = new GUIStyle();
+        ChildPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
+        ChildPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
+        ChildPointStyle.border = new RectOffset(4, 4, 12, 12);
 
-        outPointStyle = new GUIStyle();
-        outPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
-        outPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
-        outPointStyle.border = new RectOffset(4, 4, 12, 12);
+        ParentPointStyle = new GUIStyle();
+        ParentPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
+        ParentPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
+        ParentPointStyle.border = new RectOffset(4, 4, 12, 12);
         AddRootNode();
     }
 
@@ -66,11 +66,11 @@ public class NodeBasedEditor : EditorWindow
                               nodeSize[1], 
                               nodeStyle, 
                               selectedNodeStyle, 
-                              inPointStyle, 
-                              outPointStyle, 
+                              ChildPointStyle, 
+                              ParentPointStyle, 
                               UpdatePanelDetails,
-                              OnClickInPoint, 
-                              OnClickOutPoint, 
+                              OnClickChildPoint, 
+                              OnClickParentPoint, 
                               OnClickRemoveNode));
     }
 
@@ -110,6 +110,7 @@ public class NodeBasedEditor : EditorWindow
             GUILayout.Label("Name");
             selectedNode.SetName(GUILayout.TextField(selectedNode.GetName(), 50));
         }
+        
         GUI.DragWindow();
     }
 
@@ -210,13 +211,13 @@ public class NodeBasedEditor : EditorWindow
 
     private void DrawConnectionLine(Event e)
     {
-        if (selectedInPoint != null && selectedOutPoint == null)
+        if (selectedChildPoint != null && selectedParentPoint == null)
         {
             Handles.DrawBezier(
-                selectedInPoint.rect.center,
+                selectedChildPoint.rect.center,
                 e.mousePosition,
-                selectedInPoint.rect.center,
-                selectedInPoint.rect.center,
+                selectedChildPoint.rect.center,
+                selectedChildPoint.rect.center,
                 Color.white,
                 null,
                 2f
@@ -226,13 +227,13 @@ public class NodeBasedEditor : EditorWindow
             drawingLine = true;
         }
 
-        else if (selectedOutPoint != null && selectedInPoint == null)
+        else if (selectedParentPoint != null && selectedChildPoint == null)
         {
             Handles.DrawBezier(
-                selectedOutPoint.rect.center,
+                selectedParentPoint.rect.center,
                 e.mousePosition,
-                selectedOutPoint.rect.center,
-                selectedOutPoint.rect.center,
+                selectedParentPoint.rect.center,
+                selectedParentPoint.rect.center,
                 Color.white,
                 null,
                 2f
@@ -292,28 +293,28 @@ public class NodeBasedEditor : EditorWindow
                               nodeSize[1], 
                               nodeStyle, 
                               selectedNodeStyle, 
-                              inPointStyle, 
-                              outPointStyle, 
+                              ChildPointStyle, 
+                              ParentPointStyle, 
                               UpdatePanelDetails,
-                              OnClickInPoint, 
-                              OnClickOutPoint, 
+                              OnClickChildPoint, 
+                              OnClickParentPoint, 
                               OnClickRemoveNode));
-        selectedOutPoint = nodes[nodes.Count-1].GetOutPoint();
+        selectedParentPoint = nodes[nodes.Count-1].GetParentPoint();
         CreateConnection();
         ClearConnectionSelection();
     }
 
     
 
-    private void OnClickInPoint(ConnectionPoint inPoint)
+    private void OnClickChildPoint(ConnectionPoint ChildPoint)
     {
-        selectedInPoint = inPoint;
+        selectedChildPoint = ChildPoint;
 
-        if (selectedOutPoint != null)
+        if (selectedParentPoint != null)
         {
-            if (selectedOutPoint.node != selectedInPoint.node)
+            if (selectedParentPoint.node != selectedChildPoint.node)
             {
-                if (selectedOutPoint.node.GetName() != "Root"){
+                if (selectedParentPoint.node.GetName() != "Root"){
                     CreateConnection();
                     ClearConnectionSelection(); 
                 }
@@ -329,15 +330,15 @@ public class NodeBasedEditor : EditorWindow
         }
     }
 
-    private void OnClickOutPoint(ConnectionPoint outPoint)
+    private void OnClickParentPoint(ConnectionPoint ParentPoint)
     {
-        selectedOutPoint = outPoint;
+        selectedParentPoint = ParentPoint;
 
-        if (selectedInPoint != null)
+        if (selectedChildPoint != null)
         {
-            if (selectedOutPoint.node != selectedInPoint.node)
+            if (selectedParentPoint.node != selectedChildPoint.node)
             {
-                if (selectedOutPoint.node.GetName() != "Root"){
+                if (selectedParentPoint.node.GetName() != "Root"){
                     CreateConnection();
                     ClearConnectionSelection();
                 }
@@ -361,7 +362,7 @@ public class NodeBasedEditor : EditorWindow
 
             for (int i = 0; i < connections.Count; i++)
             {
-                if (connections[i].inPoint == node.inPoint || connections[i].outPoint == node.outPoint)
+                if (connections[i].ChildPoint == node.ChildPoint || connections[i].ParentPoint == node.ParentPoint)
                 {
                     connectionsToRemove.Add(connections[i]);
                 }
@@ -390,12 +391,12 @@ public class NodeBasedEditor : EditorWindow
             connections = new List<Connection>();
         }
 
-        connections.Add(new Connection(selectedInPoint, selectedOutPoint, OnClickRemoveConnection));
+        connections.Add(new Connection(selectedChildPoint, selectedParentPoint, OnClickRemoveConnection));
     }
 
     private void ClearConnectionSelection()
     {
-        selectedInPoint = null;
-        selectedOutPoint = null;
+        selectedChildPoint = null;
+        selectedParentPoint = null;
     }
 }
