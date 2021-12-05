@@ -10,14 +10,14 @@ public class Connection
     private GUINode parentNode;
     public Action<Connection> OnClickRemoveConnection;
 
-    public Connection(ConnectionPoint childPoint, ConnectionPoint parentPoint, Action<Connection> OnClickRemoveConnection)
+    public Connection(ConnectionPoint parentPoint, ConnectionPoint childPoint, Action<Connection> OnClickRemoveConnection)
     {
         this.childPoint = childPoint;
         childNode = childPoint.GetNode();
         this.parentPoint = parentPoint;
         parentNode = parentPoint.GetNode();
         this.OnClickRemoveConnection = OnClickRemoveConnection;
-    }
+    }   
 
     public void Draw()
     {
@@ -40,10 +40,10 @@ public class Connection
         }
     }
 
-    GUINode GetParentNode(){
+    public GUINode GetParentNode(){
         return parentNode;
     }
-    GUINode GetChildNode(){
+    public GUINode GetChildNode(){
         return childNode;
     }
 }

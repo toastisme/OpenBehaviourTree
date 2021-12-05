@@ -153,11 +153,33 @@ public class GUINode
     public void RemoveChildNode(Connection connection){
         childNodes.Remove(connection);
     }
+
+    public void RefreshChildOrder(){
+        /**
+         * Orders childNodes by x position
+         */
+        if (childNodes != null){
+            childNodes.Sort((x,y) => x.GetChildNode().GetXPos().CompareTo(y.GetChildNode().GetXPos()));
+        }
+
+    }
+
+    public float GetXPos(){
+        return rect.x;
+    }
     public void RemoveParentNode(){
         this.parentNode = null;
     }
     public void SetParentNode(Connection connection){
-        this.parentNode = connection;
-        }
+        this.parentNode = connection;       
+    }
+
+    public void SetCallNumber(int callNumber){
+        this.callNumber = callNumber;
+    }
+
+    public int GetCallNumber(){return callNumber;}
+
+
 
 }

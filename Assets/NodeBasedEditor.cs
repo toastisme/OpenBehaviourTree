@@ -89,7 +89,10 @@ public class NodeBasedEditor : EditorWindow
 
         DrawDetailsPanel();
 
-        if (GUI.changed) Repaint();
+        if (GUI.changed) {
+            Repaint();
+            UpdateCallNumbers(nodes[0], 1);
+        }
     }
 
     private void DrawDetailsPanel(){
@@ -302,6 +305,7 @@ public class NodeBasedEditor : EditorWindow
         selectedParentPoint = nodes[nodes.Count-1].GetParentPoint();
         CreateConnection();
         ClearConnectionSelection();
+        int numNodes = UpdateCallNumbers(nodes[0], 1);
     }
 
     
@@ -390,6 +394,7 @@ public class NodeBasedEditor : EditorWindow
         GUINode childNode = selectedParentPoint.GetNode();
         parentNode.AddChildNode(connections[connections.Count-1]);
         childNode.SetParentNode(connections[connections.Count-1]);
+        // wrong allocation here. Both getting the same connection but the connection should be reversed for one of them
     }
 
     private void ClearConnectionSelection()
@@ -397,4 +402,15 @@ public class NodeBasedEditor : EditorWindow
         selectedChildPoint = null;
         selectedParentPoint = null;
     }
+
+    private int UpdateCallNumbers(GUINode startingNode, int callNumber){
+        startingNode.SetCallNumber(callNumber);
+        callNumber++;
+        startingNode.RefreshChildOrder();
+        foreach(Connection connection in startingNode.GetChildNodes()){
+            callNumber = UpdateCallNumbers(connection.GetChildNode(), callNumber);
+        }
+        return callNumber;
+    }
+
 }
