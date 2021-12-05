@@ -71,6 +71,11 @@ public class GUINode
     {
         rect.position += delta;
         callNumberRect.position += delta;
+        if (childNodes != null){
+            foreach(Connection childNode in childNodes){
+                childNode.GetChildNode().Drag(delta);
+            }
+        }
     }
 
     public void Draw()
