@@ -5,9 +5,8 @@ using System.Collections.Generic;
 public class NodeBasedEditor : EditorWindow
 {
     // Bookkeeping
-    private List<GUINode> nodes;
+    public BehaviourTree bt;
     private GUINode selectedNode;
-    private List<Connection> connections;
 
     // Styles
     private GUIStyle nodeStyle;
@@ -26,11 +25,20 @@ public class NodeBasedEditor : EditorWindow
 
     private Rect detailsPanel;
 
+    /*
     [MenuItem("Window/Node Based Editor")]
     private static void OpenWindow()
     {
         NodeBasedEditor window = GetWindow<NodeBasedEditor>();
         window.titleContent = new GUIContent("Node Based Editor");
+    }
+    */
+
+    public void SetScriptableObject(BehaviourTree behaviourTree){
+        bt = behaviourTree;
+        if (bt.nodes == null){
+            AddRootNode();
+        }
     }
 
     private void OnEnable()
@@ -54,13 +62,12 @@ public class NodeBasedEditor : EditorWindow
         ParentPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
         ParentPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
         ParentPointStyle.border = new RectOffset(4, 4, 12, 12);
-        AddRootNode();
     }
 
     private void AddRootNode(){
 
-        nodes = new List<GUINode>();
-        nodes.Add(new GUINode("Root",
+        bt.nodes = new List<GUINode>();
+        bt.nodes.Add(new GUINode("Root",
                               new Vector2(0,0), 
                               nodeSize[0], 
                               nodeSize[1], 
@@ -75,7 +82,7 @@ public class NodeBasedEditor : EditorWindow
     }
 
     private void ResetRootNode(){
-        nodes[0].SetName("");
+        bt.nodes[0].SetName("");
     }
 
     private void OnGUI()
@@ -95,7 +102,7 @@ public class NodeBasedEditor : EditorWindow
 
         if (GUI.changed) {
             Repaint();
-            UpdateCallNumbers(nodes[0], 1);
+            UpdateCallNumbers(bt.nodes[0], 1);
         }
     }
 
@@ -113,11 +120,11 @@ public class NodeBasedEditor : EditorWindow
     void DrawDetailInfo(int unusedWindowID)
     {
         if (GUILayout.Button("Clear All")){
-            for (int i=nodes.Count-1; i>0;i--){
-                if (selectedNode == nodes[i]){
+            for (int i=bt.nodes.Count-1; i>0;i--){
+                if (selectedNode == bt.nodes[i]){
                     selectedNode = null;
                 }
-                RemoveNode(nodes[i]);
+                RemoveNode(bt.nodes[i]);
             }
             ResetRootNode();
         }
@@ -157,22 +164,22 @@ public class NodeBasedEditor : EditorWindow
 
     private void DrawNodes()
     {
-        if (nodes != null)
+        if (bt.nodes != null)
         {
-            for (int i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < bt.nodes.Count; i++)
             {
-                nodes[i].Draw();
+                bt.nodes[i].Draw();
             }
         }
     }
 
     private void DrawConnections()
     {
-        if (connections != null)
+        if (bt.connections != null)
         {
-            for (int i = 0; i < connections.Count; i++)
+            for (int i = 0; i < bt.connections.Count; i++)
             {
-                connections[i].Draw();
+                bt.connections[i].Draw();
             } 
         }
     }
@@ -211,11 +218,11 @@ public class NodeBasedEditor : EditorWindow
 
     private void ProcessNodeEvents(Event e)
     {
-        if (nodes != null)
+        if (bt.nodes != null)
         {
-            for (int i = nodes.Count - 1; i >= 0; i--)
+            for (int i = bt.nodes.Count - 1; i >= 0; i--)
             {
-                bool guiChanged = nodes[i].ProcessEvents(e);
+                bool guiChanged = bt.nodes[i].ProcessEvents(e);
 
                 if (guiChanged)
                 {
@@ -284,11 +291,11 @@ public class NodeBasedEditor : EditorWindow
     {
         drag = delta;
 
-        if (nodes != null)
+        if (bt.nodes != null)
         {
-            for (int i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < bt.nodes.Count; i++)
             {
-                nodes[i].Drag(delta);
+                bt.nodes[i].Drag(delta);
             }
         }
 
@@ -297,12 +304,12 @@ public class NodeBasedEditor : EditorWindow
 
     private void OnClickAddNode(Vector2 mousePosition, string name)
     {
-        if (nodes == null)
+        if (bt.nodes == null)
         {
-            nodes = new List<GUINode>();
+            bt.nodes = new List<GUINode>();
         }
 
-        nodes.Add(new GUINode(
+        bt.nodes.Add(new GUINode(
                               name,
                               mousePosition, 
                               nodeSize[0], 
@@ -315,10 +322,10 @@ public class NodeBasedEditor : EditorWindow
                               OnClickChildPoint, 
                               OnClickParentPoint, 
                               OnClickRemoveNode));
-        selectedParentPoint = nodes[nodes.Count-1].GetParentPoint();
+        selectedParentPoint = bt.nodes[bt.nodes.Count-1].GetParentPoint();
         CreateConnection();
         ClearConnectionSelection();
-        int numNodes = UpdateCallNumbers(nodes[0], 1);
+        int numNodes = UpdateCallNumbers(bt.nodes[0], 1);
     }
 
     
@@ -377,41 +384,41 @@ public class NodeBasedEditor : EditorWindow
     }
 
     private void RemoveNode(GUINode node){
-        if (connections != null)
+        if (bt.connections != null)
         {
-            connections.Remove(node.GetParentNode());
+            bt.connections.Remove(node.GetParentNode());
             node.RemoveParentNode();
             
             List<Connection> childNodes = node.GetChildNodes();
             if (childNodes != null){
                 for (int i=childNodes.Count-1; i>0; i--){
                     node.RemoveChildNode(childNodes[i]);
-                    connections.Remove(childNodes[i]);
+                    bt.connections.Remove(childNodes[i]);
                 }
             }
         }
 
-        nodes.Remove(node);
+        bt.nodes.Remove(node);
 
     }
 
     private void OnClickRemoveConnection(Connection connection)
     {
-        connections.Remove(connection);
+        bt.connections.Remove(connection);
     }
 
     private void CreateConnection()
     {
-        if (connections == null)
+        if (bt.connections == null)
         {
-            connections = new List<Connection>();
+            bt.connections = new List<Connection>();
         }
 
-        connections.Add(new Connection(selectedChildPoint, selectedParentPoint, OnClickRemoveConnection));
+        bt.connections.Add(new Connection(selectedChildPoint, selectedParentPoint, OnClickRemoveConnection));
         GUINode parentNode = selectedChildPoint.GetNode();
         GUINode childNode = selectedParentPoint.GetNode();
-        parentNode.AddChildNode(connections[connections.Count-1]);
-        childNode.SetParentNode(connections[connections.Count-1]);
+        parentNode.AddChildNode(bt.connections[bt.connections.Count-1]);
+        childNode.SetParentNode(bt.connections[bt.connections.Count-1]);
         // wrong allocation here. Both getting the same connection but the connection should be reversed for one of them
     }
 
