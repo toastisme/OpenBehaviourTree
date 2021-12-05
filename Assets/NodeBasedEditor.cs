@@ -74,6 +74,10 @@ public class NodeBasedEditor : EditorWindow
                               OnClickRemoveNode));
     }
 
+    private void ResetRootNode(){
+        nodes[0].SetName("");
+    }
+
     private void OnGUI()
     {
         DrawGrid(20, 0.2f, Color.gray);
@@ -108,6 +112,15 @@ public class NodeBasedEditor : EditorWindow
 
     void DrawDetailInfo(int unusedWindowID)
     {
+        if (GUILayout.Button("Clear All")){
+            for (int i=nodes.Count-1; i>0;i--){
+                if (selectedNode == nodes[i]){
+                    selectedNode = null;
+                }
+                RemoveNode(nodes[i]);
+            }
+            ResetRootNode();
+        }
         if (selectedNode != null){
             GUILayout.Label("Task: " + selectedNode.GetTask());
             GUILayout.Label("Name");
@@ -360,6 +373,10 @@ public class NodeBasedEditor : EditorWindow
 
     private void OnClickRemoveNode(GUINode node)
     {
+        RemoveNode(node);
+    }
+
+    private void RemoveNode(GUINode node){
         if (connections != null)
         {
             connections.Remove(node.GetParentNode());
@@ -375,6 +392,7 @@ public class NodeBasedEditor : EditorWindow
         }
 
         nodes.Remove(node);
+
     }
 
     private void OnClickRemoveConnection(Connection connection)
