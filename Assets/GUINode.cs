@@ -3,28 +3,16 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class GUINode
+public class GUINode : NodeBase
 {
-    public Rect rect;
-    public Rect callNumberRect;
-    private int callNumber = 0;
-    private string name = "";
-    private string task  = "";
-
-    public bool isDragged;
-    public bool isSelected;
-
+    private List<GUIDecorator> decorators;
+    private Vector2 initDecoratorPos = new Vector2(0f,0f);
+    private float decoratorWidth = 30f;
     public ConnectionPoint ChildPoint;
     public ConnectionPoint ParentPoint;
     private List<Connection> childNodes;
     private Connection parentNode;
-
-    public GUIStyle style;
-    public GUIStyle defaultNodeStyle;
-    public GUIStyle selectedNodeStyle;
-
     public Action<GUINode> OnRemoveNode;
-    public Action<GUINode> UpdatePanelDetails;
 
     public GUINode(string task,
                    Vector2 position, 
@@ -34,7 +22,7 @@ public class GUINode
                    GUIStyle selectedStyle, 
                    GUIStyle ChildPointStyle, 
                    GUIStyle ParentPointStyle, 
-                   Action<GUINode> UpdatePanelDetails,
+                   Action<NodeBase> UpdatePanelDetails,
                    Action<ConnectionPoint> OnClickChildPoint, 
                    Action<ConnectionPoint> OnClickParentPoint, 
                    Action<GUINode> OnClickRemoveNode)
@@ -53,24 +41,19 @@ public class GUINode
         this.UpdatePanelDetails = UpdatePanelDetails;
 
         childNodes = new List<Connection>();
+        decorators = new List<GUIDecorator>();
 
     }
 
     public ConnectionPoint GetChildPoint(){return ChildPoint;}
     public ConnectionPoint GetParentPoint(){return ParentPoint;}
 
-    public string GetName(){return name;}
-    public void SetName(string newName){
-        name = newName;
-    }
-    public string GetTask(){return task;}
-    public void SetTask(string newTask){
-        task = newTask;
-    }
-    public void Drag(Vector2 delta)
+    public override void Drag(Vector2 delta)
     {
         rect.position += delta;
         callNumberRect.position += delta;
+        ChildPoint.rect.position += delta;
+        ParentPoint.rect.position += delta;
         if (childNodes != null){
             foreach(Connection childNode in childNodes){
                 childNode.GetChildNode().Drag(delta);
@@ -78,66 +61,23 @@ public class GUINode
         }
     }
 
-    public void Draw()
+    public override void Draw()
     {
         //GUI.color = new Color(255, 0, 0);
         ChildPoint.Draw();
         ParentPoint.Draw();
         GUI.Box(rect, task + "\n" + name, style);
         GUI.Box(callNumberRect, callNumber.ToString(), style);
-    }
-
-    public bool ProcessEvents(Event e)
-    {
-        switch (e.type)
-        {
-            case EventType.MouseDown:
-                if (e.button == 0)
-                {
-                    if (rect.Contains(e.mousePosition))
-                    {
-                        isDragged = true;
-                        GUI.changed = true;
-                        isSelected = true;
-                        style = selectedNodeStyle;
-                        UpdatePanelDetails(this);
-                    }
-                    else
-                    {
-                        GUI.changed = true;
-                        isSelected = false;
-                        style = defaultNodeStyle;
-                    }
-                }
-
-                if (e.button == 1 && isSelected && rect.Contains(e.mousePosition))
-                {
-                    ProcessContextMenu();
-                    e.Use();
-                }
-                break;
-
-            case EventType.MouseUp:
-                isDragged = false;
-                break;
-
-            case EventType.MouseDrag:
-                if (e.button == 0 && isDragged)
-                {
-                    Drag(e.delta);
-                    e.Use();
-                    return true;
-                }
-                break;
+        foreach (GUIDecorator decorator in decorators){
+            decorator.Draw();
         }
-
-        return false;
     }
 
-    private void ProcessContextMenu()
+    protected override void ProcessContextMenu()
     {
         GenericMenu genericMenu = new GenericMenu();
         genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
+        genericMenu.AddItem(new GUIContent("Add Decorator"), false, OnClickAddDecorator);
         genericMenu.ShowAsContext();
     }
 
@@ -147,6 +87,21 @@ public class GUINode
         {
             OnRemoveNode(this);
         }
+    }
+
+    private void OnClickRemoveDecorator(GUIDecorator decorator){
+        decorators.Remove(decorator);
+    }
+
+    private void OnClickAddDecorator(){
+        decorators.Add(new GUIDecorator("Decorator",
+                              new Vector2(initDecoratorPos[0], initDecoratorPos[1]+(decoratorWidth*decorators.Count+1)), 
+                              decoratorWidth, 
+                              rect.height,
+                              style, 
+                              selectedNodeStyle, 
+                              UpdatePanelDetails,
+                              OnClickRemoveDecorator));
     }
 
     public List<Connection> GetChildNodes(){return childNodes;}
@@ -178,12 +133,6 @@ public class GUINode
     public void SetParentNode(Connection connection){
         this.parentNode = connection;       
     }
-
-    public void SetCallNumber(int callNumber){
-        this.callNumber = callNumber;
-    }
-
-    public int GetCallNumber(){return callNumber;}
 
 
 

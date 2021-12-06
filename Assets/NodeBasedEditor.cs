@@ -6,7 +6,7 @@ public class NodeBasedEditor : EditorWindow
 {
     // Bookkeeping
     public BehaviourTree bt;
-    private GUINode selectedNode;
+    private NodeBase selectedNode;
 
     // Styles
     private GUIStyle nodeStyle;
@@ -113,7 +113,7 @@ public class NodeBasedEditor : EditorWindow
         EndWindows();
     }
 
-    public void UpdatePanelDetails(GUINode node){
+    public void UpdatePanelDetails(NodeBase node){
         selectedNode = node;
     }
 

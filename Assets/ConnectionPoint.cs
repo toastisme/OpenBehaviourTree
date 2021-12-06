@@ -6,6 +6,7 @@ public enum ConnectionPointType { In, Out }
 public class ConnectionPoint
 {
     public Rect rect;
+    private Rect nodeRect;
 
     public ConnectionPointType type;
 
@@ -18,26 +19,27 @@ public class ConnectionPoint
     public ConnectionPoint(GUINode node, ConnectionPointType type, GUIStyle style, Action<ConnectionPoint> OnClickConnectionPoint)
     {
         this.node = node;
+        nodeRect = node.GetRect();
         this.type = type;
         this.style = style;
         this.OnClickConnectionPoint = OnClickConnectionPoint;
-        rect = new Rect(0, 0, node.rect.width -12f, 20f);
+        rect = new Rect(0, 0, nodeRect.width -12f, 20f);
     }
 
     public GUINode GetNode(){return node;}
 
     public void Draw()
     {
-        rect.x = node.rect.x + (node.rect.width * 0.5f) - rect.width * 0.5f;
+        rect.x = nodeRect.x + (nodeRect.width * 0.5f) - rect.width * 0.5f;
 
         switch (type)
         {
             case ConnectionPointType.In:
-            rect.y = node.rect.y + node.rect.height - rect.height * .5f;
+            rect.y = nodeRect.y + nodeRect.height - rect.height * .5f;
             break;
 
             case ConnectionPointType.Out:
-            rect.y = node.rect.y - rect.height*.5f;
+            rect.y = nodeRect.y - rect.height*.5f;
             break;
         }
 
