@@ -90,6 +90,7 @@ public class NodeBase
     public virtual void Drag(Vector2 delta)
     {
         rect.position += delta;
+        callNumberRect.position += delta;
     }
     public virtual void Draw()
     {

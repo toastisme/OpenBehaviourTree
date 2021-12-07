@@ -12,6 +12,7 @@ public class GUIDecorator : NodeBase
                    float height, 
                    GUIStyle nodeStyle, 
                    GUIStyle selectedStyle, 
+                   GUIStyle callNumberStyle,
                    Action<NodeBase> UpdatePanelDetails,
                    Action<GUIDecorator> OnClickRemoveDecorator)
     {
@@ -20,6 +21,8 @@ public class GUIDecorator : NodeBase
         this.style = nodeStyle;
         this.task = task;
         this.rect = new Rect(position[0], position[1], width, height);
+        this.callNumberRect = new Rect(position.x, position.y -10, width/6, width/6);
+        this.callNumberStyle = callNumberStyle;
     }
 
 

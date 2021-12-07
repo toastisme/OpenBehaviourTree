@@ -53,8 +53,7 @@ public class GUINode : NodeBase
 
     public override void Drag(Vector2 delta)
     {
-        rect.position += delta;
-        callNumberRect.position += delta;
+        base.Drag(delta);
         if (childNodes != null){
             foreach(Connection childNode in childNodes){
                 childNode.GetChildNode().Drag(delta);
@@ -62,7 +61,7 @@ public class GUINode : NodeBase
         }
         if (decorators != null){
             foreach(GUIDecorator decorator in decorators){
-                decorator.SetPosition(decorator.GetRect().position + delta);
+                decorator.Drag(delta);
             }
         }
     }
@@ -76,6 +75,10 @@ public class GUINode : NodeBase
         foreach (GUIDecorator decorator in decorators){
             decorator.Draw();
         }
+    }
+
+    public List<GUIDecorator> GetDecorators(){
+        return decorators;
     }
 
     protected override void ProcessContextMenu()
@@ -106,9 +109,12 @@ public class GUINode : NodeBase
                               decoratorHeight, 
                               decoratorStyle, 
                               decoratorStyle, 
+                              callNumberStyle,
                               UpdatePanelDetails,
                               OnClickRemoveDecorator));
         rect.height += decoratorHeight;
+        decorators[decorators.Count -1].SetCallNumber(GetCallNumber());
+        SetCallNumber(callNumber++);
     }
 
     public List<Connection> GetChildNodes(){return childNodes;}

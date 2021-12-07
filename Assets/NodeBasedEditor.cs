@@ -441,7 +441,6 @@ public class NodeBasedEditor : EditorWindow
         GUINode childNode = selectedParentPoint.GetNode();
         parentNode.AddChildNode(bt.connections[bt.connections.Count-1]);
         childNode.SetParentNode(bt.connections[bt.connections.Count-1]);
-        // wrong allocation here. Both getting the same connection but the connection should be reversed for one of them
     }
 
     private void ClearConnectionSelection()
@@ -451,8 +450,21 @@ public class NodeBasedEditor : EditorWindow
     }
 
     private int UpdateCallNumbers(GUINode startingNode, int callNumber){
+
+        // Update decorators first 
+        List<GUIDecorator> decorators = startingNode.GetDecorators();
+        if (decorators != null){
+            foreach(GUIDecorator decorator in decorators){
+                decorator.SetCallNumber(callNumber);
+                callNumber++;
+            }
+        }
+
+        // Update nodes
         startingNode.SetCallNumber(callNumber);
         callNumber++;
+
+        // Update child nodes
         startingNode.RefreshChildOrder();
         foreach(Connection connection in startingNode.GetChildNodes()){
             callNumber = UpdateCallNumbers(connection.GetChildNode(), callNumber);
