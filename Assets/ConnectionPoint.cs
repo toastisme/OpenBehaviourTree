@@ -30,6 +30,7 @@ public class ConnectionPoint
 
     public void Draw()
     {
+        nodeRect = node.GetRect();
         rect.x = nodeRect.x + (nodeRect.width * 0.5f) - rect.width * 0.5f;
 
         switch (type)

@@ -53,11 +53,8 @@ public class GUINode : NodeBase
 
     public override void Drag(Vector2 delta)
     {
-        Debug.Log("override drag called");
         rect.position += delta;
         callNumberRect.position += delta;
-        ChildPoint.rect.position += delta;
-        ParentPoint.rect.position += delta;
         if (childNodes != null){
             foreach(Connection childNode in childNodes){
                 childNode.GetChildNode().Drag(delta);
@@ -72,7 +69,6 @@ public class GUINode : NodeBase
 
     public override void Draw()
     {
-        //GUI.color = new Color(255, 0, 0);
         ChildPoint.Draw();
         ParentPoint.Draw();
         GUI.Box(rect, task + "\n" + name, style);

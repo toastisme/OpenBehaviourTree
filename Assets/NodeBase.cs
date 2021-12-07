@@ -89,7 +89,6 @@ public class NodeBase
 
     public virtual void Drag(Vector2 delta)
     {
-        Debug.Log("Base drag called");
         rect.position += delta;
     }
     public virtual void Draw()
