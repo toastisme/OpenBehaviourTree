@@ -113,8 +113,9 @@ public class GUINode : NodeBase
                               UpdatePanelDetails,
                               OnClickRemoveDecorator));
         rect.height += decoratorHeight;
-        decorators[decorators.Count -1].SetCallNumber(GetCallNumber());
-        SetCallNumber(callNumber++);
+        decorators[decorators.Count -1].SetCallNumber(callNumber);
+        callNumber++;
+        GUI.changed = true;
     }
 
     public List<Connection> GetChildNodes(){return childNodes;}
