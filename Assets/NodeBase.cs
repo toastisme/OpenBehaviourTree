@@ -29,6 +29,9 @@ public class NodeBase
     }
 
     public Rect GetRect(){return rect;} 
+    public void SetPosition(Vector2 position){
+        this.rect.position = position;
+    }
     public Rect GetCallNumberRect(){return callNumberRect;}
     public int GetCallNumber(){return callNumber;}
     public void SetCallNumber(int callNumber){
@@ -86,6 +89,7 @@ public class NodeBase
 
     public virtual void Drag(Vector2 delta)
     {
+        Debug.Log("Base drag called");
         rect.position += delta;
     }
     public virtual void Draw()

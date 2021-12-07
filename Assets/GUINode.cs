@@ -53,6 +53,7 @@ public class GUINode : NodeBase
 
     public override void Drag(Vector2 delta)
     {
+        Debug.Log("override drag called");
         rect.position += delta;
         callNumberRect.position += delta;
         ChildPoint.rect.position += delta;
@@ -60,6 +61,11 @@ public class GUINode : NodeBase
         if (childNodes != null){
             foreach(Connection childNode in childNodes){
                 childNode.GetChildNode().Drag(delta);
+            }
+        }
+        if (decorators != null){
+            foreach(GUIDecorator decorator in decorators){
+                decorator.SetPosition(decorator.GetRect().position + delta);
             }
         }
     }

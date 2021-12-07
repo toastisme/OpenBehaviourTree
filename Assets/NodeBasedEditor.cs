@@ -80,9 +80,6 @@ public class NodeBasedEditor : EditorWindow
         ParentPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
         ParentPointStyle.border = new RectOffset(4, 4, 12, 12);
         ParentPointStyle.alignment = TextAnchor.MiddleCenter;
-        if (bt.nodes == null){
-            AddRootNode();
-        }
     }
 
     private void AddRootNode(){
