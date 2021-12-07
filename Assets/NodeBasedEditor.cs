@@ -13,6 +13,8 @@ public class NodeBasedEditor : EditorWindow
     private GUIStyle selectedNodeStyle;
     private GUIStyle ChildPointStyle;
     private GUIStyle ParentPointStyle;
+    private GUIStyle callNumberStyle;
+    private GUIStyle decoratorStyle;
     private Vector2 nodeSize = new Vector2(200, 100);
 
     private ConnectionPoint selectedChildPoint;
@@ -47,21 +49,40 @@ public class NodeBasedEditor : EditorWindow
         nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
         nodeStyle.border = new RectOffset(12, 12, 12, 12);
         nodeStyle.normal.textColor = Color.white;
+        nodeStyle.alignment = TextAnchor.UpperCenter;
 
         selectedNodeStyle = new GUIStyle();
         selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
         selectedNodeStyle.border = new RectOffset(12, 12, 12, 12);
         selectedNodeStyle.normal.textColor = Color.white;
+        selectedNodeStyle.alignment = TextAnchor.UpperCenter;
+
+        decoratorStyle = new GUIStyle();
+        decoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        decoratorStyle.border = new RectOffset(12, 12, 12, 12);
+        decoratorStyle.normal.textColor = Color.white;
+        decoratorStyle.alignment = TextAnchor.MiddleCenter;
+
+        callNumberStyle = new GUIStyle();
+        callNumberStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        callNumberStyle.border = new RectOffset(12, 12, 12, 12);
+        callNumberStyle.normal.textColor = Color.white;
+        callNumberStyle.alignment = TextAnchor.MiddleCenter;
 
         ChildPointStyle = new GUIStyle();
         ChildPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
         ChildPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
         ChildPointStyle.border = new RectOffset(4, 4, 12, 12);
+        ChildPointStyle.alignment = TextAnchor.MiddleCenter;
 
         ParentPointStyle = new GUIStyle();
         ParentPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
         ParentPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
         ParentPointStyle.border = new RectOffset(4, 4, 12, 12);
+        ParentPointStyle.alignment = TextAnchor.MiddleCenter;
+        if (bt.nodes == null){
+            AddRootNode();
+        }
     }
 
     private void AddRootNode(){
@@ -75,6 +96,8 @@ public class NodeBasedEditor : EditorWindow
                               selectedNodeStyle, 
                               ChildPointStyle, 
                               ParentPointStyle, 
+                              callNumberStyle,
+                              decoratorStyle,
                               UpdatePanelDetails,
                               OnClickChildPoint, 
                               OnClickParentPoint, 
@@ -318,6 +341,8 @@ public class NodeBasedEditor : EditorWindow
                               selectedNodeStyle, 
                               ChildPointStyle, 
                               ParentPointStyle, 
+                              callNumberStyle,
+                              decoratorStyle,
                               UpdatePanelDetails,
                               OnClickChildPoint, 
                               OnClickParentPoint, 

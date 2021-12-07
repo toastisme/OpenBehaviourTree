@@ -7,7 +7,7 @@ public class GUINode : NodeBase
 {
     private List<GUIDecorator> decorators;
     private Vector2 initDecoratorPos = new Vector2(0f,0f);
-    private float decoratorWidth = 30f;
+    private float decoratorHeight = 35f;
     public ConnectionPoint ChildPoint;
     public ConnectionPoint ParentPoint;
     private List<Connection> childNodes;
@@ -22,6 +22,8 @@ public class GUINode : NodeBase
                    GUIStyle selectedStyle, 
                    GUIStyle ChildPointStyle, 
                    GUIStyle ParentPointStyle, 
+                   GUIStyle callNumberStyle, 
+                   GUIStyle decoratorStyle, 
                    Action<NodeBase> UpdatePanelDetails,
                    Action<ConnectionPoint> OnClickChildPoint, 
                    Action<ConnectionPoint> OnClickParentPoint, 
@@ -29,14 +31,15 @@ public class GUINode : NodeBase
     {
         this.task = task;
         rect = new Rect(position.x, position.y, width, height);
+        initDecoratorPos = new Vector2(0, rect.height*.5f);
         callNumberRect = new Rect(position.x, position.y -10, width/6, width/6);
         style = nodeStyle;
+        this.callNumberStyle = callNumberStyle;
+        this.decoratorStyle = decoratorStyle; 
         ChildPoint = new ConnectionPoint(this, ConnectionPointType.In, ChildPointStyle, OnClickChildPoint);
         ParentPoint = new ConnectionPoint(this, ConnectionPointType.Out, ParentPointStyle, OnClickParentPoint);
         defaultNodeStyle = nodeStyle;
         selectedNodeStyle = selectedStyle;
-        defaultNodeStyle.alignment = TextAnchor.MiddleCenter;
-        selectedNodeStyle.alignment = TextAnchor.MiddleCenter;
         OnRemoveNode = OnClickRemoveNode;
         this.UpdatePanelDetails = UpdatePanelDetails;
 
@@ -67,7 +70,7 @@ public class GUINode : NodeBase
         ChildPoint.Draw();
         ParentPoint.Draw();
         GUI.Box(rect, task + "\n" + name, style);
-        GUI.Box(callNumberRect, callNumber.ToString(), style);
+        GUI.Box(callNumberRect, callNumber.ToString(), callNumberStyle);
         foreach (GUIDecorator decorator in decorators){
             decorator.Draw();
         }
@@ -95,13 +98,15 @@ public class GUINode : NodeBase
 
     private void OnClickAddDecorator(){
         decorators.Add(new GUIDecorator("Decorator",
-                              new Vector2(initDecoratorPos[0], initDecoratorPos[1]+(decoratorWidth*decorators.Count+1)), 
-                              decoratorWidth, 
-                              rect.height,
-                              style, 
-                              selectedNodeStyle, 
+                              new Vector2(
+                                  rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(decoratorHeight*decorators.Count+1)), 
+                              rect.width,
+                              decoratorHeight, 
+                              decoratorStyle, 
+                              decoratorStyle, 
                               UpdatePanelDetails,
                               OnClickRemoveDecorator));
+        rect.height += decoratorHeight;
     }
 
     public List<Connection> GetChildNodes(){return childNodes;}

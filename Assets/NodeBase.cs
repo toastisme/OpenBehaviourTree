@@ -10,6 +10,8 @@ public class NodeBase
     public GUIStyle style;
     public GUIStyle defaultNodeStyle;
     public GUIStyle selectedNodeStyle;
+    public GUIStyle callNumberStyle;
+    public GUIStyle decoratorStyle;
     public Action<NodeBase> UpdatePanelDetails;
 
     protected Rect rect;
