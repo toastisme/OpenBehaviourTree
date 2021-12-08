@@ -68,7 +68,7 @@ public class NodeBasedEditor : EditorWindow
         selectedDecoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
         selectedDecoratorStyle.border = new RectOffset(12, 12, 12, 12);
         selectedDecoratorStyle.normal.textColor = Color.white;
-        selectedDecoratorStyle.alignment = TextAnchor.UpperCenter;
+        selectedDecoratorStyle.alignment = TextAnchor.MiddleCenter;
 
         callNumberStyle = new GUIStyle();
         callNumberStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
@@ -256,6 +256,11 @@ public class NodeBasedEditor : EditorWindow
                 {
                     GUI.changed = true;
                 }
+            }
+        }
+        if (selectedNode != null){
+            if (!selectedNode.IsSelected()){
+                selectedNode = null;
             }
         }
     }

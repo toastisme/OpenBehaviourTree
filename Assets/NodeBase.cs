@@ -44,10 +44,8 @@ public class NodeBase
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    Debug.Log("Process events " + task);
                     if (rect.Contains(e.mousePosition))
                     {
-                        Debug.Log("Is in bounds " + task);
                         isDragged = true;
                         GUI.changed = true;
                         isSelected = true;
@@ -95,15 +93,10 @@ public class NodeBase
     }
     public virtual void Draw()
     {
-        Debug.Log("rect " + (rect==null));
-        Debug.Log("name " + (name==null));
-        Debug.Log("task " + (task==null));
-        Debug.Log("style " + (style==null));
-        if (style == null){
-            Debug.Log("Style is null");
-        }
         GUI.Box(rect, task + "\n" + name, style);
         GUI.Box(callNumberRect, callNumber.ToString(), style);
     }
+
+    public bool IsSelected(){return isSelected;}
 
 }
