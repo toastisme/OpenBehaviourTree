@@ -6,6 +6,8 @@ using UnityEngine;
 public class GUINode : NodeBase
 {
     private List<GUIDecorator> decorators;
+    private GUIStyle decoratorStyle;
+    private GUIStyle selectedDecoratorStyle;
     private Vector2 initDecoratorPos = new Vector2(0f,0f);
     private float decoratorHeight = 35f;
     public ConnectionPoint ChildPoint;
@@ -24,6 +26,7 @@ public class GUINode : NodeBase
                    GUIStyle ParentPointStyle, 
                    GUIStyle callNumberStyle, 
                    GUIStyle decoratorStyle, 
+                   GUIStyle selectedDecoratorStyle, 
                    Action<NodeBase> UpdatePanelDetails,
                    Action<ConnectionPoint> OnClickChildPoint, 
                    Action<ConnectionPoint> OnClickParentPoint, 
@@ -36,6 +39,7 @@ public class GUINode : NodeBase
         style = nodeStyle;
         this.callNumberStyle = callNumberStyle;
         this.decoratorStyle = decoratorStyle; 
+        this.selectedDecoratorStyle = selectedDecoratorStyle; 
         ChildPoint = new ConnectionPoint(this, ConnectionPointType.In, ChildPointStyle, OnClickChildPoint);
         ParentPoint = new ConnectionPoint(this, ConnectionPointType.Out, ParentPointStyle, OnClickParentPoint);
         defaultNodeStyle = nodeStyle;
@@ -89,6 +93,24 @@ public class GUINode : NodeBase
         genericMenu.ShowAsContext();
     }
 
+    public override bool ProcessEvents(Event e)
+    {
+        bool guiChanged = false;
+        bool guiChangedFromNode =  base.ProcessEvents(e);
+        if (guiChangedFromNode){
+            guiChanged = true;
+        }
+        if (decorators != null){
+            foreach(GUIDecorator decorator in decorators){
+                bool guiChangedFromDecorator = decorator.ProcessEvents(e);
+                if (!guiChanged && guiChangedFromDecorator){
+                    guiChanged = true;
+                }
+            }
+        }
+        return guiChanged;
+    }
+
     private void OnClickRemoveNode()
     {
         if (OnRemoveNode != null)
@@ -108,7 +130,7 @@ public class GUINode : NodeBase
                               rect.width,
                               decoratorHeight, 
                               decoratorStyle, 
-                              decoratorStyle, 
+                              selectedDecoratorStyle, 
                               callNumberStyle,
                               UpdatePanelDetails,
                               OnClickRemoveDecorator));

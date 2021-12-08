@@ -11,7 +11,6 @@ public class NodeBase
     public GUIStyle defaultNodeStyle;
     public GUIStyle selectedNodeStyle;
     public GUIStyle callNumberStyle;
-    public GUIStyle decoratorStyle;
     public Action<NodeBase> UpdatePanelDetails;
 
     protected Rect rect;
@@ -38,15 +37,17 @@ public class NodeBase
         this.callNumber = callNumber;
     }
 
-    public bool ProcessEvents(Event e)
+    public virtual bool ProcessEvents(Event e)
     {
         switch (e.type)
         {
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
+                    Debug.Log("Process events " + task);
                     if (rect.Contains(e.mousePosition))
                     {
+                        Debug.Log("Is in bounds " + task);
                         isDragged = true;
                         GUI.changed = true;
                         isSelected = true;
@@ -94,6 +95,13 @@ public class NodeBase
     }
     public virtual void Draw()
     {
+        Debug.Log("rect " + (rect==null));
+        Debug.Log("name " + (name==null));
+        Debug.Log("task " + (task==null));
+        Debug.Log("style " + (style==null));
+        if (style == null){
+            Debug.Log("Style is null");
+        }
         GUI.Box(rect, task + "\n" + name, style);
         GUI.Box(callNumberRect, callNumber.ToString(), style);
     }

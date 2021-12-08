@@ -15,6 +15,7 @@ public class NodeBasedEditor : EditorWindow
     private GUIStyle ParentPointStyle;
     private GUIStyle callNumberStyle;
     private GUIStyle decoratorStyle;
+    private GUIStyle selectedDecoratorStyle;
     private Vector2 nodeSize = new Vector2(200, 100);
 
     private ConnectionPoint selectedChildPoint;
@@ -63,6 +64,12 @@ public class NodeBasedEditor : EditorWindow
         decoratorStyle.normal.textColor = Color.white;
         decoratorStyle.alignment = TextAnchor.MiddleCenter;
 
+        selectedDecoratorStyle = new GUIStyle();
+        selectedDecoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
+        selectedDecoratorStyle.border = new RectOffset(12, 12, 12, 12);
+        selectedDecoratorStyle.normal.textColor = Color.white;
+        selectedDecoratorStyle.alignment = TextAnchor.UpperCenter;
+
         callNumberStyle = new GUIStyle();
         callNumberStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
         callNumberStyle.border = new RectOffset(12, 12, 12, 12);
@@ -95,6 +102,7 @@ public class NodeBasedEditor : EditorWindow
                               ParentPointStyle, 
                               callNumberStyle,
                               decoratorStyle,
+                              selectedDecoratorStyle,
                               UpdatePanelDetails,
                               OnClickChildPoint, 
                               OnClickParentPoint, 
@@ -324,6 +332,7 @@ public class NodeBasedEditor : EditorWindow
                               ParentPointStyle, 
                               callNumberStyle,
                               decoratorStyle,
+                              selectedDecoratorStyle,
                               UpdatePanelDetails,
                               OnClickChildPoint, 
                               OnClickParentPoint, 
