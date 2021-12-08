@@ -269,22 +269,6 @@ public class NodeBasedEditor : EditorWindow
             GUI.changed = true;
             drawingLine = true;
         }
-
-        else if (selectedParentPoint != null && selectedChildPoint == null)
-        {
-            Handles.DrawBezier(
-                selectedParentPoint.rect.center,
-                e.mousePosition,
-                selectedParentPoint.rect.center,
-                selectedParentPoint.rect.center,
-                Color.white,
-                null,
-                2f
-            );
-
-            GUI.changed = true;
-            drawingLine = true;
-        }
         else{
             drawingLine = false;
         }
