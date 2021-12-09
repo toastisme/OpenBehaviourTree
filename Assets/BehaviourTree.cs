@@ -6,5 +6,4 @@ public class BehaviourTree : ScriptableObject
 {
     public List<GUINode> nodes;
     public List<Connection> connections;
-
 }
