@@ -27,6 +27,8 @@ public class NodeBasedEditor : EditorWindow
     private bool drawingLine;
 
     private Rect detailsPanel;
+    private string[] toolbarStrings = {"Selected Node", "Blackboard"};
+    private int toolbarInt = 0;
 
     /*
     [MenuItem("Window/Node Based Editor")]
@@ -123,7 +125,9 @@ public class NodeBasedEditor : EditorWindow
 
         DrawConnectionLine(Event.current);
 
-        ProcessNodeEvents(Event.current);
+        if (MousePosOnGrid(Event.current.mousePosition)){
+            ProcessNodeEvents(Event.current);
+        }
         ProcessEvents(Event.current);
 
         DrawDetailsPanel();
@@ -147,22 +151,23 @@ public class NodeBasedEditor : EditorWindow
 
     void DrawDetailInfo(int unusedWindowID)
     {
-        if (GUILayout.Button("Clear All")){
-            for (int i=bt.nodes.Count-1; i>0;i--){
-                if (selectedNode == bt.nodes[i]){
-                    selectedNode = null;
+        toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
+        if (toolbarInt == 0){
+            if (GUILayout.Button("Clear All")){
+                for (int i=bt.nodes.Count-1; i>0;i--){
+                    if (selectedNode == bt.nodes[i]){
+                        selectedNode = null;
+                    }
+                    RemoveNode(bt.nodes[i]);
                 }
-                RemoveNode(bt.nodes[i]);
+                ResetRootNode();
             }
-            ResetRootNode();
+            if (selectedNode != null){
+                GUILayout.Label("Task: " + selectedNode.GetTask());
+                GUILayout.Label("Name");
+                selectedNode.SetName(GUILayout.TextField(selectedNode.GetName(), 50));
+            }
         }
-        if (selectedNode != null){
-            GUILayout.Label("Task: " + selectedNode.GetTask());
-            GUILayout.Label("Name");
-            selectedNode.SetName(GUILayout.TextField(selectedNode.GetName(), 50));
-        }
-        
-        GUI.DragWindow();
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
@@ -238,10 +243,20 @@ public class NodeBasedEditor : EditorWindow
             case EventType.MouseDrag:
                 if (e.button == 0)
                 {
-                    OnDrag(e.delta);
+
+                    if (MousePosOnGrid(e.mousePosition)){
+                        OnDrag(e.delta);
+                    }
                 }
             break;
         }
+    }
+
+    bool MousePosOnGrid(Vector2 mousePos){
+        if (detailsPanel.Contains(mousePos)){
+            return false;
+        }
+        return true;
     }
 
     private void ProcessNodeEvents(Event e)
