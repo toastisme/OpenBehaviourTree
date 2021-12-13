@@ -21,6 +21,14 @@ public class BehaviourTreeBlackboard : ScriptableObject
     public Dictionary<string, GameObject> gameObjectDict = new Dictionary<string, GameObject>();
     public Dictionary<string, string> stringDict = new Dictionary<string, string>();
 
+    public Dictionary<string, int> GetIntDict(){return intDict;}
+    public Dictionary<string, float> GetFloatDict(){return floatDict;}
+    public Dictionary<string, bool> GetBoolDict(){return boolDict;}
+    public Dictionary<string, Vector3> GetVector3Dict(){return vector3Dict;}
+    public Dictionary<string, Vector2> GetVector2Dict(){return vector2Dict;}
+    public Dictionary<string, GameObject> GetGameObjectDict(){return gameObjectDict;}
+    public Dictionary<string, string> GetStringDict(){return stringDict;}
+
     public List<string> GetKeyTypes(){return keyTypes;}
     public List<string> GetAllKeyNames(){return allKeyNames;}
 
@@ -66,6 +74,7 @@ public class BehaviourTreeBlackboard : ScriptableObject
                 throw new System.Exception("Key in allKeyNames but not found in dictionaries.");
             }
         }
+        allKeyNames.Remove(keyName);
     }
 
     public void AddKey(string keyType){
@@ -88,10 +97,10 @@ public class BehaviourTreeBlackboard : ScriptableObject
                 case "string":
                     stringDict.Add(keyName, "");
                     break;
-                case "vector3":
+                case "Vector3":
                     vector3Dict.Add(keyName, new Vector3(0,0,0));
                     break;
-                case "vector2":
+                case "Vector2":
                     vector2Dict.Add(keyName, new Vector2(0,0));
                     break;
             }

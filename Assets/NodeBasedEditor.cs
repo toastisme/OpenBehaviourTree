@@ -187,6 +187,70 @@ public class NodeBasedEditor : EditorWindow
             }
             genericMenu.ShowAsContext();
         }
+
+        // Display current keys
+        GUILayout.Label("Int Keys");
+        foreach(string label in bt.blackboard.GetIntDict().Keys){
+            if (GUILayout.Button(label)){
+                GenericMenu intKeyMenu = new GenericMenu();
+                intKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
+                intKeyMenu.ShowAsContext();
+            }
+        }
+
+        GUILayout.Label("Float Keys");
+        foreach(string label in bt.blackboard.GetFloatDict().Keys){
+            if (GUILayout.Button(label)){
+                GenericMenu floatKeyMenu = new GenericMenu();
+                floatKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
+                floatKeyMenu.ShowAsContext();
+            }
+        }
+
+        GUILayout.Label("Bool Keys");
+        foreach(string label in bt.blackboard.GetBoolDict().Keys){
+            if (GUILayout.Button(label)){
+                GenericMenu boolKeyMenu = new GenericMenu();
+                boolKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
+                boolKeyMenu.ShowAsContext();
+            }
+        }
+
+        GUILayout.Label("String Keys");
+        foreach(string label in bt.blackboard.GetStringDict().Keys){
+            if (GUILayout.Button(label)){
+                GenericMenu stringKeyMenu = new GenericMenu();
+                stringKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
+                stringKeyMenu.ShowAsContext();
+            }
+        }
+
+        GUILayout.Label("GameObject Keys");
+        foreach(string label in bt.blackboard.GetGameObjectDict().Keys){
+            if (GUILayout.Button(label)){
+                GenericMenu gameObjectKeyMenu = new GenericMenu();
+                gameObjectKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
+                gameObjectKeyMenu.ShowAsContext();
+            }
+        }
+
+        GUILayout.Label("Vector3 Keys");
+        foreach(string label in bt.blackboard.GetVector3Dict().Keys){
+            if (GUILayout.Button(label)){
+                GenericMenu vector3KeyMenu = new GenericMenu();
+                vector3KeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
+                vector3KeyMenu.ShowAsContext();
+            }
+        }
+
+        GUILayout.Label("Vector2 Keys");
+        foreach(string label in bt.blackboard.GetVector2Dict().Keys){
+            if (GUILayout.Button(label)){
+                GenericMenu vector2KeyMenu = new GenericMenu();
+                vector2KeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
+                vector2KeyMenu.ShowAsContext();
+            }
+        }
     }
 
 
@@ -194,6 +258,10 @@ public class NodeBasedEditor : EditorWindow
         if (bt.blackboard != null && bt.blackboard.GetKeyTypes().Contains(keyType)){
             bt.blackboard.AddKey(keyType);
         }
+    }
+
+    void OnClickRemoveBlackboardKey(string keyName){
+        bt.blackboard.RemoveKey(keyName);
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
