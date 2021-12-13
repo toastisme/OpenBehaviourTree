@@ -152,21 +152,47 @@ public class NodeBasedEditor : EditorWindow
     void DrawDetailInfo(int unusedWindowID)
     {
         toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
-        if (toolbarInt == 0){
-            if (GUILayout.Button("Clear All")){
-                for (int i=bt.nodes.Count-1; i>0;i--){
-                    if (selectedNode == bt.nodes[i]){
-                        selectedNode = null;
-                    }
-                    RemoveNode(bt.nodes[i]);
+        switch(toolbarInt){
+            case 0:
+                DrawNodeDetails(unusedWindowID);
+                break;
+            case 1:
+                DrawBlackboardDetails(unusedWindowID);
+                break;
+        }
+    }
+
+    void DrawNodeDetails(int unusedWindowID){
+        if (GUILayout.Button("Clear All")){
+            for (int i=bt.nodes.Count-1; i>0;i--){
+                if (selectedNode == bt.nodes[i]){
+                    selectedNode = null;
                 }
-                ResetRootNode();
+                RemoveNode(bt.nodes[i]);
             }
-            if (selectedNode != null){
-                GUILayout.Label("Task: " + selectedNode.GetTask());
-                GUILayout.Label("Name");
-                selectedNode.SetName(GUILayout.TextField(selectedNode.GetName(), 50));
+            ResetRootNode();
+        }
+        if (selectedNode != null){
+            GUILayout.Label("Task: " + selectedNode.GetTask());
+            GUILayout.Label("Name");
+            selectedNode.SetName(GUILayout.TextField(selectedNode.GetName(), 50));
+        }
+    }
+
+    void DrawBlackboardDetails(int unusedWindowID){
+        if (GUILayout.Button("New Key")){
+            GenericMenu genericMenu = new GenericMenu();
+            foreach (string keyType in bt.blackboard.GetKeyTypes()){
+                genericMenu.AddItem(new GUIContent(keyType), false, () => OnClickAddBlackboardKey(keyType)); 
             }
+            genericMenu.ShowAsContext();
+        }
+    }
+
+
+    void OnClickAddBlackboardKey(string keyType){
+        if (bt.blackboard != null && bt.blackboard.GetKeyTypes().Contains(keyType)){
+            bt.blackboard.AddKey(keyType);
         }
     }
 
