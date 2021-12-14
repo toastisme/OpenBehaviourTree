@@ -41,7 +41,7 @@ public class GUINode : NodeBase
         this.decoratorStyle = decoratorStyle; 
         this.selectedDecoratorStyle = selectedDecoratorStyle; 
         ChildPoint = new ConnectionPoint(this, ConnectionPointType.In, ChildPointStyle, OnClickChildPoint);
-        if (task=="Root"){
+        if (IsRootNode()){
             ParentPoint = null;
         }
         else{
@@ -96,10 +96,12 @@ public class GUINode : NodeBase
 
     protected override void ProcessContextMenu()
     {
-        GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
-        genericMenu.AddItem(new GUIContent("Add Decorator"), false, OnClickAddDecorator);
-        genericMenu.ShowAsContext();
+        if (!IsRootNode()){
+            GenericMenu genericMenu = new GenericMenu();
+            genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
+            genericMenu.AddItem(new GUIContent("Add Decorator"), false, OnClickAddDecorator);
+            genericMenu.ShowAsContext();
+        }
     }
 
     public override bool ProcessEvents(Event e)
@@ -177,6 +179,10 @@ public class GUINode : NodeBase
     }
     public void SetParentNode(Connection connection){
         this.parentNode = connection;       
+    }
+
+    public bool IsRootNode(){
+        return (task == "Root");
     }
 
 
