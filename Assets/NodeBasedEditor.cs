@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class NodeBasedEditor : EditorWindow
 {
@@ -29,6 +31,8 @@ public class NodeBasedEditor : EditorWindow
     private Rect detailsPanel;
     private string[] toolbarStrings = {"Selected Node", "Blackboard"};
     private int toolbarInt = 0;
+
+    List<string> customTaskNames;
 
     /*
     [MenuItem("Window/Node Based Editor")]
@@ -89,6 +93,8 @@ public class NodeBasedEditor : EditorWindow
         ParentPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
         ParentPointStyle.border = new RectOffset(4, 4, 12, 12);
         ParentPointStyle.alignment = TextAnchor.MiddleCenter;
+
+        customTaskNames = GetCustomTaskNames();
     }
 
     private void AddRootNode(){
@@ -409,6 +415,9 @@ public class NodeBasedEditor : EditorWindow
         GenericMenu genericMenu = new GenericMenu();
         genericMenu.AddItem(new GUIContent("Add Selector"), false, () => OnClickAddNode(mousePosition, "Selector")); 
         genericMenu.AddItem(new GUIContent("Add Sequence"), false, () => OnClickAddNode(mousePosition, "Sequence")); 
+        foreach(string taskName in customTaskNames){
+            genericMenu.AddItem(new GUIContent("Add " + taskName), false, () => OnClickAddNode(mousePosition, taskName)); 
+        }
         genericMenu.ShowAsContext();
 
     }
@@ -578,5 +587,19 @@ public class NodeBasedEditor : EditorWindow
         }
         return callNumber;
     }
+
+     List<BehaviourTreeTask> GetCustomTasks()
+     {
+         return AppDomain.CurrentDomain.GetAssemblies()
+             .SelectMany(assembly => assembly.GetTypes())
+             .Where(type => type.IsSubclassOf(typeof(BehaviourTreeTask)))
+             .Select(type => Activator.CreateInstance(type) as BehaviourTreeTask).ToList();
+     }
+
+     List<string> GetCustomTaskNames(){
+         List<string> taskNames = new List<string>();
+         GetCustomTasks().ForEach(x => taskNames.Add(x.GetType().ToString()));
+         return taskNames;
+     }
 
 }
