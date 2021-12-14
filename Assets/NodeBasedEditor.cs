@@ -32,6 +32,7 @@ public class NodeBasedEditor : EditorWindow
     private string[] toolbarStrings = {"Selected Node", "Blackboard"};
     private int toolbarInt = 0;
 
+    List<string> decisionTaskNames = new List<string>{"Priority Selector", "Probability Selector", "Sequence"};
     List<string> customTaskNames;
 
     /*
@@ -413,10 +414,11 @@ public class NodeBasedEditor : EditorWindow
     private void ProcessCreateContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Add Selector"), false, () => OnClickAddNode(mousePosition, "Selector")); 
-        genericMenu.AddItem(new GUIContent("Add Sequence"), false, () => OnClickAddNode(mousePosition, "Sequence")); 
+        foreach(string taskName in decisionTaskNames){
+            genericMenu.AddItem(new GUIContent(taskName), false, () => OnClickAddNode(mousePosition, taskName)); 
+        }
         foreach(string taskName in customTaskNames){
-            genericMenu.AddItem(new GUIContent("Add " + taskName), false, () => OnClickAddNode(mousePosition, taskName)); 
+            genericMenu.AddItem(new GUIContent("Actions/"+taskName), false, () => OnClickAddNode(mousePosition, taskName)); 
         }
         genericMenu.ShowAsContext();
 
