@@ -41,7 +41,12 @@ public class GUINode : NodeBase
         this.decoratorStyle = decoratorStyle; 
         this.selectedDecoratorStyle = selectedDecoratorStyle; 
         ChildPoint = new ConnectionPoint(this, ConnectionPointType.In, ChildPointStyle, OnClickChildPoint);
-        ParentPoint = new ConnectionPoint(this, ConnectionPointType.Out, ParentPointStyle, OnClickParentPoint);
+        if (task=="Root"){
+            ParentPoint = null;
+        }
+        else{
+            ParentPoint = new ConnectionPoint(this, ConnectionPointType.Out, ParentPointStyle, OnClickParentPoint);
+        }
         defaultNodeStyle = nodeStyle;
         selectedNodeStyle = selectedStyle;
         OnRemoveNode = OnClickRemoveNode;
@@ -72,8 +77,12 @@ public class GUINode : NodeBase
 
     public override void Draw()
     {
-        ChildPoint.Draw();
-        ParentPoint.Draw();
+        if (ChildPoint != null){
+            ChildPoint.Draw();
+        }
+        if (ParentPoint != null){
+            ParentPoint.Draw();
+        }
         GUI.Box(rect, task + "\n" + name, style);
         GUI.Box(callNumberRect, callNumber.ToString(), callNumberStyle);
         foreach (GUIDecorator decorator in decorators){
