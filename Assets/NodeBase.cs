@@ -91,7 +91,7 @@ public class NodeBase
     }
     public virtual void Draw()
     {
-        GUI.Box(rect, task + "\n" + name, style);
+        GUI.Box(rect, name + "\n" + task, style);
         GUI.Box(callNumberRect, callNumber.ToString(), style);
     }
 

@@ -9,7 +9,7 @@ public class GUINode : NodeBase
     private GUIStyle decoratorStyle;
     private GUIStyle selectedDecoratorStyle;
     private Vector2 initDecoratorPos = new Vector2(0f,0f);
-    private float decoratorHeight = 35f;
+    private float decoratorHeight = 50f;
     public ConnectionPoint ChildPoint;
     public ConnectionPoint ParentPoint;
     private List<Connection> childNodes;
@@ -35,7 +35,7 @@ public class GUINode : NodeBase
         this.task = task;
         rect = new Rect(position.x, position.y, width, height);
         initDecoratorPos = new Vector2(0, rect.height*.5f);
-        callNumberRect = new Rect(position.x, position.y -10, width/6, width/6);
+        callNumberRect = new Rect(position.x, position.y, width/6, width/6);
         style = nodeStyle;
         this.callNumberStyle = callNumberStyle;
         this.decoratorStyle = decoratorStyle; 
@@ -68,9 +68,11 @@ public class GUINode : NodeBase
                 childNode.GetChildNode().Drag(delta);
             }
         }
-        if (decorators != null && IsSelected()){
+        if (decorators != null){
             foreach(GUIDecorator decorator in decorators){
-                decorator.Drag(delta);
+                if (!decorator.IsSelected()){
+                    decorator.Drag(delta);
+                }
             }
         }
     }
@@ -83,7 +85,7 @@ public class GUINode : NodeBase
         if (ParentPoint != null){
             ParentPoint.Draw();
         }
-        GUI.Box(rect, task + "\n" + name, style);
+        GUI.Box(rect, "\n" + name + "\n" + task, style);
         GUI.Box(callNumberRect, callNumber.ToString(), callNumberStyle);
         foreach (GUIDecorator decorator in decorators){
             decorator.Draw();

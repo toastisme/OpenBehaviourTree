@@ -129,8 +129,6 @@ public class NodeBasedEditor : EditorWindow
         }
         ProcessEvents(Event.current);
 
-        DrawDetailsPanel();
-
         if (GUI.changed) {
             Repaint();
             UpdateCallNumbers(bt.nodes[0], 1);
@@ -143,6 +141,7 @@ public class NodeBasedEditor : EditorWindow
         DrawConnections();
 
         DrawConnectionLine(Event.current);
+        DrawDetailsPanel();
     }
 
     private void DrawDetailsPanel(){

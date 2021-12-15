@@ -26,7 +26,7 @@ public class GUIDecorator : NodeBase
         this.UpdatePanelDetails = UpdatePanelDetails;
         this.OnRemoveDecorator = OnClickRemoveDecorator;
         this.rect = new Rect(position[0], position[1], width, height);
-        this.callNumberRect = new Rect(position.x, position.y -10, width/6, width/6);
+        this.callNumberRect = new Rect(position.x, position.y, width/6, width/6);
         this.callNumberStyle = callNumberStyle;
         defaultNodeStyle = nodeStyle;
         this.selectedNodeStyle = selectedStyle;
