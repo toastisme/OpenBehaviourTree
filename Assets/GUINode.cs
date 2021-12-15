@@ -15,6 +15,7 @@ public class GUINode : NodeBase
     private List<Connection> childNodes;
     private Connection parentNode;
     public Action<GUINode> OnRemoveNode;
+    public List<string> customDecoratorConditions;
 
     public GUINode(string task,
                    Vector2 position, 
@@ -30,7 +31,9 @@ public class GUINode : NodeBase
                    Action<NodeBase> UpdatePanelDetails,
                    Action<ConnectionPoint> OnClickChildPoint, 
                    Action<ConnectionPoint> OnClickParentPoint, 
-                   Action<GUINode> OnClickRemoveNode)
+                   Action<GUINode> OnClickRemoveNode,
+                   List<string> customDecoratorConditions
+                   )
     {
         this.task = task;
         rect = new Rect(position.x, position.y, width, height);
@@ -51,7 +54,7 @@ public class GUINode : NodeBase
         selectedNodeStyle = selectedStyle;
         OnRemoveNode = OnClickRemoveNode;
         this.UpdatePanelDetails = UpdatePanelDetails;
-
+        this.customDecoratorConditions = customDecoratorConditions;
         childNodes = new List<Connection>();
         decorators = new List<GUIDecorator>();
 
@@ -100,8 +103,10 @@ public class GUINode : NodeBase
     {
         if (!IsRootNode()){
             GenericMenu genericMenu = new GenericMenu();
+            foreach(string decoratorCondition in customDecoratorConditions){
+                genericMenu.AddItem(new GUIContent("Add Decorator/" + decoratorCondition), false, () => OnClickAddDecorator(decoratorCondition));
+            }
             genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
-            genericMenu.AddItem(new GUIContent("Add Decorator"), false, OnClickAddDecorator);
             genericMenu.ShowAsContext();
         }
     }
@@ -145,8 +150,8 @@ public class GUINode : NodeBase
         decorators.Remove(decorator);
     }
 
-    private void OnClickAddDecorator(){
-        decorators.Add(new GUIDecorator("Decorator",
+    private void OnClickAddDecorator(string decoratorCondition){
+        decorators.Add(new GUIDecorator(decoratorCondition,
                               new Vector2(
                                   rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(decoratorHeight*decorators.Count+1)), 
                               rect.width,
