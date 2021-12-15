@@ -6,7 +6,7 @@ using UnityEngine;
 public class NodeBase 
 {
     public bool isDragged;
-    public bool isSelected;
+    private bool isSelected;
     public GUIStyle style;
     public GUIStyle defaultNodeStyle;
     public GUIStyle selectedNodeStyle;
@@ -48,19 +48,17 @@ public class NodeBase
                     {
                         isDragged = true;
                         GUI.changed = true;
-                        isSelected = true;
-                        style = selectedNodeStyle;
+                        SetSelected(true);
                         UpdatePanelDetails(this);
                     }
                     else
                     {
                         GUI.changed = true;
-                        isSelected = false;
-                        style = defaultNodeStyle;
+                        SetSelected(false);
                     }
                 }
 
-                if (e.button == 1 && isSelected && rect.Contains(e.mousePosition))
+                if (e.button == 1 && rect.Contains(e.mousePosition))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -98,5 +96,16 @@ public class NodeBase
     }
 
     public bool IsSelected(){return isSelected;}
+
+    public void SetSelected(bool selected){
+        if (selected){
+            isSelected = true;
+            style = selectedNodeStyle;
+        }
+        else{
+            isSelected = false;
+            style = defaultNodeStyle;
+        }
+    }
 
 }

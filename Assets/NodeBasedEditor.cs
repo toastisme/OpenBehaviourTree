@@ -124,14 +124,6 @@ public class NodeBasedEditor : EditorWindow
 
     private void OnGUI()
     {
-        DrawGrid(20, 0.2f, Color.gray);
-        DrawGrid(100, 0.4f, Color.gray);
-
-        DrawNodes();
-        DrawConnections();
-
-        DrawConnectionLine(Event.current);
-
         if (MousePosOnGrid(Event.current.mousePosition)){
             ProcessNodeEvents(Event.current);
         }
@@ -143,6 +135,14 @@ public class NodeBasedEditor : EditorWindow
             Repaint();
             UpdateCallNumbers(bt.nodes[0], 1);
         }
+
+        DrawGrid(20, 0.2f, Color.gray);
+        DrawGrid(100, 0.4f, Color.gray);
+
+        DrawNodes();
+        DrawConnections();
+
+        DrawConnectionLine(Event.current);
     }
 
     private void DrawDetailsPanel(){

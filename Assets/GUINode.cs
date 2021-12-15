@@ -68,7 +68,7 @@ public class GUINode : NodeBase
                 childNode.GetChildNode().Drag(delta);
             }
         }
-        if (decorators != null){
+        if (decorators != null && IsSelected()){
             foreach(GUIDecorator decorator in decorators){
                 decorator.Drag(delta);
             }
@@ -107,17 +107,26 @@ public class GUINode : NodeBase
     public override bool ProcessEvents(Event e)
     {
         bool guiChanged = false;
-        bool guiChangedFromNode =  base.ProcessEvents(e);
-        if (guiChangedFromNode){
-            guiChanged = true;
-        }
+        bool decoratorSelected = false;
         if (decorators != null){
             foreach(GUIDecorator decorator in decorators){
                 bool guiChangedFromDecorator = decorator.ProcessEvents(e);
                 if (!guiChanged && guiChangedFromDecorator){
                     guiChanged = true;
                 }
+                if (!decoratorSelected && decorator.IsSelected()){
+                    decoratorSelected = true;
+                }
             }
+        }
+        if (!decoratorSelected){
+            bool guiChangedFromNode =  base.ProcessEvents(e);
+            if (guiChangedFromNode){
+                guiChanged = true;
+            }
+        }
+        else{
+            SetSelected(false);
         }
         return guiChanged;
     }
@@ -140,6 +149,7 @@ public class GUINode : NodeBase
                                   rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(decoratorHeight*decorators.Count+1)), 
                               rect.width,
                               decoratorHeight, 
+                              this,
                               decoratorStyle, 
                               selectedDecoratorStyle, 
                               callNumberStyle,

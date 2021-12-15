@@ -6,16 +6,19 @@ using UnityEngine;
 public class GUIDecorator : NodeBase
 {
     public Action<GUIDecorator> OnRemoveDecorator;
+    GUINode parentNode;
     public GUIDecorator(string task,
                    Vector2 position, 
                    float width, 
                    float height, 
-                   GUIStyle nodeStyle, 
+                   GUINode parentNode,
+                   GUIStyle nodeStyle,
                    GUIStyle selectedStyle, 
                    GUIStyle callNumberStyle,
                    Action<NodeBase> UpdatePanelDetails,
                    Action<GUIDecorator> OnClickRemoveDecorator)
     {
+        this.parentNode = parentNode;
         this.style = nodeStyle;
         this.selectedNodeStyle = selectedStyle;
         this.task = task;
@@ -36,6 +39,19 @@ public class GUIDecorator : NodeBase
         }
     }
 
-    protected override void ProcessContextMenu(){}
+    public override void Drag(Vector2 delta)
+    {
+        if (IsSelected()){
+            parentNode.Drag(delta);
+        }
+        rect.position += delta;
+        callNumberRect.position += delta;
+    }
+
+    protected override void ProcessContextMenu(){
+        GenericMenu genericMenu = new GenericMenu();
+        genericMenu.AddItem(new GUIContent("Remove decorator"), false, RemoveDecorator);
+        genericMenu.ShowAsContext();
+    }
 
 }
