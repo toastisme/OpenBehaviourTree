@@ -34,7 +34,6 @@ public class NodeBasedEditor : EditorWindow
 
     List<string> decisionTaskNames = new List<string>{"Priority Selector", "Probability Selector", "Sequence"};
     List<string> customTaskNames;
-    List<string> customDecoratorConditions;
 
     /*
     [MenuItem("Window/Node Based Editor")]
@@ -97,7 +96,6 @@ public class NodeBasedEditor : EditorWindow
         ParentPointStyle.alignment = TextAnchor.MiddleCenter;
 
         customTaskNames = GetCustomTaskNames();
-        customDecoratorConditions = GetCustomDecoratorConditions();
     }
 
     private void AddRootNode(){
@@ -118,7 +116,7 @@ public class NodeBasedEditor : EditorWindow
                               OnClickChildPoint, 
                               OnClickParentPoint, 
                               OnClickRemoveNode,
-                              customDecoratorConditions));
+                              bt));
     }
 
     private void ResetRootNode(){
@@ -464,7 +462,7 @@ public class NodeBasedEditor : EditorWindow
                               OnClickChildPoint, 
                               OnClickParentPoint, 
                               OnClickRemoveNode,
-                              customDecoratorConditions));
+                              bt));
         selectedParentPoint = bt.nodes[bt.nodes.Count-1].GetParentPoint();
         CreateConnection();
         ClearConnectionSelection();
@@ -601,24 +599,10 @@ public class NodeBasedEditor : EditorWindow
              .Select(type => Activator.CreateInstance(type) as BehaviourTreeTask).ToList();
      }
 
-     List<BehaviourTreeDecorator> GetCustomDecorators()
-     {
-         return AppDomain.CurrentDomain.GetAssemblies()
-             .SelectMany(assembly => assembly.GetTypes())
-             .Where(type => type.IsSubclassOf(typeof(BehaviourTreeDecorator)))
-             .Select(type => Activator.CreateInstance(type) as BehaviourTreeDecorator).ToList();
-     }
-
      List<string> GetCustomTaskNames(){
          List<string> taskNames = new List<string>();
          GetCustomTasks().ForEach(x => taskNames.Add(x.GetType().ToString()));
          return taskNames;
-     }
-
-     List<string> GetCustomDecoratorConditions(){
-         List<string> decoratorConditions = new List<string>();
-         GetCustomDecorators().ForEach(x => decoratorConditions.Add(x.GetType().ToString()));
-         return decoratorConditions;
      }
 
 }

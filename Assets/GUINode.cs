@@ -15,7 +15,7 @@ public class GUINode : NodeBase
     private List<Connection> childNodes;
     private Connection parentNode;
     public Action<GUINode> OnRemoveNode;
-    public List<string> customDecoratorConditions;
+    BehaviourTree bt;
 
     public GUINode(string task,
                    Vector2 position, 
@@ -32,7 +32,7 @@ public class GUINode : NodeBase
                    Action<ConnectionPoint> OnClickChildPoint, 
                    Action<ConnectionPoint> OnClickParentPoint, 
                    Action<GUINode> OnClickRemoveNode,
-                   List<string> customDecoratorConditions
+                   BehaviourTree behaviourTree
                    )
     {
         this.task = task;
@@ -54,7 +54,7 @@ public class GUINode : NodeBase
         selectedNodeStyle = selectedStyle;
         OnRemoveNode = OnClickRemoveNode;
         this.UpdatePanelDetails = UpdatePanelDetails;
-        this.customDecoratorConditions = customDecoratorConditions;
+        this.bt = behaviourTree;
         childNodes = new List<Connection>();
         decorators = new List<GUIDecorator>();
 
@@ -103,8 +103,8 @@ public class GUINode : NodeBase
     {
         if (!IsRootNode()){
             GenericMenu genericMenu = new GenericMenu();
-            foreach(string decoratorCondition in customDecoratorConditions){
-                genericMenu.AddItem(new GUIContent("Add Decorator/" + decoratorCondition), false, () => OnClickAddDecorator(decoratorCondition));
+            foreach(string boolName in bt.blackboard.GetBoolDict().Keys){
+                genericMenu.AddItem(new GUIContent("Add Decorator/" + boolName), false, () => OnClickAddDecorator(boolName));
             }
             genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
             genericMenu.ShowAsContext();
@@ -150,10 +150,10 @@ public class GUINode : NodeBase
         decorators.Remove(decorator);
     }
 
-    private void OnClickAddDecorator(string decoratorCondition){
-        decorators.Add(new GUIDecorator(decoratorCondition,
+    private void OnClickAddDecorator(string conditionName){
+        decorators.Add(new GUIDecorator(conditionName,
                               new Vector2(
-                                  rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(decoratorHeight*decorators.Count+1)), 
+                              rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(decoratorHeight*decorators.Count+1)), 
                               rect.width,
                               decoratorHeight, 
                               this,
