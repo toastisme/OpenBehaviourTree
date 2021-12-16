@@ -201,6 +201,15 @@ public class GUINode : NodeBase
     public bool IsRootNode(){
         return (task == "Root");
     }
+    public void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
+        if (decorators != null){
+            foreach(GUIDecorator decorator in decorators){
+                if (decorator.GetTask() == oldKeyName){
+                    decorator.SetTask(newKeyName);
+                }
+            }
+        }
+    }
 
 
 

@@ -201,6 +201,9 @@ public class NodeBasedEditor : EditorWindow
             if (newName != activeBlackboardKey[0]){
                 if (!bt.blackboard.GetAllKeyNames().Contains(newName) && newName != ""){
                     bt.blackboard.RenameKey(keyName, newName);
+                    if (keyType == "bool"){
+                        RefreshDecoratorTasks(keyName, newName);
+                    }
                 }
                 else{
                     newName = activeBlackboardKey[0];
@@ -584,6 +587,14 @@ public class NodeBasedEditor : EditorWindow
             callNumber = UpdateCallNumbers(connection.GetChildNode(), callNumber);
         }
         return callNumber;
+    }
+
+    private void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
+        if (bt.nodes!=null){
+            foreach(GUINode node in bt.nodes){
+                node.RefreshDecoratorTasks(oldKeyName, newKeyName);
+            }
+        }
     }
 
      List<BehaviourTreeTask> GetCustomTasks()
