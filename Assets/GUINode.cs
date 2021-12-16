@@ -103,7 +103,7 @@ public class GUINode : NodeBase
     {
         if (!IsRootNode()){
             GenericMenu genericMenu = new GenericMenu();
-            foreach(string boolName in bt.blackboard.GetBoolDict().Keys){
+            foreach(string boolName in bt.blackboard.GetBoolKeys().Keys){
                 genericMenu.AddItem(new GUIContent("Add Decorator/" + boolName), false, () => OnClickAddDecorator(boolName));
             }
             genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);

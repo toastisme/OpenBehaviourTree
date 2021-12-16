@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System;
 
@@ -34,6 +35,10 @@ public class NodeBasedEditor : EditorWindow
 
     List<string> decisionTaskNames = new List<string>{"Priority Selector", "Probability Selector", "Sequence"};
     List<string> customTaskNames;
+
+    // Blackboard
+    string[] activeBlackboardKey = {"","",""};
+    bool renamingBlackboardKey = false;
 
     /*
     [MenuItem("Window/Node Based Editor")]
@@ -186,6 +191,40 @@ public class NodeBasedEditor : EditorWindow
         }
     }
 
+    void DrawKey(string keyName, string keyType){
+        if (keyName == activeBlackboardKey[0] && renamingBlackboardKey){
+            activeBlackboardKey[1] = GUILayout.TextField(activeBlackboardKey[1], 50);
+        }
+        else if(keyName == activeBlackboardKey[0] && !renamingBlackboardKey){
+            // update name if possible and draw button 
+            string newName = activeBlackboardKey[1];
+            if (newName != activeBlackboardKey[0]){
+                if (!bt.blackboard.GetAllKeyNames().Contains(newName) && newName != ""){
+                    bt.blackboard.RenameKey(keyName, newName);
+                }
+                else{
+                    newName = activeBlackboardKey[0];
+                }
+                if (GUILayout.Button(newName + " (" + keyType + ")")){
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddItem(new GUIContent("Rename"), false, () => OnClickRenameBlackboardKey(keyName));
+                    menu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(keyName));
+                    menu.ShowAsContext();
+                }
+            }
+            activeBlackboardKey[0] = "";
+            activeBlackboardKey[1] = "";
+        }
+        else{
+            // draw button
+            if (GUILayout.Button(keyName + " (" + keyType + ")")){
+                GenericMenu menu = new GenericMenu();
+                menu.AddItem(new GUIContent("Rename"), false, () => OnClickRenameBlackboardKey(keyName));
+                menu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(keyName));
+                menu.ShowAsContext();
+            }
+        }
+    }
     void DrawBlackboardDetails(int unusedWindowID){
         if (GUILayout.Button("New Key")){
             GenericMenu genericMenu = new GenericMenu();
@@ -196,67 +235,15 @@ public class NodeBasedEditor : EditorWindow
         }
 
         // Display current keys
-        GUILayout.Label("Int Keys");
-        foreach(string label in bt.blackboard.GetIntDict().Keys){
-            if (GUILayout.Button(label)){
-                GenericMenu intKeyMenu = new GenericMenu();
-                intKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
-                intKeyMenu.ShowAsContext();
-            }
-        }
+        ICollection keyNamesCollection = bt.blackboard.GetAllKeyNames().Keys;
+        ICollection keyTypesCollection = bt.blackboard.GetAllKeyNames().Values;
+        String[] keyNames = new String[keyNamesCollection.Count];
+        String[] keyTypes = new String[keyNamesCollection.Count];
+        keyNamesCollection.CopyTo(keyNames,0);
+        keyTypesCollection.CopyTo(keyTypes,0);
+        for (int i=0; i<keyNames.Length; i++){
+            DrawKey(keyNames[i], keyTypes[i]);
 
-        GUILayout.Label("Float Keys");
-        foreach(string label in bt.blackboard.GetFloatDict().Keys){
-            if (GUILayout.Button(label)){
-                GenericMenu floatKeyMenu = new GenericMenu();
-                floatKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
-                floatKeyMenu.ShowAsContext();
-            }
-        }
-
-        GUILayout.Label("Bool Keys");
-        foreach(string label in bt.blackboard.GetBoolDict().Keys){
-            if (GUILayout.Button(label)){
-                GenericMenu boolKeyMenu = new GenericMenu();
-                boolKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
-                boolKeyMenu.ShowAsContext();
-            }
-        }
-
-        GUILayout.Label("String Keys");
-        foreach(string label in bt.blackboard.GetStringDict().Keys){
-            if (GUILayout.Button(label)){
-                GenericMenu stringKeyMenu = new GenericMenu();
-                stringKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
-                stringKeyMenu.ShowAsContext();
-            }
-        }
-
-        GUILayout.Label("GameObject Keys");
-        foreach(string label in bt.blackboard.GetGameObjectDict().Keys){
-            if (GUILayout.Button(label)){
-                GenericMenu gameObjectKeyMenu = new GenericMenu();
-                gameObjectKeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
-                gameObjectKeyMenu.ShowAsContext();
-            }
-        }
-
-        GUILayout.Label("Vector3 Keys");
-        foreach(string label in bt.blackboard.GetVector3Dict().Keys){
-            if (GUILayout.Button(label)){
-                GenericMenu vector3KeyMenu = new GenericMenu();
-                vector3KeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
-                vector3KeyMenu.ShowAsContext();
-            }
-        }
-
-        GUILayout.Label("Vector2 Keys");
-        foreach(string label in bt.blackboard.GetVector2Dict().Keys){
-            if (GUILayout.Button(label)){
-                GenericMenu vector2KeyMenu = new GenericMenu();
-                vector2KeyMenu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(label));
-                vector2KeyMenu.ShowAsContext();
-            }
         }
     }
 
@@ -269,6 +256,11 @@ public class NodeBasedEditor : EditorWindow
 
     void OnClickRemoveBlackboardKey(string keyName){
         bt.blackboard.RemoveKey(keyName);
+    }
+
+    void OnClickRenameBlackboardKey(string keyName){
+        renamingBlackboardKey = true;
+        activeBlackboardKey[0] = keyName;
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
@@ -337,6 +329,9 @@ public class NodeBasedEditor : EditorWindow
 
                 if (e.button == 1)
                 {
+                    if (renamingBlackboardKey){
+                        renamingBlackboardKey = false;
+                    }
                     ClearConnectionSelection();
                 }
             break;
