@@ -19,7 +19,10 @@ public class NodeBasedEditor : EditorWindow
     private GUIStyle callNumberStyle;
     private GUIStyle decoratorStyle;
     private GUIStyle selectedDecoratorStyle;
+    private GUIStyle probabilityWeightStyle;
+    private GUIStyle selectedProbabilityWeightStyle;
     private Vector2 nodeSize = new Vector2(200, 100);
+    private Vector2 probabilityWeightSize = new Vector2(200, 50);
 
     private ConnectionPoint selectedChildPoint;
     private ConnectionPoint selectedParentPoint;
@@ -81,6 +84,18 @@ public class NodeBasedEditor : EditorWindow
         selectedDecoratorStyle.border = new RectOffset(12, 12, 12, 12);
         selectedDecoratorStyle.normal.textColor = Color.white;
         selectedDecoratorStyle.alignment = TextAnchor.MiddleCenter;
+
+        probabilityWeightStyle = new GUIStyle();
+        probabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        probabilityWeightStyle.border = new RectOffset(12, 12, 12, 12);
+        probabilityWeightStyle.normal.textColor = Color.white;
+        probabilityWeightStyle.alignment = TextAnchor.MiddleCenter;
+
+        selectedProbabilityWeightStyle = new GUIStyle();
+        selectedProbabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
+        selectedProbabilityWeightStyle.border = new RectOffset(12, 12, 12, 12);
+        selectedProbabilityWeightStyle.normal.textColor = Color.white;
+        selectedProbabilityWeightStyle.alignment = TextAnchor.MiddleCenter;
 
         callNumberStyle = new GUIStyle();
         callNumberStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
@@ -360,22 +375,32 @@ public class NodeBasedEditor : EditorWindow
 
     private void ProcessNodeEvents(Event e)
     {
+        bool guiChanged = false;
         if (bt.nodes != null)
         {
             for (int i = bt.nodes.Count - 1; i >= 0; i--)
             {
-                bool guiChanged = bt.nodes[i].ProcessEvents(e);
-
-                if (guiChanged)
-                {
-                    GUI.changed = true;
+                if (bt.nodes[i].ProcessEvents(e)){
+                    guiChanged = true;
                 }
-            }
+           }
         }
+
         if (selectedNode != null){
             if (!selectedNode.IsSelected()){
                 selectedNode = null;
             }
+        }
+
+        if (bt.connections != null){
+            for (int i = bt.connections.Count - 1; i>=0; i--){
+                if (bt.connections[i].ProcessProbabilityWeightEvents(e)){
+                    guiChanged = true;
+                }
+            }
+        }
+        if (guiChanged){
+            GUI.changed = true;
         }
     }
 
@@ -384,10 +409,10 @@ public class NodeBasedEditor : EditorWindow
         if (selectedChildPoint != null && selectedParentPoint == null)
         {
             Handles.DrawBezier(
-                selectedChildPoint.rect.center,
+                selectedChildPoint.GetRect().center,
                 e.mousePosition,
-                selectedChildPoint.rect.center,
-                selectedChildPoint.rect.center,
+                selectedChildPoint.GetRect().center,
+                selectedChildPoint.GetRect().center,
                 Color.white,
                 null,
                 2f
@@ -553,11 +578,19 @@ public class NodeBasedEditor : EditorWindow
             bt.connections = new List<Connection>();
         }
 
-        bt.connections.Add(new Connection(selectedChildPoint, selectedParentPoint, OnClickRemoveConnection));
+        Connection newConnection = new Connection(selectedChildPoint, selectedParentPoint, OnClickRemoveConnection);
         GUINode parentNode = selectedChildPoint.GetNode();
         GUINode childNode = selectedParentPoint.GetNode();
-        parentNode.AddChildNode(bt.connections[bt.connections.Count-1]);
-        childNode.SetParentNode(bt.connections[bt.connections.Count-1]);
+        parentNode.AddChildNode(newConnection);
+        childNode.SetParentNode(newConnection);
+        if (parentNode.GetTask() == "Probability Selector"){
+            newConnection.AddProbabilityWeight(probabilityWeightSize[0],
+                                               probabilityWeightSize[1],
+                                               probabilityWeightStyle,
+                                               selectedProbabilityWeightStyle,
+                                               UpdatePanelDetails);
+        } 
+        bt.connections.Add(newConnection);
     }
 
     private void ClearConnectionSelection()

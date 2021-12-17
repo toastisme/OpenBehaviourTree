@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class GUINode : NodeBase
+public class GUINode : CallableNode
 {
     private List<GUIDecorator> decorators;
     private GUIStyle decoratorStyle;

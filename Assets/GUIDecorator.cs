@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class GUIDecorator : NodeBase
+public class GUIDecorator : CallableNode
 {
     public Action<GUIDecorator> OnRemoveDecorator;
     GUINode parentNode;

@@ -10,12 +10,9 @@ public class NodeBase
     public GUIStyle style;
     public GUIStyle defaultNodeStyle;
     public GUIStyle selectedNodeStyle;
-    public GUIStyle callNumberStyle;
     public Action<NodeBase> UpdatePanelDetails;
 
     protected Rect rect;
-    protected Rect callNumberRect;
-    protected int callNumber = 0;
     protected string name = "";
     protected string task  = "";
     public string GetName(){return name;}
@@ -31,14 +28,10 @@ public class NodeBase
     public void SetPosition(Vector2 position){
         this.rect.position = position;
     }
-    public Rect GetCallNumberRect(){return callNumberRect;}
-    public int GetCallNumber(){return callNumber;}
-    public void SetCallNumber(int callNumber){
-        this.callNumber = callNumber;
-    }
 
     public virtual bool ProcessEvents(Event e)
     {
+        bool guiChanged = false;
         switch (e.type)
         {
             case EventType.MouseDown:
@@ -47,13 +40,13 @@ public class NodeBase
                     if (rect.Contains(e.mousePosition))
                     {
                         isDragged = true;
-                        GUI.changed = true;
+                        guiChanged = true;
                         SetSelected(true);
                         UpdatePanelDetails(this);
                     }
                     else
                     {
-                        GUI.changed = true;
+                        guiChanged = true;
                         SetSelected(false);
                     }
                 }
@@ -79,7 +72,7 @@ public class NodeBase
                 break;
         }
 
-        return false;
+        return guiChanged;
     }
 
     protected virtual void ProcessContextMenu(){}
@@ -87,12 +80,10 @@ public class NodeBase
     public virtual void Drag(Vector2 delta)
     {
         rect.position += delta;
-        callNumberRect.position += delta;
     }
     public virtual void Draw()
     {
         GUI.Box(rect, name + "\n" + task, style);
-        GUI.Box(callNumberRect, callNumber.ToString(), style);
     }
 
     public bool IsSelected(){return isSelected;}

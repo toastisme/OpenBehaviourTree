@@ -9,8 +9,15 @@ public class Connection
     public ConnectionPoint parentPoint;
     private GUINode parentNode;
     public Action<Connection> OnClickRemoveConnection;
+    private GUIProbabilityWeight probabilityWeight;
 
-    public Connection(ConnectionPoint parentPoint, ConnectionPoint childPoint, Action<Connection> OnClickRemoveConnection)
+    private Vector2 probabilityWeightOffset;
+
+
+    public Connection(ConnectionPoint parentPoint,
+                      ConnectionPoint childPoint,
+                      Action<Connection> OnClickRemoveConnection
+                      )
     {
         this.childPoint = childPoint;
         childNode = childPoint.GetNode();
@@ -19,25 +26,69 @@ public class Connection
         this.OnClickRemoveConnection = OnClickRemoveConnection;
     }   
 
+    public void AddProbabilityWeight(float width, 
+                                     float height,
+                                     GUIStyle nodeStyle,
+                                     GUIStyle selectedNodeStyle,
+                                     Action<NodeBase> UpdatePanelDetails
+                                     ){
+
+        probabilityWeight = new GUIProbabilityWeight("1",
+                                                        GetCentrePos(),
+                                                        width,
+                                                        height,
+                                                        nodeStyle,
+                                                        selectedNodeStyle,
+                                                        UpdatePanelDetails
+                                                        );
+        probabilityWeightOffset = new Vector2(width*.5f, 0);
+    }
+    public void UpdateWeightPosition(){
+        if (HasProbabilityWeight()){
+            probabilityWeight.Move(GetCentrePos() - probabilityWeightOffset);
+        }
+    }
+
+    public bool HasProbabilityWeight(){
+        return (probabilityWeight != null);
+    }
+
+    public bool ProcessProbabilityWeightEvents(Event e){
+        if (HasProbabilityWeight()){
+            UpdateWeightPosition();
+            return probabilityWeight.ProcessEvents(e);
+        }
+        return false;
+    }
+
+
+
+
     public void Draw()
     {
         Handles.DrawBezier(
-            childPoint.rect.center,
-            parentPoint.rect.center,
-            childPoint.rect.center,
-            parentPoint.rect.center,
+            childPoint.GetRect().center,
+            parentPoint.GetRect().center,
+            childPoint.GetRect().center,
+            parentPoint.GetRect().center,
             Color.white,
             null,
             2f
         );
 
-        if (Handles.Button((childPoint.rect.center + parentPoint.rect.center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
+        if (HasProbabilityWeight()){
+            probabilityWeight.Draw();
+        }
+
+        /*
+        if (Handles.Button((childPoint.GetRect().center + parentPoint.GetRect().center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
         {
             if (OnClickRemoveConnection != null)
             {
                 OnClickRemoveConnection(this);
             }
         }
+        */
     }
 
     public GUINode GetParentNode(){
@@ -45,5 +96,9 @@ public class Connection
     }
     public GUINode GetChildNode(){
         return childNode;
+    }
+
+    public Vector2 GetCentrePos(){
+        return (childPoint.GetRect().center + parentNode.GetRect().center)*.5f;        
     }
 }

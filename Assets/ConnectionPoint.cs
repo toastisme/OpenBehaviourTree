@@ -5,7 +5,7 @@ public enum ConnectionPointType { In, Out }
 
 public class ConnectionPoint
 {
-    public Rect rect;
+    private Rect rect;
     private Rect nodeRect;
 
     public ConnectionPointType type;
@@ -27,6 +27,10 @@ public class ConnectionPoint
     }
 
     public GUINode GetNode(){return node;}
+    public Rect GetRect(){
+        return rect;
+    }
+
 
     public void Draw()
     {
