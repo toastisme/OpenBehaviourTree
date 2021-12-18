@@ -16,6 +16,7 @@ public class GUIProbabilityWeight : NodeBase
                    BehaviourTree behaviourTree
                    )
     {
+        SetNodeTypeFromTask(task);
         this.style = nodeStyle;
         this.selectedNodeStyle = selectedStyle;
         this.task = task;

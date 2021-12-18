@@ -36,7 +36,9 @@ public class NodeBasedEditor : EditorWindow
     private string[] toolbarStrings = {"Selected Node", "Blackboard"};
     private int toolbarInt = 0;
 
-    List<string> decisionTaskNames = new List<string>{"Priority Selector", "Probability Selector", "Sequence"};
+    List<NodeType> decisionNodeTypes = new List<NodeType>{NodeType.PrioritySelector, 
+                                                        NodeType.ProbabilitySelector,
+                                                        NodeType.SequenceSelector};
     List<string> customTaskNames;
 
     // Blackboard
@@ -426,22 +428,15 @@ public class NodeBasedEditor : EditorWindow
         }
     }
 
-    private void ProcessContextMenu(Vector2 mousePosition)
-    {
-        GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Add Selector"), false, () => OnClickAddNode(mousePosition, "Selector")); 
-        genericMenu.AddItem(new GUIContent("Add Sequence"), false, () => OnClickAddNode(mousePosition, "Sequence")); 
-        genericMenu.ShowAsContext();
-    }
-
     private void ProcessCreateContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
-        foreach(string taskName in decisionTaskNames){
-            genericMenu.AddItem(new GUIContent(taskName), false, () => OnClickAddNode(mousePosition, taskName)); 
+        foreach(NodeType nodeType in decisionNodeTypes){
+            string nodeTypeString = NodeBase.GetStringFromNodeType(nodeType);
+            genericMenu.AddItem(new GUIContent(nodeTypeString), false, () => OnClickAddNode(mousePosition, nodeType, nodeTypeString)); 
         }
         foreach(string taskName in customTaskNames){
-            genericMenu.AddItem(new GUIContent("Actions/"+taskName), false, () => OnClickAddNode(mousePosition, taskName)); 
+            genericMenu.AddItem(new GUIContent("Actions/"+taskName), false, () => OnClickAddNode(mousePosition, NodeType.Action, taskName)); 
         }
         genericMenu.ShowAsContext();
 
@@ -462,30 +457,52 @@ public class NodeBasedEditor : EditorWindow
         GUI.changed = true;
     }
 
-    private void OnClickAddNode(Vector2 mousePosition, string name)
+    private void OnClickAddNode(Vector2 mousePosition, NodeType nodeType, string name)
     {
         if (bt.nodes == null)
         {
             bt.nodes = new List<GUINode>();
         }
 
-        bt.nodes.Add(new GUINode(
-                              name,
-                              mousePosition, 
-                              nodeSize[0], 
-                              nodeSize[1], 
-                              nodeStyle, 
-                              selectedNodeStyle, 
-                              ChildPointStyle, 
-                              ParentPointStyle, 
-                              callNumberStyle,
-                              decoratorStyle,
-                              selectedDecoratorStyle,
-                              UpdatePanelDetails,
-                              OnClickChildPoint, 
-                              OnClickParentPoint, 
-                              OnClickRemoveNode,
-                              bt));
+        if (nodeType == NodeType.Action){
+            bt.nodes.Add(new GUIActionNode(
+                                name,
+                                mousePosition, 
+                                nodeSize[0], 
+                                nodeSize[1], 
+                                nodeStyle, 
+                                selectedNodeStyle, 
+                                ChildPointStyle, 
+                                ParentPointStyle, 
+                                callNumberStyle,
+                                decoratorStyle,
+                                selectedDecoratorStyle,
+                                UpdatePanelDetails,
+                                OnClickChildPoint, 
+                                OnClickParentPoint, 
+                                OnClickRemoveNode,
+                                bt,
+                                customTaskNames));
+        }
+        else{
+            bt.nodes.Add(new GUINode(
+                                    name,
+                                mousePosition, 
+                                nodeSize[0], 
+                                nodeSize[1], 
+                                nodeStyle, 
+                                selectedNodeStyle, 
+                                ChildPointStyle, 
+                                ParentPointStyle, 
+                                callNumberStyle,
+                                decoratorStyle,
+                                selectedDecoratorStyle,
+                                UpdatePanelDetails,
+                                OnClickChildPoint, 
+                                OnClickParentPoint, 
+                                OnClickRemoveNode,
+                                bt));
+        }
         selectedParentPoint = bt.nodes[bt.nodes.Count-1].GetParentPoint();
         CreateConnection();
         ClearConnectionSelection();

@@ -18,6 +18,7 @@ public class GUIDecorator : CallableNode
                    Action<NodeBase> UpdatePanelDetails,
                    Action<GUIDecorator> OnClickRemoveDecorator)
     {
+        SetNodeTypeFromTask(task);
         this.parentNode = parentNode;
         this.style = nodeStyle;
         this.selectedNodeStyle = selectedStyle;

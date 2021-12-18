@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class GUINode : CallableNode
 {
-    private List<GUIDecorator> decorators;
-    private GUIStyle decoratorStyle;
-    private GUIStyle selectedDecoratorStyle;
-    private Vector2 initDecoratorPos = new Vector2(0f,0f);
-    private float decoratorHeight = 50f;
+    protected List<GUIDecorator> decorators;
+    protected GUIStyle decoratorStyle;
+    protected GUIStyle selectedDecoratorStyle;
+    protected Vector2 initDecoratorPos = new Vector2(0f,0f);
+    protected float decoratorHeight = 50f;
     public ConnectionPoint ChildPoint;
     public ConnectionPoint ParentPoint;
     private List<Connection> childNodes;
-    private Connection parentNode;
+    protected Connection parentNode;
     public Action<GUINode> OnRemoveNode;
-    BehaviourTree bt;
+    protected BehaviourTree bt;
 
     public GUINode(string task,
                    Vector2 position, 
@@ -36,6 +36,7 @@ public class GUINode : CallableNode
                    )
     {
         this.task = task;
+        SetNodeTypeFromTask(task);
         rect = new Rect(position.x, position.y, width, height);
         initDecoratorPos = new Vector2(0, rect.height*.5f);
         callNumberRect = new Rect(position.x, position.y, width/6, width/6);
@@ -144,7 +145,7 @@ public class GUINode : CallableNode
         return guiChanged;
     }
 
-    private void OnClickRemoveNode()
+    protected void OnClickRemoveNode()
     {
         if (OnRemoveNode != null)
         {
@@ -152,11 +153,11 @@ public class GUINode : CallableNode
         }
     }
 
-    private void OnClickRemoveDecorator(GUIDecorator decorator){
+    protected void OnClickRemoveDecorator(GUIDecorator decorator){
         decorators.Remove(decorator);
     }
 
-    private void OnClickAddDecorator(string conditionName){
+    protected void OnClickAddDecorator(string conditionName){
         decorators.Add(new GUIDecorator(conditionName,
                               new Vector2(
                               rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(decoratorHeight*decorators.Count+1)), 
@@ -205,7 +206,7 @@ public class GUINode : CallableNode
     }
 
     public bool IsRootNode(){
-        return (task == "Root");
+        return (nodeType == NodeType.Root);
     }
     public void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
         if (decorators != null){

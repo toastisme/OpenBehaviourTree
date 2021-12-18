@@ -3,8 +3,18 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+public enum NodeType{
+    Root,
+    SequenceSelector,
+    ProbabilitySelector,
+    PrioritySelector,
+    Action,
+    Decorator,
+    ProbabilityWeight
+}
 public class NodeBase 
 {
+    protected NodeType nodeType;
     public bool isDragged;
     private bool isSelected;
     public GUIStyle style;
@@ -97,6 +107,52 @@ public class NodeBase
             isSelected = false;
             style = defaultNodeStyle;
         }
+    }
+
+    public NodeType GetNodeType(){return nodeType;}
+
+    public static NodeType GetNodeTypeFromString(string s){
+        switch(s){
+            case "Root":
+                return NodeType.Root;
+            case "Sequence":
+                return NodeType.SequenceSelector;
+            case "Priority Selector":
+                return NodeType.PrioritySelector;
+            case "Probability Selector":
+                return NodeType.ProbabilitySelector;
+            case "Decorator":
+                return NodeType.Decorator;
+            case "Constant value":
+                return NodeType.ProbabilityWeight;
+            default:
+                return NodeType.Action;
+        }
+
+    }
+
+    public static string GetStringFromNodeType(NodeType nodeType){
+        switch(nodeType){
+            case NodeType.Root:
+                return "Root";
+            case NodeType.SequenceSelector:
+                return "Sequence";
+            case NodeType.PrioritySelector:
+                return "Priority Selector";
+            case NodeType.ProbabilitySelector:
+                return "Probability Selector";
+            case NodeType.Decorator:
+                return "Decorator";
+            case NodeType.ProbabilityWeight:
+                return "Constant value";
+            default:
+                throw new Exception("Unknown string from NodeType");
+        }
+    }
+
+
+    public void SetNodeTypeFromTask(string task){
+        nodeType = NodeBase.GetNodeTypeFromString(task);
     }
 
 }
