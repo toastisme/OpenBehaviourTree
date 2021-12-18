@@ -103,8 +103,14 @@ public class GUINode : CallableNode
     {
         if (!IsRootNode()){
             GenericMenu genericMenu = new GenericMenu();
-            foreach(string boolName in bt.blackboard.GetBoolKeys().Keys){
-                genericMenu.AddItem(new GUIContent("Add Decorator/" + boolName), false, () => OnClickAddDecorator(boolName));
+            Dictionary<string, bool> boolKeys = bt.blackboard.GetBoolKeys();
+            if (boolKeys == null || boolKeys.Count == 0){
+                genericMenu.AddDisabledItem(new GUIContent("Add blackboard bool keys to use as decorators"));
+            }
+            else{            
+                foreach(string boolName in bt.blackboard.GetBoolKeys().Keys){
+                    genericMenu.AddItem(new GUIContent("Add Decorator/" + boolName), false, () => OnClickAddDecorator(boolName));
+                }
             }
             genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
             genericMenu.ShowAsContext();

@@ -588,7 +588,8 @@ public class NodeBasedEditor : EditorWindow
                                                probabilityWeightSize[1],
                                                probabilityWeightStyle,
                                                selectedProbabilityWeightStyle,
-                                               UpdatePanelDetails);
+                                               UpdatePanelDetails,
+                                               bt);
         } 
         bt.connections.Add(newConnection);
     }

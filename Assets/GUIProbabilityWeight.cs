@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class GUIProbabilityWeight : NodeBase
 {
+    BehaviourTree bt;
     public GUIProbabilityWeight(string task,
                    Vector2 position, 
                    float width, 
                    float height, 
                    GUIStyle nodeStyle,
                    GUIStyle selectedStyle, 
-                   Action<NodeBase> UpdatePanelDetails
+                   Action<NodeBase> UpdatePanelDetails,
+                   BehaviourTree behaviourTree
                    )
     {
         this.style = nodeStyle;
@@ -22,6 +24,7 @@ public class GUIProbabilityWeight : NodeBase
         this.rect = new Rect(position[0], position[1], width, height);
         defaultNodeStyle = nodeStyle;
         this.selectedNodeStyle = selectedStyle;
+        bt = behaviourTree;
     }
 
     public void Move(Vector2 pos)
@@ -48,6 +51,11 @@ public class GUIProbabilityWeight : NodeBase
                         SetSelected(false);
                     }
                 }
+                if (e.button == 1 && rect.Contains(e.mousePosition))
+                {
+                    ProcessContextMenu();
+                    e.Use();
+                }
                 break;
         }
 
@@ -56,6 +64,24 @@ public class GUIProbabilityWeight : NodeBase
 
     public override void Drag(Vector2 delta){}
 
-    protected override void ProcessContextMenu(){}
+    protected override void ProcessContextMenu(){
+        Dictionary<string, int> intKeys = bt.blackboard.GetIntKeys();
+        Dictionary<string, float> floatKeys = bt.blackboard.GetFloatKeys();
+        GenericMenu genericMenu = new GenericMenu();
+        if ((intKeys == null && floatKeys == null) || (intKeys.Count == 0 && floatKeys.Count == 0)){
+            genericMenu.AddDisabledItem(new GUIContent("Add blackboard float or int keys to use as weights"));
+        }
+        else{
+            foreach(KeyValuePair<string, int> kvp in bt.blackboard.GetIntKeys()){
+                        genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
+            }
+            foreach(KeyValuePair<string, float> kvp in bt.blackboard.GetFloatKeys()){
+                    genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
+            }
+        }
+        genericMenu.ShowAsContext();
+
+    }
+
 
 }

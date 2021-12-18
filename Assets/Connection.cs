@@ -20,9 +20,9 @@ public class Connection
                       )
     {
         this.childPoint = childPoint;
-        childNode = childPoint.GetNode();
+        this.childNode = childPoint.GetNode();
         this.parentPoint = parentPoint;
-        parentNode = parentPoint.GetNode();
+        this.parentNode = parentPoint.GetNode();
         this.OnClickRemoveConnection = OnClickRemoveConnection;
     }   
 
@@ -30,7 +30,8 @@ public class Connection
                                      float height,
                                      GUIStyle nodeStyle,
                                      GUIStyle selectedNodeStyle,
-                                     Action<NodeBase> UpdatePanelDetails
+                                     Action<NodeBase> UpdatePanelDetails,
+                                     BehaviourTree behaviourTree
                                      ){
 
         probabilityWeight = new GUIProbabilityWeight("1",
@@ -39,7 +40,8 @@ public class Connection
                                                         height,
                                                         nodeStyle,
                                                         selectedNodeStyle,
-                                                        UpdatePanelDetails
+                                                        UpdatePanelDetails,
+                                                        behaviourTree
                                                         );
         probabilityWeightOffset = new Vector2(width*.5f, 0);
     }
