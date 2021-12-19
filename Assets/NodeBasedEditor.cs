@@ -12,17 +12,17 @@ public class NodeBasedEditor : EditorWindow
     private NodeBase selectedNode;
 
     // Styles
-    private GUIStyle nodeStyle;
-    private GUIStyle selectedNodeStyle;
-    private GUIStyle ChildPointStyle;
-    private GUIStyle ParentPointStyle;
+    private GUIStyle guiNodeStyle;
+    private GUIStyle selectedGuiNodeStyle;
+    private GUIStyle childPointStyle;
+    private GUIStyle parentPointStyle;
     private GUIStyle callNumberStyle;
     private GUIStyle decoratorStyle;
     private GUIStyle selectedDecoratorStyle;
     private GUIStyle probabilityWeightStyle;
     private GUIStyle selectedProbabilityWeightStyle;
-    private Vector2 nodeSize = new Vector2(200, 100);
-    private Vector2 probabilityWeightSize = new Vector2(200, 50);
+    private Vector2 guiNodeSize;
+    private Vector2 subNodeSize; 
 
     private ConnectionPoint selectedChildPoint;
     private ConnectionPoint selectedParentPoint;
@@ -63,59 +63,18 @@ public class NodeBasedEditor : EditorWindow
 
     private void OnEnable()
     {
-        nodeStyle = new GUIStyle();
-        nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
-        nodeStyle.border = new RectOffset(12, 12, 12, 12);
-        nodeStyle.normal.textColor = Color.white;
-        nodeStyle.alignment = TextAnchor.UpperCenter;
+        guiNodeSize = NodeProperties.GUINodeSize();
+        subNodeSize = NodeProperties.SubNodeSize();
+        guiNodeStyle = NodeProperties.GUINodeStyle(); 
+        decoratorStyle = NodeProperties.DecoratorStyle();
+        probabilityWeightStyle = NodeProperties.ProbabilityWeightStyle();
+        callNumberStyle = NodeProperties.CallNumberStyle();
+        childPointStyle = NodeProperties.ChildPointStyle();
+        parentPointStyle = NodeProperties.ParentPointStyle();
 
-        selectedNodeStyle = new GUIStyle();
-        selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
-        selectedNodeStyle.border = new RectOffset(12, 12, 12, 12);
-        selectedNodeStyle.normal.textColor = Color.white;
-        selectedNodeStyle.alignment = TextAnchor.UpperCenter;
-
-        decoratorStyle = new GUIStyle();
-        decoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
-        decoratorStyle.border = new RectOffset(12, 12, 12, 12);
-        decoratorStyle.normal.textColor = Color.white;
-        decoratorStyle.alignment = TextAnchor.MiddleCenter;
-
-        selectedDecoratorStyle = new GUIStyle();
-        selectedDecoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
-        selectedDecoratorStyle.border = new RectOffset(12, 12, 12, 12);
-        selectedDecoratorStyle.normal.textColor = Color.white;
-        selectedDecoratorStyle.alignment = TextAnchor.MiddleCenter;
-
-        probabilityWeightStyle = new GUIStyle();
-        probabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
-        probabilityWeightStyle.border = new RectOffset(12, 12, 12, 12);
-        probabilityWeightStyle.normal.textColor = Color.white;
-        probabilityWeightStyle.alignment = TextAnchor.MiddleCenter;
-
-        selectedProbabilityWeightStyle = new GUIStyle();
-        selectedProbabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
-        selectedProbabilityWeightStyle.border = new RectOffset(12, 12, 12, 12);
-        selectedProbabilityWeightStyle.normal.textColor = Color.white;
-        selectedProbabilityWeightStyle.alignment = TextAnchor.MiddleCenter;
-
-        callNumberStyle = new GUIStyle();
-        callNumberStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
-        callNumberStyle.border = new RectOffset(12, 12, 12, 12);
-        callNumberStyle.normal.textColor = Color.white;
-        callNumberStyle.alignment = TextAnchor.MiddleCenter;
-
-        ChildPointStyle = new GUIStyle();
-        ChildPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
-        ChildPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
-        ChildPointStyle.border = new RectOffset(4, 4, 12, 12);
-        ChildPointStyle.alignment = TextAnchor.MiddleCenter;
-
-        ParentPointStyle = new GUIStyle();
-        ParentPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
-        ParentPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn on.png") as Texture2D;
-        ParentPointStyle.border = new RectOffset(4, 4, 12, 12);
-        ParentPointStyle.alignment = TextAnchor.MiddleCenter;
+        selectedGuiNodeStyle = NodeProperties.SelectedGUINodestyle();
+        selectedDecoratorStyle = NodeProperties.SelectedDecoratorStyle();
+        selectedProbabilityWeightStyle = NodeProperties.SelectedProbabilityWeightStyle();
 
         customTaskNames = GetCustomTaskNames();
     }
@@ -125,12 +84,11 @@ public class NodeBasedEditor : EditorWindow
         bt.nodes = new List<GUINode>();
         bt.nodes.Add(new GUINode("Root",
                               new Vector2(0,0), 
-                              nodeSize[0], 
-                              nodeSize[1], 
-                              nodeStyle, 
-                              selectedNodeStyle, 
-                              ChildPointStyle, 
-                              ParentPointStyle, 
+                              guiNodeSize,
+                              guiNodeStyle, 
+                              selectedGuiNodeStyle, 
+                              childPointStyle, 
+                              parentPointStyle, 
                               callNumberStyle,
                               decoratorStyle,
                               selectedDecoratorStyle,
@@ -468,12 +426,11 @@ public class NodeBasedEditor : EditorWindow
             bt.nodes.Add(new GUIActionNode(
                                 name,
                                 mousePosition, 
-                                nodeSize[0], 
-                                nodeSize[1], 
-                                nodeStyle, 
-                                selectedNodeStyle, 
-                                ChildPointStyle, 
-                                ParentPointStyle, 
+                                guiNodeSize,
+                                guiNodeStyle, 
+                                selectedGuiNodeStyle, 
+                                childPointStyle, 
+                                parentPointStyle, 
                                 callNumberStyle,
                                 decoratorStyle,
                                 selectedDecoratorStyle,
@@ -488,12 +445,11 @@ public class NodeBasedEditor : EditorWindow
             bt.nodes.Add(new GUINode(
                                     name,
                                 mousePosition, 
-                                nodeSize[0], 
-                                nodeSize[1], 
-                                nodeStyle, 
-                                selectedNodeStyle, 
-                                ChildPointStyle, 
-                                ParentPointStyle, 
+                                guiNodeSize,
+                                guiNodeStyle, 
+                                selectedGuiNodeStyle, 
+                                childPointStyle, 
+                                parentPointStyle, 
                                 callNumberStyle,
                                 decoratorStyle,
                                 selectedDecoratorStyle,
@@ -601,8 +557,7 @@ public class NodeBasedEditor : EditorWindow
         parentNode.AddChildNode(newConnection);
         childNode.SetParentNode(newConnection);
         if (parentNode.GetTask() == "Probability Selector"){
-            newConnection.AddProbabilityWeight(probabilityWeightSize[0],
-                                               probabilityWeightSize[1],
+            newConnection.AddProbabilityWeight(subNodeSize,
                                                probabilityWeightStyle,
                                                selectedProbabilityWeightStyle,
                                                UpdatePanelDetails,

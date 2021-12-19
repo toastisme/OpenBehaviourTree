@@ -19,8 +19,7 @@ public class GUINode : CallableNode
 
     public GUINode(string task,
                    Vector2 position, 
-                   float width, 
-                   float height, 
+                   Vector2 size, 
                    GUIStyle nodeStyle, 
                    GUIStyle selectedStyle, 
                    GUIStyle ChildPointStyle, 
@@ -37,9 +36,9 @@ public class GUINode : CallableNode
     {
         this.task = task;
         SetNodeTypeFromTask(task);
-        rect = new Rect(position.x, position.y, width, height);
+        rect = new Rect(position.x, position.y, size.x, size.y);
         initDecoratorPos = new Vector2(0, rect.height*.5f);
-        callNumberRect = new Rect(position.x, position.y, width/6, width/6);
+        callNumberRect = new Rect(position.x, position.y, size.x/6, size.x/6);
         style = nodeStyle;
         this.callNumberStyle = callNumberStyle;
         this.decoratorStyle = decoratorStyle; 

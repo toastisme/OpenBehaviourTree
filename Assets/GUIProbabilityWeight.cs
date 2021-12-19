@@ -8,8 +8,7 @@ public class GUIProbabilityWeight : NodeBase
     BehaviourTree bt;
     public GUIProbabilityWeight(string task,
                    Vector2 position, 
-                   float width, 
-                   float height, 
+                   Vector2 size,
                    GUIStyle nodeStyle,
                    GUIStyle selectedStyle, 
                    Action<NodeBase> UpdatePanelDetails,
@@ -22,7 +21,7 @@ public class GUIProbabilityWeight : NodeBase
         this.task = task;
         this.name = "";
         this.UpdatePanelDetails = UpdatePanelDetails;
-        this.rect = new Rect(position[0], position[1], width, height);
+        this.rect = new Rect(position.x, position.y, size.x, size.y);
         defaultNodeStyle = nodeStyle;
         this.selectedNodeStyle = selectedStyle;
         bt = behaviourTree;

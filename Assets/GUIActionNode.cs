@@ -8,8 +8,7 @@ public class GUIActionNode : GUINode
     List<string> customTaskNames;
     public GUIActionNode(string task,
                    Vector2 position, 
-                   float width, 
-                   float height, 
+                   Vector2 size,
                    GUIStyle nodeStyle, 
                    GUIStyle selectedStyle, 
                    GUIStyle ChildPointStyle, 
@@ -25,8 +24,7 @@ public class GUIActionNode : GUINode
                    List<string> customTaskNames
                    ) : base(task,
                           position,
-                          width,
-                          height,
+                          size,
                           nodeStyle,
                           selectedStyle,
                           ChildPointStyle,

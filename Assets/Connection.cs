@@ -26,8 +26,7 @@ public class Connection
         this.OnClickRemoveConnection = OnClickRemoveConnection;
     }   
 
-    public void AddProbabilityWeight(float width, 
-                                     float height,
+    public void AddProbabilityWeight(Vector2 size, 
                                      GUIStyle nodeStyle,
                                      GUIStyle selectedNodeStyle,
                                      Action<NodeBase> UpdatePanelDetails,
@@ -36,14 +35,13 @@ public class Connection
 
         probabilityWeight = new GUIProbabilityWeight("Constant value",
                                                         GetCentrePos(),
-                                                        width,
-                                                        height,
+                                                        size,
                                                         nodeStyle,
                                                         selectedNodeStyle,
                                                         UpdatePanelDetails,
                                                         behaviourTree
                                                         );
-        probabilityWeightOffset = new Vector2(width*.5f, 0);
+        probabilityWeightOffset = new Vector2(size.x*.5f, 0);
     }
     public void UpdateWeightPosition(){
         if (HasProbabilityWeight()){
