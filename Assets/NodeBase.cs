@@ -146,7 +146,8 @@ public class NodeBase
             case NodeType.ProbabilityWeight:
                 return "Constant value";
             default:
-                throw new Exception("Unknown string from NodeType");
+                return "Action";
+                
         }
     }
 

@@ -82,7 +82,7 @@ public class NodeBasedEditor : EditorWindow
     private void AddRootNode(){
 
         bt.nodes = new List<GUINode>();
-        bt.nodes.Add(new GUINode("Root",
+        bt.nodes.Add(new GUINode(NodeType.Root,
                               new Vector2(0,0), 
                               guiNodeSize,
                               guiNodeStyle, 
@@ -443,7 +443,7 @@ public class NodeBasedEditor : EditorWindow
         }
         else{
             bt.nodes.Add(new GUINode(
-                                    name,
+                                nodeType,
                                 mousePosition, 
                                 guiNodeSize,
                                 guiNodeStyle, 

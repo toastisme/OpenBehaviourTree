@@ -22,7 +22,7 @@ public class GUIActionNode : GUINode
                    Action<GUINode> OnClickRemoveNode,
                    BehaviourTree behaviourTree,
                    List<string> customTaskNames
-                   ) : base(task,
+                   ) : base(NodeType.Action,
                           position,
                           size,
                           nodeStyle,
@@ -39,6 +39,7 @@ public class GUIActionNode : GUINode
                           behaviourTree)
     {
         this.customTaskNames = customTaskNames;
+        this.task = task;
 
     }
     protected override void ProcessContextMenu()

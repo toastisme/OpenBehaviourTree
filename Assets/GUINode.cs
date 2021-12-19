@@ -10,31 +10,32 @@ public class GUINode : CallableNode
     protected GUIStyle selectedDecoratorStyle;
     protected Vector2 initDecoratorPos = new Vector2(0f,0f);
     protected float decoratorHeight = 50f;
-    public ConnectionPoint ChildPoint;
-    public ConnectionPoint ParentPoint;
+    public ConnectionPoint childPoint;
+    public ConnectionPoint parentPoint;
     private List<Connection> childNodes;
     protected Connection parentNode;
     public Action<GUINode> OnRemoveNode;
     protected BehaviourTree bt;
 
-    public GUINode(string task,
+    public GUINode(NodeType nodeType,
                    Vector2 position, 
                    Vector2 size, 
                    GUIStyle nodeStyle, 
                    GUIStyle selectedStyle, 
-                   GUIStyle ChildPointStyle, 
-                   GUIStyle ParentPointStyle, 
+                   GUIStyle childPointStyle, 
+                   GUIStyle parentPointStyle, 
                    GUIStyle callNumberStyle, 
                    GUIStyle decoratorStyle, 
                    GUIStyle selectedDecoratorStyle, 
                    Action<NodeBase> UpdatePanelDetails,
-                   Action<ConnectionPoint> OnClickChildPoint, 
-                   Action<ConnectionPoint> OnClickParentPoint, 
+                   Action<ConnectionPoint> OnClickchildPoint, 
+                   Action<ConnectionPoint> OnClickparentPoint, 
                    Action<GUINode> OnClickRemoveNode,
                    BehaviourTree behaviourTree
                    )
     {
-        this.task = task;
+        this.nodeType = nodeType;
+        this.task = NodeBase.GetStringFromNodeType(nodeType);
         SetNodeTypeFromTask(task);
         rect = new Rect(position.x, position.y, size.x, size.y);
         initDecoratorPos = new Vector2(0, rect.height*.5f);
@@ -43,12 +44,17 @@ public class GUINode : CallableNode
         this.callNumberStyle = callNumberStyle;
         this.decoratorStyle = decoratorStyle; 
         this.selectedDecoratorStyle = selectedDecoratorStyle; 
-        ChildPoint = new ConnectionPoint(this, ConnectionPointType.In, ChildPointStyle, OnClickChildPoint);
-        if (IsRootNode()){
-            ParentPoint = null;
+        if (nodeType == NodeType.Action){
+            childPoint = null;
         }
         else{
-            ParentPoint = new ConnectionPoint(this, ConnectionPointType.Out, ParentPointStyle, OnClickParentPoint);
+            childPoint = new ConnectionPoint(this, ConnectionPointType.In, childPointStyle, OnClickchildPoint);
+        }
+        if (IsRootNode()){
+            parentPoint = null;
+        }
+        else{
+            parentPoint = new ConnectionPoint(this, ConnectionPointType.Out, parentPointStyle, OnClickparentPoint);
         }
         defaultNodeStyle = nodeStyle;
         selectedNodeStyle = selectedStyle;
@@ -60,8 +66,8 @@ public class GUINode : CallableNode
 
     }
 
-    public ConnectionPoint GetChildPoint(){return ChildPoint;}
-    public ConnectionPoint GetParentPoint(){return ParentPoint;}
+    public ConnectionPoint GetChildPoint(){return childPoint;}
+    public ConnectionPoint GetParentPoint(){return parentPoint;}
 
     public override void Drag(Vector2 delta)
     {
@@ -82,11 +88,11 @@ public class GUINode : CallableNode
 
     public override void Draw()
     {
-        if (ChildPoint != null){
-            ChildPoint.Draw();
+        if (childPoint != null){
+            childPoint.Draw();
         }
-        if (ParentPoint != null){
-            ParentPoint.Draw();
+        if (parentPoint != null){
+            parentPoint.Draw();
         }
         GUI.Box(rect, "\n" + name + "\n" + task, style);
         GUI.Box(callNumberRect, callNumber.ToString(), callNumberStyle);
