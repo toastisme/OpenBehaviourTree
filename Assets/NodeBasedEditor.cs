@@ -14,6 +14,14 @@ public class NodeBasedEditor : EditorWindow
     // Styles
     private GUIStyle guiNodeStyle;
     private GUIStyle selectedGuiNodeStyle;
+    private GUIStyle actionStyle;
+    private GUIStyle selectedActionStyle;
+    private GUIStyle sequenceSelectorStyle;
+    private GUIStyle selectedSequenceSelectorStyle;
+    private GUIStyle prioritySelectorStyle;
+    private GUIStyle selectedPrioritySelectorStyle;
+    private GUIStyle probabilitySelectorStyle;
+    private GUIStyle selectedProbabilitySelectorStyle;
     private GUIStyle childPointStyle;
     private GUIStyle parentPointStyle;
     private GUIStyle callNumberStyle;
@@ -66,6 +74,10 @@ public class NodeBasedEditor : EditorWindow
         guiNodeSize = NodeProperties.GUINodeSize();
         subNodeSize = NodeProperties.SubNodeSize();
         guiNodeStyle = NodeProperties.GUINodeStyle(); 
+        sequenceSelectorStyle = NodeProperties.SequenceSelectorStyle();
+        prioritySelectorStyle = NodeProperties.PrioritySelectorStyle();
+        probabilitySelectorStyle = NodeProperties.ProbabilitySelectorStyle();
+        actionStyle = NodeProperties.ActionStyle();
         decoratorStyle = NodeProperties.DecoratorStyle();
         probabilityWeightStyle = NodeProperties.ProbabilityWeightStyle();
         callNumberStyle = NodeProperties.CallNumberStyle();
@@ -73,6 +85,10 @@ public class NodeBasedEditor : EditorWindow
         parentPointStyle = NodeProperties.ParentPointStyle();
 
         selectedGuiNodeStyle = NodeProperties.SelectedGUINodestyle();
+        selectedSequenceSelectorStyle = NodeProperties.SelectedSequenceSelectorStyle();
+        selectedPrioritySelectorStyle = NodeProperties.SelectedPrioritySelectorStyle();
+        selectedProbabilitySelectorStyle = NodeProperties.SelectedProbabilitySelectorStyle();
+        selectedActionStyle = NodeProperties.SelectedActionStyle();
         selectedDecoratorStyle = NodeProperties.SelectedDecoratorStyle();
         selectedProbabilityWeightStyle = NodeProperties.SelectedProbabilityWeightStyle();
 
@@ -427,8 +443,8 @@ public class NodeBasedEditor : EditorWindow
                                 name,
                                 mousePosition, 
                                 guiNodeSize,
-                                guiNodeStyle, 
-                                selectedGuiNodeStyle, 
+                                actionStyle, 
+                                selectedActionStyle, 
                                 childPointStyle, 
                                 parentPointStyle, 
                                 callNumberStyle,
@@ -442,12 +458,30 @@ public class NodeBasedEditor : EditorWindow
                                 customTaskNames));
         }
         else{
+            GUIStyle nodeStyle;
+            GUIStyle selectedNodeStyle;
+            switch(nodeType){
+                case NodeType.SequenceSelector:
+                    nodeStyle = sequenceSelectorStyle;
+                    selectedNodeStyle = selectedSequenceSelectorStyle;
+                    break;
+                case NodeType.PrioritySelector:
+                    nodeStyle = prioritySelectorStyle;
+                    selectedNodeStyle = selectedPrioritySelectorStyle;
+                    break;
+                case NodeType.ProbabilitySelector:
+                    nodeStyle = probabilitySelectorStyle;
+                    selectedNodeStyle = selectedProbabilitySelectorStyle;
+                    break;
+                default:
+                    throw new Exception("Unknown node type");
+            }
             bt.nodes.Add(new GUINode(
                                 nodeType,
                                 mousePosition, 
                                 guiNodeSize,
-                                guiNodeStyle, 
-                                selectedGuiNodeStyle, 
+                                nodeStyle, 
+                                selectedNodeStyle, 
                                 childPointStyle, 
                                 parentPointStyle, 
                                 callNumberStyle,

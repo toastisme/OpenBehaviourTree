@@ -136,7 +136,7 @@ public class NodeBase
             case NodeType.Root:
                 return "Root";
             case NodeType.SequenceSelector:
-                return "Sequence";
+                return "Sequence Selector";
             case NodeType.PrioritySelector:
                 return "Priority Selector";
             case NodeType.ProbabilitySelector:
@@ -147,7 +147,6 @@ public class NodeBase
                 return "Constant value";
             default:
                 return "Action";
-                
         }
     }
 
