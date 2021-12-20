@@ -35,7 +35,7 @@ public class GUINode : CallableNode
                    )
     {
         this.nodeType = nodeType;
-        this.task = NodeBase.GetStringFromNodeType(nodeType);
+        this.task = NodeBase.GetDefaultStringFromNodeType(nodeType);
         SetNodeTypeFromTask(task);
         rect = new Rect(position.x, position.y, size.x, size.y);
         initDecoratorPos = new Vector2(0, rect.height*.5f);

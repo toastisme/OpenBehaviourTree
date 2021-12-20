@@ -70,8 +70,10 @@ public class GUIProbabilityWeight : NodeBase
         GenericMenu genericMenu = new GenericMenu();
         if ((intKeys == null && floatKeys == null) || (intKeys.Count == 0 && floatKeys.Count == 0)){
             genericMenu.AddDisabledItem(new GUIContent("Add blackboard float or int keys to use as weights"));
+            genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight (1)"));
         }
         else{
+            genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight (1)"));
             foreach(KeyValuePair<string, int> kvp in bt.blackboard.GetIntKeys()){
                         genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
             }

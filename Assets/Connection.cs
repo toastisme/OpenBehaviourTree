@@ -33,7 +33,7 @@ public class Connection
                                      BehaviourTree behaviourTree
                                      ){
 
-        probabilityWeight = new GUIProbabilityWeight("Constant value",
+        probabilityWeight = new GUIProbabilityWeight("Constant weight (1)",
                                                         GetCentrePos(),
                                                         size,
                                                         nodeStyle,

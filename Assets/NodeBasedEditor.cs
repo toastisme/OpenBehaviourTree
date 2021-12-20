@@ -406,7 +406,7 @@ public class NodeBasedEditor : EditorWindow
     {
         GenericMenu genericMenu = new GenericMenu();
         foreach(NodeType nodeType in decisionNodeTypes){
-            string nodeTypeString = NodeBase.GetStringFromNodeType(nodeType);
+            string nodeTypeString = NodeBase.GetDefaultStringFromNodeType(nodeType);
             genericMenu.AddItem(new GUIContent(nodeTypeString), false, () => OnClickAddNode(mousePosition, nodeType, nodeTypeString)); 
         }
         foreach(string taskName in customTaskNames){

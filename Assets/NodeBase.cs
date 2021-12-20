@@ -123,7 +123,7 @@ public class NodeBase
                 return NodeType.ProbabilitySelector;
             case "Decorator":
                 return NodeType.Decorator;
-            case "Constant value":
+            case "Constant weight (1)":
                 return NodeType.ProbabilityWeight;
             default:
                 return NodeType.Action;
@@ -131,7 +131,7 @@ public class NodeBase
 
     }
 
-    public static string GetStringFromNodeType(NodeType nodeType){
+    public static string GetDefaultStringFromNodeType(NodeType nodeType){
         switch(nodeType){
             case NodeType.Root:
                 return "Root";
@@ -144,7 +144,7 @@ public class NodeBase
             case NodeType.Decorator:
                 return "Decorator";
             case NodeType.ProbabilityWeight:
-                return "Constant value";
+                return "Constant weight (1)";
             default:
                 return "Action";
         }
