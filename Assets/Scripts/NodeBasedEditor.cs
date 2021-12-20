@@ -7,28 +7,15 @@ using System;
 
 public class NodeBasedEditor : EditorWindow
 {
+    // Node Properties
+    public NodeColors nodeColors;
+    public NodeStyles nodeStyles;
+    public NodeSizes nodeSizes;
+    List<NodeType> decisionNodeTypes;
+
     // Bookkeeping
     public BehaviourTree bt;
     private NodeBase selectedNode;
-
-    // Styles
-    private GUIStyle guiNodeStyle;
-    private GUIStyle selectedGuiNodeStyle;
-    private GUIStyle rootStyle;
-    private GUIStyle actionStyle;
-    private GUIStyle sequenceSelectorStyle;
-    private GUIStyle prioritySelectorStyle;
-    private GUIStyle probabilitySelectorStyle;
-    private GUIStyle childPointStyle;
-    private GUIStyle parentPointStyle;
-    private GUIStyle callNumberStyle;
-    private GUIStyle decoratorStyle;
-    private GUIStyle selectedDecoratorStyle;
-    private GUIStyle probabilityWeightStyle;
-    private GUIStyle selectedProbabilityWeightStyle;
-    private Vector2 guiNodeSize;
-    private Vector2 subNodeSize; 
-
     private ConnectionPoint selectedChildPoint;
     private ConnectionPoint selectedParentPoint;
 
@@ -37,27 +24,16 @@ public class NodeBasedEditor : EditorWindow
     private Vector2 drag;
     private bool drawingLine;
 
+    // Details panel
     private Rect detailsPanel;
     private string[] toolbarStrings = {"Selected Node", "Blackboard"};
     private int toolbarInt = 0;
 
-    List<NodeType> decisionNodeTypes = new List<NodeType>{NodeType.PrioritySelector, 
-                                                        NodeType.ProbabilitySelector,
-                                                        NodeType.SequenceSelector};
     List<string> customTaskNames;
 
     // Blackboard
     string[] activeBlackboardKey = {"","",""};
     bool renamingBlackboardKey = false;
-
-    /*
-    [MenuItem("Window/Node Based Editor")]
-    private static void OpenWindow()
-    {
-        NodeBasedEditor window = GetWindow<NodeBasedEditor>();
-        window.titleContent = new GUIContent("Node Based Editor");
-    }
-    */
 
     public void SetScriptableObject(BehaviourTree behaviourTree){
         bt = behaviourTree;
@@ -68,24 +44,12 @@ public class NodeBasedEditor : EditorWindow
 
     private void OnEnable()
     {
-        guiNodeSize = NodeProperties.GUINodeSize();
-        subNodeSize = NodeProperties.SubNodeSize();
-        guiNodeStyle = NodeProperties.GUINodeStyle(); 
-        rootStyle = NodeProperties.RootStyle();
-        sequenceSelectorStyle = NodeProperties.SequenceSelectorStyle();
-        prioritySelectorStyle = NodeProperties.PrioritySelectorStyle();
-        probabilitySelectorStyle = NodeProperties.ProbabilitySelectorStyle();
-        actionStyle = NodeProperties.ActionStyle();
-        decoratorStyle = NodeProperties.DecoratorStyle();
-        probabilityWeightStyle = NodeProperties.ProbabilityWeightStyle();
-        callNumberStyle = NodeProperties.CallNumberStyle();
-        childPointStyle = NodeProperties.ChildPointStyle();
-        parentPointStyle = NodeProperties.ParentPointStyle();
-
-        selectedGuiNodeStyle = NodeProperties.SelectedGUINodestyle();
-        selectedDecoratorStyle = NodeProperties.SelectedDecoratorStyle();
-        selectedProbabilityWeightStyle = NodeProperties.SelectedProbabilityWeightStyle();
-
+        nodeSizes = new NodeSizes();
+        nodeStyles = new NodeStyles();
+        nodeColors = new NodeColors();
+        decisionNodeTypes = new List<NodeType>{NodeType.PrioritySelector, 
+                                               NodeType.ProbabilitySelector,
+                                               NodeType.SequenceSelector};
         customTaskNames = GetCustomTaskNames();
     }
 
@@ -94,24 +58,20 @@ public class NodeBasedEditor : EditorWindow
         bt.nodes = new List<GUINode>();
         bt.nodes.Add(new GUINode(NodeType.Root,
                               new Vector2(0,0), 
-                              guiNodeSize,
-                              guiNodeStyle, 
-                              selectedGuiNodeStyle, 
-                              rootStyle,
-                              childPointStyle, 
-                              parentPointStyle, 
-                              callNumberStyle,
-                              decoratorStyle,
-                              selectedDecoratorStyle,
+                              nodeSizes.guiNodeSize,
+                              nodeStyles,
+                              nodeColors,
                               UpdatePanelDetails,
                               OnClickChildPoint, 
                               OnClickParentPoint, 
                               OnClickRemoveNode,
-                              bt));
+                              bt
+                              ));
     }
 
     private void ResetRootNode(){
         bt.nodes[0].SetName("");
+        bt.nodes[0].SetPosition(new Vector2(0,0));
     }
 
     private void OnGUI()
@@ -437,49 +397,22 @@ public class NodeBasedEditor : EditorWindow
             bt.nodes.Add(new GUIActionNode(
                                 name,
                                 mousePosition, 
-                                guiNodeSize,
-                                guiNodeStyle,
-                                selectedGuiNodeStyle,
-                                actionStyle, 
-                                childPointStyle, 
-                                parentPointStyle, 
-                                callNumberStyle,
-                                decoratorStyle,
-                                selectedDecoratorStyle,
+                                nodeSizes.guiNodeSize,
+                                nodeStyles,
+                                nodeColors,
                                 UpdatePanelDetails,
                                 OnClickChildPoint, 
-                                OnClickParentPoint, 
                                 OnClickRemoveNode,
                                 bt,
                                 customTaskNames));
         }
         else{
-            GUIStyle subNodeStyle;
-            switch(nodeType){
-                case NodeType.SequenceSelector:
-                    subNodeStyle = sequenceSelectorStyle;
-                    break;
-                case NodeType.PrioritySelector:
-                    subNodeStyle = prioritySelectorStyle;
-                    break;
-                case NodeType.ProbabilitySelector:
-                    subNodeStyle = probabilitySelectorStyle;
-                    break;
-                default:
-                    throw new Exception("Unknown node type");
-            }
             bt.nodes.Add(new GUINode(
                                 nodeType,
                                 mousePosition, 
-                                guiNodeSize,
-                                guiNodeStyle, 
-                                selectedGuiNodeStyle, 
-                                subNodeStyle,
-                                childPointStyle, 
-                                parentPointStyle, 
-                                callNumberStyle,
-                                decoratorStyle,
-                                selectedDecoratorStyle,
+                                nodeSizes.guiNodeSize,
+                                nodeStyles,
+                                nodeColors,
                                 UpdatePanelDetails,
                                 OnClickChildPoint, 
                                 OnClickParentPoint, 
@@ -584,9 +517,9 @@ public class NodeBasedEditor : EditorWindow
         parentNode.AddChildNode(newConnection);
         childNode.SetParentNode(newConnection);
         if (parentNode.GetTask() == "Probability Selector"){
-            newConnection.AddProbabilityWeight(subNodeSize,
-                                               probabilityWeightStyle,
-                                               selectedProbabilityWeightStyle,
+            newConnection.AddProbabilityWeight(nodeSizes.subNodeSize,
+                                               nodeStyles.probabilityWeightStyle,
+                                               nodeStyles.selectedProbabilityWeightStyle,
                                                UpdatePanelDetails,
                                                bt);
         } 

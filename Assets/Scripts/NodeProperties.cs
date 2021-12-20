@@ -4,11 +4,113 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System;
+public enum NodeType{
+    Root,
+    SequenceSelector,
+    ProbabilitySelector,
+    PrioritySelector,
+    Action,
+    Decorator,
+    ProbabilityWeight,
+    CallNumber
+}
+
+public class NodeColors
+{
+    public Color defaultColor = NodeProperties.GetDefaultColor();
+    public Color callNumberColor = NodeProperties.GetDefaultColor();
+    public Color actionColor = NodeProperties.GetDefaultColor();
+    public Color probabilityWeightColor = NodeProperties.GetDefaultColor();
+    public Color decoratorColor = NodeProperties.GetDecoratorColor();
+    public Color sequenceSelectorColor = NodeProperties.GetSequenceSelectorColor();
+    public Color prioritySelectorColor = NodeProperties.GetPrioritySelectorColor();
+    public Color probabilitySelectorColor = NodeProperties.GetProbabilitySelectorColor();
+
+    public Color GetColor(NodeType nodeType){
+        switch(nodeType){
+            case NodeType.Root:
+                return defaultColor;
+            case NodeType.Decorator:
+                return decoratorColor;
+            case NodeType.SequenceSelector:
+                return sequenceSelectorColor;
+            case NodeType.PrioritySelector:
+                return prioritySelectorColor;
+            case NodeType.ProbabilitySelector:
+                return probabilitySelectorColor;
+            case NodeType.CallNumber:
+                return callNumberColor;
+            case NodeType.ProbabilityWeight:
+                return probabilityWeightColor;
+            case NodeType.Action:
+                return actionColor;
+            default:   
+                throw new Exception("Unknown NodeType");
+        }
+    }
+}
+
+public class NodeSizes
+{
+    public Vector2 guiNodeSize = NodeProperties.GUINodeSize();    
+    public Vector2 subNodeSize = NodeProperties.SubNodeSize();
+}
+
+public class NodeStyles
+{
+    public GUIStyle guiNodeStyle = NodeProperties.GUINodeStyle();
+    public GUIStyle selectedGuiNodeStyle = NodeProperties.SelectedGUINodeStyle();
+    public GUIStyle rootStyle = NodeProperties.RootStyle();
+    public GUIStyle sequenceSelectorStyle = NodeProperties.SequenceSelectorStyle();
+    public GUIStyle prioritySelectorStyle = NodeProperties.PrioritySelectorStyle();
+    public GUIStyle probabilitySelectorStyle = NodeProperties.ProbabilitySelectorStyle();
+    public GUIStyle probabilityWeightStyle = NodeProperties.ProbabilityWeightStyle();
+    public GUIStyle selectedProbabilityWeightStyle = NodeProperties.SelectedProbabilityWeightStyle();
+    public GUIStyle decoratorStyle = NodeProperties.DecoratorStyle();
+    public GUIStyle selectedDecoratorStyle = NodeProperties.SelectedDecoratorStyle();
+    public GUIStyle callNumberStyle = NodeProperties.CallNumberStyle();
+    public GUIStyle actionStyle = NodeProperties.ActionStyle();
+    public GUIStyle childPointStyle = NodeProperties.ChildPointStyle();
+    public GUIStyle parentPointStyle = NodeProperties.ParentPointStyle();
+
+    public GUIStyle GetStyle(NodeType nodeType){
+        switch(nodeType){
+            case NodeType.Root:
+                return rootStyle;
+            case NodeType.SequenceSelector:
+                return sequenceSelectorStyle;
+            case NodeType.ProbabilitySelector:
+                return probabilitySelectorStyle;
+            case NodeType.ProbabilityWeight:
+                return probabilityWeightStyle;
+            case NodeType.PrioritySelector:
+                return prioritySelectorStyle;
+            case NodeType.Action:
+                return actionStyle;
+            case NodeType.CallNumber:
+                return callNumberStyle;
+            case NodeType.Decorator:
+                return decoratorStyle;
+            default:
+                throw new Exception("Unknown node type");
+        }
+    }
+}
 
 public class NodeProperties
 {
+    // Size
     public static Vector2 GUINodeSize(){return new Vector2(200, 100);}
     public static Vector2 SubNodeSize(){return new Vector2(200, 60);}
+
+    // Color
+    public static Color GetDefaultColor(){return new Color(38.0f/255.0f, 70.0f/255.0f, 83.0f/255.0f);}
+    public static Color GetDecoratorColor(){return new Color(42.0f/255.0f, 157.0f/255.0f, 143.0f/255.0f);}
+    public static Color GetSequenceSelectorColor(){return new Color(233.0f/255.0f, 196.0f/255.0f, 106.0f/255.0f);}
+    public static Color GetProbabilitySelectorColor(){return new Color(244.0f/255.0f, 162.0f/255.0f, 97.0f/255.0f);}
+    public static Color GetPrioritySelectorColor(){return new Color(231.0f/255.0f, 111.0f/255.0f, 81.0f/255.0f);}
+
+    // Style
 
     public static GUIStyle GUINodeStyle(){
         GUIStyle nodeStyle = new GUIStyle();
@@ -19,7 +121,7 @@ public class NodeProperties
         return nodeStyle;
     }
 
-    public static GUIStyle SelectedGUINodestyle(){
+    public static GUIStyle SelectedGUINodeStyle(){
         GUIStyle selectedNodeStyle = GUINodeStyle();
         selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
         return selectedNodeStyle;

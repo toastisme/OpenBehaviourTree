@@ -6,9 +6,8 @@ using UnityEngine;
 public class GUINode : CallableNode
 {
     protected List<GUIDecorator> decorators;
-    protected GUIStyle decoratorStyle;
-    protected GUIStyle selectedDecoratorStyle;
-    protected GUIStyle subNodeStyle;
+    protected NodeStyles nodeStyles;
+    protected NodeColors nodeColors;
     protected Vector2 initDecoratorPos = new Vector2(0f,0f);
     protected Vector2 subNodePos;
     protected Vector2 subNodeSize = NodeProperties.SubNodeSize();
@@ -20,17 +19,15 @@ public class GUINode : CallableNode
     protected BehaviourTree bt;
     protected Rect subNodeRect;
 
+
+    // Colors
+    private Color defaultColor = NodeProperties.GetDefaultColor();
+
     public GUINode(NodeType nodeType,
                    Vector2 position, 
                    Vector2 size, 
-                   GUIStyle nodeStyle, 
-                   GUIStyle selectedStyle, 
-                   GUIStyle subNodeStyle,
-                   GUIStyle childPointStyle, 
-                   GUIStyle parentPointStyle, 
-                   GUIStyle callNumberStyle, 
-                   GUIStyle decoratorStyle, 
-                   GUIStyle selectedDecoratorStyle, 
+                   NodeStyles nodeStyles,
+                   NodeColors nodeColors,
                    Action<NodeBase> UpdatePanelDetails,
                    Action<ConnectionPoint> OnClickchildPoint, 
                    Action<ConnectionPoint> OnClickparentPoint, 
@@ -38,32 +35,27 @@ public class GUINode : CallableNode
                    BehaviourTree behaviourTree
                    )
     {
+        this.nodeStyles = nodeStyles;
+        this.nodeColors = nodeColors;
         this.nodeType = nodeType;
         this.task = NodeBase.GetDefaultStringFromNodeType(nodeType);
         SetNodeTypeFromTask(task);
         rect = new Rect(position.x, position.y, size.x, size.y);
         subNodeRect = new Rect(position.x, position.y+subNodeSize.y*.5f, subNodeSize.x, subNodeSize.y);
-        this.subNodeStyle = subNodeStyle;
         initDecoratorPos = new Vector2(0, rect.height*.21f);
         callNumberRect = new Rect(subNodeRect.position.x, subNodeRect.position.y, size.x/6, size.x/6);
-        style = nodeStyle;
-        this.callNumberStyle = callNumberStyle;
-        this.decoratorStyle = decoratorStyle; 
-        this.selectedDecoratorStyle = selectedDecoratorStyle; 
         if (nodeType == NodeType.Action){
             childPoint = null;
         }
         else{
-            childPoint = new ConnectionPoint(this, ConnectionPointType.In, childPointStyle, OnClickchildPoint);
+            childPoint = new ConnectionPoint(this, ConnectionPointType.In, nodeStyles.childPointStyle, OnClickchildPoint);
         }
         if (IsRootNode()){
             parentPoint = null;
         }
         else{
-            parentPoint = new ConnectionPoint(this, ConnectionPointType.Out, parentPointStyle, OnClickparentPoint);
+            parentPoint = new ConnectionPoint(this, ConnectionPointType.Out, nodeStyles.parentPointStyle, OnClickparentPoint);
         }
-        defaultNodeStyle = nodeStyle;
-        selectedNodeStyle = selectedStyle;
         OnRemoveNode = OnClickRemoveNode;
         this.UpdatePanelDetails = UpdatePanelDetails;
         this.bt = behaviourTree;
@@ -101,12 +93,22 @@ public class GUINode : CallableNode
         if (parentPoint != null){
             parentPoint.Draw();
         }
-        GUI.Box(rect, "", style);
-        GUI.Box(subNodeRect, "\n" + name + "\n" + task, subNodeStyle);
-        GUI.Box(callNumberRect, callNumber.ToString(), callNumberStyle);
+        Color currentColor = GUI.backgroundColor;
+        GUI.backgroundColor = nodeColors.defaultColor;
+        if (IsSelected()){
+            GUI.Box(rect, "", nodeStyles.selectedGuiNodeStyle);
+        }
+        else{
+            GUI.Box(rect, "", nodeStyles.guiNodeStyle);
+        }
+        GUI.backgroundColor = nodeColors.GetColor(nodeType);
+        GUI.Box(subNodeRect, "\n" + name + "\n" + task, nodeStyles.GetStyle(nodeType));
+        GUI.backgroundColor = nodeColors.callNumberColor;
+        GUI.Box(callNumberRect, callNumber.ToString(), nodeStyles.callNumberStyle);
         foreach (GUIDecorator decorator in decorators){
             decorator.Draw();
         }
+        GUI.backgroundColor = currentColor;
     }
 
     public List<GUIDecorator> GetDecorators(){
@@ -174,12 +176,13 @@ public class GUINode : CallableNode
         decorators.Add(new GUIDecorator(conditionName,
                               new Vector2(
                               rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(subNodeSize[1]*decorators.Count+1)), 
-                              subNodeSize[0],
-                              subNodeSize[1], 
+                              subNodeSize,
                               this,
-                              decoratorStyle, 
-                              selectedDecoratorStyle, 
-                              callNumberStyle,
+                              nodeStyles.decoratorStyle, 
+                              nodeStyles.selectedDecoratorStyle, 
+                              nodeStyles.callNumberStyle,
+                              nodeColors.decoratorColor,
+                              nodeColors.callNumberColor,
                               UpdatePanelDetails,
                               OnClickRemoveDecorator));
         rect.height += subNodeSize[1];

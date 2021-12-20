@@ -3,15 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public enum NodeType{
-    Root,
-    SequenceSelector,
-    ProbabilitySelector,
-    PrioritySelector,
-    Action,
-    Decorator,
-    ProbabilityWeight
-}
 public class NodeBase 
 {
     protected NodeType nodeType;

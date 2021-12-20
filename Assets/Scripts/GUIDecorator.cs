@@ -9,12 +9,13 @@ public class GUIDecorator : CallableNode
     GUINode parentNode;
     public GUIDecorator(string task,
                    Vector2 position, 
-                   float width, 
-                   float height, 
+                   Vector2 size,
                    GUINode parentNode,
                    GUIStyle nodeStyle,
                    GUIStyle selectedStyle, 
                    GUIStyle callNumberStyle,
+                   Color nodeColor,
+                   Color callNumberColor,
                    Action<NodeBase> UpdatePanelDetails,
                    Action<GUIDecorator> OnClickRemoveDecorator)
     {
@@ -26,11 +27,13 @@ public class GUIDecorator : CallableNode
         this.name = "";
         this.UpdatePanelDetails = UpdatePanelDetails;
         this.OnRemoveDecorator = OnClickRemoveDecorator;
-        this.rect = new Rect(position[0], position[1], width, height);
-        this.callNumberRect = new Rect(position.x, position.y, width/6, width/6);
+        this.rect = new Rect(position[0], position[1], size[0], size[1]);
+        this.callNumberRect = new Rect(position.x, position.y, size[0]/6, size[0]/6);
         this.callNumberStyle = callNumberStyle;
         defaultNodeStyle = nodeStyle;
         this.selectedNodeStyle = selectedStyle;
+        this.nodeColor = nodeColor;
+        this.callNumberColor = nodeColor;
     }
 
 
