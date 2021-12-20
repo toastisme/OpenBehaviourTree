@@ -93,7 +93,7 @@ public class NodeBase
     }
     public virtual void Draw()
     {
-        GUI.Box(rect, name + "\n" + task, style);
+        GUI.Box(rect, "\n" + name + "\n" + task, style);
     }
 
     public bool IsSelected(){return isSelected;}

@@ -8,20 +8,24 @@ public class GUINode : CallableNode
     protected List<GUIDecorator> decorators;
     protected GUIStyle decoratorStyle;
     protected GUIStyle selectedDecoratorStyle;
+    protected GUIStyle subNodeStyle;
     protected Vector2 initDecoratorPos = new Vector2(0f,0f);
-    protected float decoratorHeight = 50f;
+    protected Vector2 subNodePos;
+    protected Vector2 subNodeSize = NodeProperties.SubNodeSize();
     public ConnectionPoint childPoint;
     public ConnectionPoint parentPoint;
     private List<Connection> childNodes;
     protected Connection parentNode;
     public Action<GUINode> OnRemoveNode;
     protected BehaviourTree bt;
+    protected Rect subNodeRect;
 
     public GUINode(NodeType nodeType,
                    Vector2 position, 
                    Vector2 size, 
                    GUIStyle nodeStyle, 
                    GUIStyle selectedStyle, 
+                   GUIStyle subNodeStyle,
                    GUIStyle childPointStyle, 
                    GUIStyle parentPointStyle, 
                    GUIStyle callNumberStyle, 
@@ -38,8 +42,10 @@ public class GUINode : CallableNode
         this.task = NodeBase.GetDefaultStringFromNodeType(nodeType);
         SetNodeTypeFromTask(task);
         rect = new Rect(position.x, position.y, size.x, size.y);
-        initDecoratorPos = new Vector2(0, rect.height*.5f);
-        callNumberRect = new Rect(position.x, position.y, size.x/6, size.x/6);
+        subNodeRect = new Rect(position.x, position.y+subNodeSize.y*.5f, subNodeSize.x, subNodeSize.y);
+        this.subNodeStyle = subNodeStyle;
+        initDecoratorPos = new Vector2(0, rect.height*.21f);
+        callNumberRect = new Rect(subNodeRect.position.x, subNodeRect.position.y, size.x/6, size.x/6);
         style = nodeStyle;
         this.callNumberStyle = callNumberStyle;
         this.decoratorStyle = decoratorStyle; 
@@ -72,6 +78,7 @@ public class GUINode : CallableNode
     public override void Drag(Vector2 delta)
     {
         base.Drag(delta);
+        subNodeRect.position += delta; 
         if (childNodes != null){
             foreach(Connection childNode in childNodes){
                 childNode.GetChildNode().Drag(delta);
@@ -94,7 +101,8 @@ public class GUINode : CallableNode
         if (parentPoint != null){
             parentPoint.Draw();
         }
-        GUI.Box(rect, "\n" + name + "\n" + task, style);
+        GUI.Box(rect, "", style);
+        GUI.Box(subNodeRect, "\n" + name + "\n" + task, subNodeStyle);
         GUI.Box(callNumberRect, callNumber.ToString(), callNumberStyle);
         foreach (GUIDecorator decorator in decorators){
             decorator.Draw();
@@ -165,16 +173,18 @@ public class GUINode : CallableNode
     protected void OnClickAddDecorator(string conditionName){
         decorators.Add(new GUIDecorator(conditionName,
                               new Vector2(
-                              rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(decoratorHeight*decorators.Count+1)), 
-                              rect.width,
-                              decoratorHeight, 
+                              rect.x + initDecoratorPos[0], rect.y + initDecoratorPos[1]+(subNodeSize[1]*decorators.Count+1)), 
+                              subNodeSize[0],
+                              subNodeSize[1], 
                               this,
                               decoratorStyle, 
                               selectedDecoratorStyle, 
                               callNumberStyle,
                               UpdatePanelDetails,
                               OnClickRemoveDecorator));
-        rect.height += decoratorHeight;
+        rect.height += subNodeSize[1];
+        subNodeRect.y += subNodeSize[1];
+        callNumberRect.y += subNodeSize[1];
         decorators[decorators.Count -1].SetCallNumber(callNumber);
         callNumber++;
         GUI.changed = true;

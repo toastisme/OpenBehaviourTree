@@ -6,7 +6,7 @@ public class CallableNode : NodeBase
 {
     public GUIStyle callNumberStyle;
     protected Rect callNumberRect;
-    protected int callNumber = 0;
+    protected int callNumber = 1;
     public Rect GetCallNumberRect(){return callNumberRect;}
     public int GetCallNumber(){return callNumber;}
     public void SetCallNumber(int callNumber){

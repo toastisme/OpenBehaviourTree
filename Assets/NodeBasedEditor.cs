@@ -14,14 +14,11 @@ public class NodeBasedEditor : EditorWindow
     // Styles
     private GUIStyle guiNodeStyle;
     private GUIStyle selectedGuiNodeStyle;
+    private GUIStyle rootStyle;
     private GUIStyle actionStyle;
-    private GUIStyle selectedActionStyle;
     private GUIStyle sequenceSelectorStyle;
-    private GUIStyle selectedSequenceSelectorStyle;
     private GUIStyle prioritySelectorStyle;
-    private GUIStyle selectedPrioritySelectorStyle;
     private GUIStyle probabilitySelectorStyle;
-    private GUIStyle selectedProbabilitySelectorStyle;
     private GUIStyle childPointStyle;
     private GUIStyle parentPointStyle;
     private GUIStyle callNumberStyle;
@@ -74,6 +71,7 @@ public class NodeBasedEditor : EditorWindow
         guiNodeSize = NodeProperties.GUINodeSize();
         subNodeSize = NodeProperties.SubNodeSize();
         guiNodeStyle = NodeProperties.GUINodeStyle(); 
+        rootStyle = NodeProperties.RootStyle();
         sequenceSelectorStyle = NodeProperties.SequenceSelectorStyle();
         prioritySelectorStyle = NodeProperties.PrioritySelectorStyle();
         probabilitySelectorStyle = NodeProperties.ProbabilitySelectorStyle();
@@ -85,10 +83,6 @@ public class NodeBasedEditor : EditorWindow
         parentPointStyle = NodeProperties.ParentPointStyle();
 
         selectedGuiNodeStyle = NodeProperties.SelectedGUINodestyle();
-        selectedSequenceSelectorStyle = NodeProperties.SelectedSequenceSelectorStyle();
-        selectedPrioritySelectorStyle = NodeProperties.SelectedPrioritySelectorStyle();
-        selectedProbabilitySelectorStyle = NodeProperties.SelectedProbabilitySelectorStyle();
-        selectedActionStyle = NodeProperties.SelectedActionStyle();
         selectedDecoratorStyle = NodeProperties.SelectedDecoratorStyle();
         selectedProbabilityWeightStyle = NodeProperties.SelectedProbabilityWeightStyle();
 
@@ -103,6 +97,7 @@ public class NodeBasedEditor : EditorWindow
                               guiNodeSize,
                               guiNodeStyle, 
                               selectedGuiNodeStyle, 
+                              rootStyle,
                               childPointStyle, 
                               parentPointStyle, 
                               callNumberStyle,
@@ -443,8 +438,9 @@ public class NodeBasedEditor : EditorWindow
                                 name,
                                 mousePosition, 
                                 guiNodeSize,
+                                guiNodeStyle,
+                                selectedGuiNodeStyle,
                                 actionStyle, 
-                                selectedActionStyle, 
                                 childPointStyle, 
                                 parentPointStyle, 
                                 callNumberStyle,
@@ -458,20 +454,16 @@ public class NodeBasedEditor : EditorWindow
                                 customTaskNames));
         }
         else{
-            GUIStyle nodeStyle;
-            GUIStyle selectedNodeStyle;
+            GUIStyle subNodeStyle;
             switch(nodeType){
                 case NodeType.SequenceSelector:
-                    nodeStyle = sequenceSelectorStyle;
-                    selectedNodeStyle = selectedSequenceSelectorStyle;
+                    subNodeStyle = sequenceSelectorStyle;
                     break;
                 case NodeType.PrioritySelector:
-                    nodeStyle = prioritySelectorStyle;
-                    selectedNodeStyle = selectedPrioritySelectorStyle;
+                    subNodeStyle = prioritySelectorStyle;
                     break;
                 case NodeType.ProbabilitySelector:
-                    nodeStyle = probabilitySelectorStyle;
-                    selectedNodeStyle = selectedProbabilitySelectorStyle;
+                    subNodeStyle = probabilitySelectorStyle;
                     break;
                 default:
                     throw new Exception("Unknown node type");
@@ -480,8 +472,9 @@ public class NodeBasedEditor : EditorWindow
                                 nodeType,
                                 mousePosition, 
                                 guiNodeSize,
-                                nodeStyle, 
-                                selectedNodeStyle, 
+                                guiNodeStyle, 
+                                selectedGuiNodeStyle, 
+                                subNodeStyle,
                                 childPointStyle, 
                                 parentPointStyle, 
                                 callNumberStyle,
