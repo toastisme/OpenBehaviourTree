@@ -26,7 +26,7 @@ public class NodeBase
     }
 
     public Rect GetRect(){return rect;} 
-    public void SetPosition(Vector2 position){
+    public virtual void SetPosition(Vector2 position){
         this.rect.position = position;
     }
 

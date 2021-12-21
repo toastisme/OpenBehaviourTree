@@ -235,6 +235,11 @@ public class GUINode : CallableNode
         }
     }
 
+    public override void SetPosition(Vector2 position){
+        Vector2 delta = position - this.rect.position;
+        Drag(delta);
+    }
+
 
 
 }
