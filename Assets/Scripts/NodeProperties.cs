@@ -19,8 +19,8 @@ public class NodeColors
 {
     public Color defaultColor = NodeProperties.GetDefaultColor();
     public Color callNumberColor = NodeProperties.GetDefaultColor();
-    public Color actionColor = NodeProperties.GetDefaultColor();
-    public Color probabilityWeightColor = NodeProperties.GetDefaultColor();
+    public Color actionColor = NodeProperties.GetActionColor();
+    public Color probabilityWeightColor = NodeProperties.GetProbabilityWeightColor();
     public Color decoratorColor = NodeProperties.GetDecoratorColor();
     public Color sequenceSelectorColor = NodeProperties.GetSequenceSelectorColor();
     public Color prioritySelectorColor = NodeProperties.GetPrioritySelectorColor();
@@ -104,17 +104,19 @@ public class NodeProperties
     public static Vector2 SubNodeSize(){return new Vector2(200, 60);}
 
     // Color
-    public static Color GetDefaultColor(){return new Color(38.0f/255.0f, 70.0f/255.0f, 83.0f/255.0f);}
-    public static Color GetDecoratorColor(){return new Color(42.0f/255.0f, 157.0f/255.0f, 143.0f/255.0f);}
-    public static Color GetSequenceSelectorColor(){return new Color(233.0f/255.0f, 196.0f/255.0f, 106.0f/255.0f);}
-    public static Color GetProbabilitySelectorColor(){return new Color(244.0f/255.0f, 162.0f/255.0f, 97.0f/255.0f);}
-    public static Color GetPrioritySelectorColor(){return new Color(231.0f/255.0f, 111.0f/255.0f, 81.0f/255.0f);}
+    public static Color GetDefaultColor(){return new Color(87f/255.0f, 117f/255.0f, 144f/255.0f);}
+    public static Color GetDecoratorColor(){return new Color(67f/255.0f, 170f/255.0f, 139f/255.0f);}
+    public static Color GetSequenceSelectorColor(){return new Color(249f/255.0f, 199f/255.0f, 79f/255.0f);}
+    public static Color GetProbabilitySelectorColor(){return new Color(249f/255.0f, 132f/255.0f, 74f/255.0f);}
+    public static Color GetProbabilityWeightColor(){return new Color(248f/255.0f, 150f/255.0f, 30f/255.0f);}
+    public static Color GetPrioritySelectorColor(){return new Color(39f/255.0f, 125f/255.0f, 161f/255.0f);}
+    public static Color GetActionColor(){return new Color(249f/255.0f, 65f/255.0f, 68f/255.0f);}
 
     // Style
 
     public static GUIStyle GUINodeStyle(){
         GUIStyle nodeStyle = new GUIStyle();
-        nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         nodeStyle.border = new RectOffset(12, 12, 12, 12);
         nodeStyle.normal.textColor = Color.white;
         nodeStyle.alignment = TextAnchor.UpperCenter;
@@ -123,13 +125,13 @@ public class NodeProperties
 
     public static GUIStyle SelectedGUINodeStyle(){
         GUIStyle selectedNodeStyle = GUINodeStyle();
-        selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
+        selectedNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0 on.png") as Texture2D;
         return selectedNodeStyle;
     }
 
     public static GUIStyle RootStyle(){
         GUIStyle rootStyle = new GUIStyle();
-        rootStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        rootStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         rootStyle.border = new RectOffset(12, 12, 12, 12);
         rootStyle.normal.textColor = Color.white;
         rootStyle.alignment = TextAnchor.UpperCenter;
@@ -138,7 +140,7 @@ public class NodeProperties
 
     public static GUIStyle DecoratorStyle(){
         GUIStyle decoratorStyle = new GUIStyle();
-        decoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        decoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         decoratorStyle.border = new RectOffset(12, 12, 12, 12);
         decoratorStyle.normal.textColor = Color.white;
         decoratorStyle.alignment = TextAnchor.MiddleCenter;
@@ -147,13 +149,13 @@ public class NodeProperties
 
     public static GUIStyle SelectedDecoratorStyle(){
         GUIStyle selectedDecoratorStyle =  DecoratorStyle();
-        selectedDecoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
+        selectedDecoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0 on.png") as Texture2D;
         return selectedDecoratorStyle;
     }
 
     public static GUIStyle SequenceSelectorStyle(){
         GUIStyle sequenceSelectorStyle = new GUIStyle();
-        sequenceSelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        sequenceSelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         sequenceSelectorStyle.border = new RectOffset(12, 12, 12, 12);
         sequenceSelectorStyle.normal.textColor = Color.white;
         sequenceSelectorStyle.alignment = TextAnchor.UpperCenter;
@@ -162,7 +164,7 @@ public class NodeProperties
 
     public static GUIStyle PrioritySelectorStyle(){
         GUIStyle prioritySelectorStyle = new GUIStyle();
-        prioritySelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        prioritySelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         prioritySelectorStyle.border = new RectOffset(12, 12, 12, 12);
         prioritySelectorStyle.normal.textColor = Color.white;
         prioritySelectorStyle.alignment = TextAnchor.UpperCenter;
@@ -171,7 +173,7 @@ public class NodeProperties
 
     public static GUIStyle ProbabilitySelectorStyle(){
         GUIStyle probabilitySelectorStyle = new GUIStyle();
-        probabilitySelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        probabilitySelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         probabilitySelectorStyle.border = new RectOffset(12, 12, 12, 12);
         probabilitySelectorStyle.normal.textColor = Color.white;
         probabilitySelectorStyle.alignment = TextAnchor.UpperCenter;
@@ -180,7 +182,7 @@ public class NodeProperties
 
     public static GUIStyle ActionStyle(){
         GUIStyle actionStyle = new GUIStyle();
-        actionStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        actionStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         actionStyle.border = new RectOffset(12, 12, 12, 12);
         actionStyle.normal.textColor = Color.white;
         actionStyle.alignment = TextAnchor.UpperCenter;
@@ -189,7 +191,7 @@ public class NodeProperties
 
     public static GUIStyle ProbabilityWeightStyle(){
         GUIStyle probabilityWeightStyle = new GUIStyle();
-        probabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        probabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         probabilityWeightStyle.border = new RectOffset(12, 12, 12, 12);
         probabilityWeightStyle.normal.textColor = Color.white;
         probabilityWeightStyle.alignment = TextAnchor.UpperCenter;
@@ -198,13 +200,13 @@ public class NodeProperties
 
     public static GUIStyle SelectedProbabilityWeightStyle(){
         GUIStyle selectedProbabilityWeightStyle = ProbabilityWeightStyle();
-        selectedProbabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
+        selectedProbabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0 on.png") as Texture2D;
         return selectedProbabilityWeightStyle;
     }
 
     public static GUIStyle CallNumberStyle(){
         GUIStyle callNumberStyle = new GUIStyle();
-        callNumberStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        callNumberStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
         callNumberStyle.border = new RectOffset(12, 12, 12, 12);
         callNumberStyle.normal.textColor = Color.white;
         callNumberStyle.alignment = TextAnchor.MiddleCenter;

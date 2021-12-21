@@ -29,6 +29,7 @@ public class Connection
     public void AddProbabilityWeight(Vector2 size, 
                                      GUIStyle nodeStyle,
                                      GUIStyle selectedNodeStyle,
+                                     Color nodeColor,
                                      Action<NodeBase> UpdatePanelDetails,
                                      BehaviourTree behaviourTree
                                      ){
@@ -38,6 +39,7 @@ public class Connection
                                                         size,
                                                         nodeStyle,
                                                         selectedNodeStyle,
+                                                        nodeColor,
                                                         UpdatePanelDetails,
                                                         behaviourTree
                                                         );

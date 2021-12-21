@@ -6,17 +6,20 @@ using UnityEngine;
 public class GUIProbabilityWeight : NodeBase
 {
     BehaviourTree bt;
+    Color nodeColor;
     public GUIProbabilityWeight(string task,
                    Vector2 position, 
                    Vector2 size,
                    GUIStyle nodeStyle,
                    GUIStyle selectedStyle, 
+                   Color nodeColor,
                    Action<NodeBase> UpdatePanelDetails,
                    BehaviourTree behaviourTree
                    )
     {
         SetNodeTypeFromTask(task);
         this.style = nodeStyle;
+        this.nodeColor = nodeColor;
         this.selectedNodeStyle = selectedStyle;
         this.task = task;
         this.name = "";
@@ -83,6 +86,13 @@ public class GUIProbabilityWeight : NodeBase
         }
         genericMenu.ShowAsContext();
 
+    }
+    public override void Draw()
+    {
+        Color currentColor = GUI.backgroundColor;
+        GUI.backgroundColor = nodeColor;
+        GUI.Box(rect, "\n" + name + "\n" + task, style);
+        GUI.backgroundColor = currentColor;
     }
 
 

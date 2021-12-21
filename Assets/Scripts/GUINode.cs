@@ -39,7 +39,6 @@ public class GUINode : CallableNode
         this.nodeColors = nodeColors;
         this.nodeType = nodeType;
         this.task = NodeBase.GetDefaultStringFromNodeType(nodeType);
-        SetNodeTypeFromTask(task);
         rect = new Rect(position.x, position.y, size.x, size.y);
         subNodeRect = new Rect(position.x, position.y+subNodeSize.y*.5f, subNodeSize.x, subNodeSize.y);
         initDecoratorPos = new Vector2(0, rect.height*.21f);

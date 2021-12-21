@@ -33,7 +33,7 @@ public class GUIDecorator : CallableNode
         defaultNodeStyle = nodeStyle;
         this.selectedNodeStyle = selectedStyle;
         this.nodeColor = nodeColor;
-        this.callNumberColor = nodeColor;
+        this.callNumberColor = callNumberColor;
     }
 
 

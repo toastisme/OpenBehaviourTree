@@ -520,6 +520,7 @@ public class NodeBasedEditor : EditorWindow
             newConnection.AddProbabilityWeight(nodeSizes.subNodeSize,
                                                nodeStyles.probabilityWeightStyle,
                                                nodeStyles.selectedProbabilityWeightStyle,
+                                               nodeColors.probabilityWeightColor,
                                                UpdatePanelDetails,
                                                bt);
         } 
