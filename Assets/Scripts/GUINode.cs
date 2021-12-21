@@ -13,8 +13,8 @@ public class GUINode : CallableNode
     protected Vector2 subNodeSize = NodeProperties.SubNodeSize();
     public ConnectionPoint childPoint;
     public ConnectionPoint parentPoint;
-    private List<Connection> childNodes;
-    protected Connection parentNode;
+    private List<Connection> childConnections;
+    protected Connection parentConnection;
     public Action<GUINode> OnRemoveNode;
     protected BehaviourTree bt;
     protected Rect subNodeRect;
@@ -58,7 +58,7 @@ public class GUINode : CallableNode
         OnRemoveNode = OnClickRemoveNode;
         this.UpdatePanelDetails = UpdatePanelDetails;
         this.bt = behaviourTree;
-        childNodes = new List<Connection>();
+        childConnections = new List<Connection>();
         decorators = new List<GUIDecorator>();
 
     }
@@ -70,8 +70,8 @@ public class GUINode : CallableNode
     {
         base.Drag(delta);
         subNodeRect.position += delta; 
-        if (childNodes != null){
-            foreach(Connection childNode in childNodes){
+        if (childConnections != null){
+            foreach(Connection childNode in childConnections){
                 childNode.GetChildNode().Drag(delta);
             }
         }
@@ -192,22 +192,22 @@ public class GUINode : CallableNode
         GUI.changed = true;
     }
 
-    public List<Connection> GetChildNodes(){return childNodes;}
-    public Connection GetParentNode(){return parentNode;}
-    public void SetChildNodes(List<Connection> childNodes){this.childNodes = childNodes;}
-    public void AddChildNode(Connection connection){
-        this.childNodes.Add(connection);
+    public List<Connection> GetChildConnections(){return childConnections;}
+    public Connection GetParentConnection(){return parentConnection;}
+    public void SetChildConnections(List<Connection> childConnections){this.childConnections = childConnections;}
+    public void AddChildConnection(Connection connection){
+        this.childConnections.Add(connection);
     }
-    public void RemoveChildNode(Connection connection){
-        childNodes.Remove(connection);
+    public void RemoveChildConnection(Connection connection){
+        childConnections.Remove(connection);
     }
 
     public void RefreshChildOrder(){
         /**
-         * Orders childNodes by x position
+         * Orders childConnections by x position
          */
-        if (childNodes != null){
-            childNodes.Sort((x,y) => x.GetChildNode().GetXPos().CompareTo(y.GetChildNode().GetXPos()));
+        if (childConnections != null){
+            childConnections.Sort((x,y) => x.GetChildNode().GetXPos().CompareTo(y.GetChildNode().GetXPos()));
         }
 
     }
@@ -215,11 +215,11 @@ public class GUINode : CallableNode
     public float GetXPos(){
         return rect.x;
     }
-    public void RemoveParentNode(){
-        this.parentNode = null;
+    public void RemoveParentConnection(){
+        this.parentConnection = null;
     }
-    public void SetParentNode(Connection connection){
-        this.parentNode = connection;       
+    public void SetParentConnection(Connection connection){
+        this.parentConnection = connection;       
     }
 
     public bool IsRootNode(){

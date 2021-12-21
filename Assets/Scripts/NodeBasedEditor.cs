@@ -483,14 +483,14 @@ public class NodeBasedEditor : EditorWindow
     private void RemoveNode(GUINode node){
         if (bt.connections != null)
         {
-            bt.connections.Remove(node.GetParentNode());
-            node.RemoveParentNode();
+            bt.connections.Remove(node.GetParentConnection());
+            node.RemoveParentConnection();
             
-            List<Connection> childNodes = node.GetChildNodes();
-            if (childNodes != null){
-                for (int i=childNodes.Count-1; i>0; i--){
-                    node.RemoveChildNode(childNodes[i]);
-                    bt.connections.Remove(childNodes[i]);
+            List<Connection> childConnections = node.GetChildConnections();
+            if (childConnections != null){
+                for (int i=childConnections.Count-1; i>0; i--){
+                    bt.connections.Remove(childConnections[i]);
+                    node.RemoveChildConnection(childConnections[i]);
                 }
             }
         }
@@ -514,8 +514,8 @@ public class NodeBasedEditor : EditorWindow
         Connection newConnection = new Connection(selectedChildPoint, selectedParentPoint, OnClickRemoveConnection);
         GUINode parentNode = selectedChildPoint.GetNode();
         GUINode childNode = selectedParentPoint.GetNode();
-        parentNode.AddChildNode(newConnection);
-        childNode.SetParentNode(newConnection);
+        parentNode.AddChildConnection(newConnection);
+        childNode.SetParentConnection(newConnection);
         if (parentNode.GetTask() == "Probability Selector"){
             newConnection.AddProbabilityWeight(nodeSizes.subNodeSize,
                                                nodeStyles.probabilityWeightStyle,
@@ -550,7 +550,7 @@ public class NodeBasedEditor : EditorWindow
 
         // Update child nodes
         startingNode.RefreshChildOrder();
-        foreach(Connection connection in startingNode.GetChildNodes()){
+        foreach(Connection connection in startingNode.GetChildConnections()){
             callNumber = UpdateCallNumbers(connection.GetChildNode(), callNumber);
         }
         return callNumber;
