@@ -7,6 +7,7 @@ public class GUIProbabilityWeight : NodeBase
 {
     BehaviourTree bt;
     Color nodeColor;
+    Connection parentConnection;
     public GUIProbabilityWeight(string task,
                    Vector2 position, 
                    Vector2 size,
@@ -14,7 +15,8 @@ public class GUIProbabilityWeight : NodeBase
                    GUIStyle selectedStyle, 
                    Color nodeColor,
                    Action<NodeBase> UpdatePanelDetails,
-                   BehaviourTree behaviourTree
+                   BehaviourTree behaviourTree,
+                   Connection parentConnection
                    )
     {
         SetNodeTypeFromTask(task);
@@ -28,6 +30,7 @@ public class GUIProbabilityWeight : NodeBase
         defaultNodeStyle = nodeStyle;
         this.selectedNodeStyle = selectedStyle;
         bt = behaviourTree;
+        this.parentConnection = parentConnection;
     }
 
     public void Move(Vector2 pos)
@@ -84,6 +87,7 @@ public class GUIProbabilityWeight : NodeBase
                     genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
             }
         }
+        genericMenu.AddItem(new GUIContent("Remove connection"), false, () => parentConnection.OnClickRemoveConnection(parentConnection));
         genericMenu.ShowAsContext();
 
     }

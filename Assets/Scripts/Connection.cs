@@ -31,7 +31,8 @@ public class Connection
                                      GUIStyle selectedNodeStyle,
                                      Color nodeColor,
                                      Action<NodeBase> UpdatePanelDetails,
-                                     BehaviourTree behaviourTree
+                                     BehaviourTree behaviourTree,
+                                     Connection parentConnection
                                      ){
 
         probabilityWeight = new GUIProbabilityWeight("Constant weight (1)",
@@ -41,7 +42,8 @@ public class Connection
                                                         selectedNodeStyle,
                                                         nodeColor,
                                                         UpdatePanelDetails,
-                                                        behaviourTree
+                                                        behaviourTree,
+                                                        this
                                                         );
         probabilityWeightOffset = new Vector2(size.x*.5f, 0);
     }
@@ -63,9 +65,6 @@ public class Connection
         return false;
     }
 
-
-
-
     public void Draw()
     {
         Handles.DrawBezier(
@@ -82,15 +81,10 @@ public class Connection
             probabilityWeight.Draw();
         }
 
-        /*
-        if (Handles.Button((childPoint.GetRect().center + parentPoint.GetRect().center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
+        else if (Handles.Button((childPoint.GetRect().center + parentPoint.GetRect().center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
         {
-            if (OnClickRemoveConnection != null)
-            {
-                OnClickRemoveConnection(this);
-            }
+            ProcessContextMenu();
         }
-        */
     }
 
     public GUINode GetParentNode(){
@@ -103,4 +97,11 @@ public class Connection
     public Vector2 GetCentrePos(){
         return (childPoint.GetRect().center + parentNode.GetRect().center)*.5f;        
     }
+    private void ProcessContextMenu(){
+        GenericMenu genericMenu = new GenericMenu();
+        genericMenu.AddItem(new GUIContent("Remove connection"), false, () => OnClickRemoveConnection(this));
+        genericMenu.ShowAsContext();
+
+    }
+
 }
