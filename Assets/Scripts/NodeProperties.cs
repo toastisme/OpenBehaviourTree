@@ -230,4 +230,9 @@ public class NodeProperties
         parentPointStyle.alignment = TextAnchor.MiddleCenter;
         return parentPointStyle;
     }
+
+
+    public static Texture2D GetArrowTexture(){
+        return EditorGUIUtility.Load("icons/uparrow.png") as Texture2D;
+    }
 }

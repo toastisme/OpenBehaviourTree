@@ -74,7 +74,7 @@ public class Connection
             parentPoint.GetRect().center,
             Color.white,
             null,
-            2f
+            4f
         );
 
         if (HasProbabilityWeight()){

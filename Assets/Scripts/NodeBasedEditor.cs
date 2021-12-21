@@ -30,6 +30,7 @@ public class NodeBasedEditor : EditorWindow
     private int toolbarInt = 0;
 
     List<string> customTaskNames;
+    Texture2D arrowTexture;
 
     // Blackboard
     string[] activeBlackboardKey = {"","",""};
@@ -51,6 +52,7 @@ public class NodeBasedEditor : EditorWindow
                                                NodeType.ProbabilitySelector,
                                                NodeType.SequenceSelector};
         customTaskNames = GetCustomTaskNames();
+        arrowTexture = NodeProperties.GetArrowTexture();
     }
 
     private void AddRootNode(){
@@ -84,7 +86,7 @@ public class NodeBasedEditor : EditorWindow
 
         DrawConnectionLine(Event.current);
         DrawDetailsPanel();
-        
+
         if (MousePosOnGrid(Event.current.mousePosition)){
             ProcessNodeEvents(Event.current);
         }
@@ -340,16 +342,16 @@ public class NodeBasedEditor : EditorWindow
     {
         if (selectedChildPoint != null && selectedParentPoint == null)
         {
+            Vector2 startPos = selectedChildPoint.GetRect().center;
             Handles.DrawBezier(
-                selectedChildPoint.GetRect().center,
+                startPos,
                 e.mousePosition,
-                selectedChildPoint.GetRect().center,
-                selectedChildPoint.GetRect().center,
+                startPos,
+                startPos,
                 Color.white,
                 null,
-                2f
+                4f
             );
-
             GUI.changed = true;
             drawingLine = true;
         }
@@ -357,6 +359,26 @@ public class NodeBasedEditor : EditorWindow
             drawingLine = false;
         }
     }
+
+
+    private void DrawConnectionArrow(Vector2 startPos, Vector2 mousePos){
+        float angle = Mathf.Acos(Vector2.Dot(Vector2.up, (startPos - mousePos).normalized));  
+        angle *= 180f/Mathf.PI;
+        if (startPos.x - mousePos.x > 0){
+            angle *= -1;
+        }
+        Debug.Log(mousePos + " " + angle);
+        GUIUtility.RotateAroundPivot(angle, mousePos);
+        GUI.DrawTexture(new Rect(mousePos.x - arrowTexture.width/2f, 
+                                 mousePos.y - arrowTexture.height/2f, 
+                                 arrowTexture.width, 
+                                 arrowTexture.height), 
+                                 arrowTexture, 
+                                 ScaleMode.StretchToFill);
+        GUIUtility.RotateAroundPivot(-angle, mousePos);
+        
+    }
+
 
     private void ProcessCreateContextMenu(Vector2 mousePosition)
     {
