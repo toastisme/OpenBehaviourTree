@@ -15,6 +15,13 @@ public enum NodeType{
     CallNumber
 }
 
+public enum NodeState{
+    Running,
+    Failed,
+    Succeeded,
+    Idle
+}
+
 public class NodeColors
 {
     public Color defaultColor = NodeProperties.GetDefaultColor();
