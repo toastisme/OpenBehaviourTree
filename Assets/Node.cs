@@ -18,7 +18,7 @@ namespace BehaviourBase{
         protected Rect rect;
         protected Color color;
         protected bool isDragged;
-        protected bool isSelected;
+        public bool isSelected{get; protected set;}
         protected GUIStyle activeStyle;
         protected GUIStyle defaultStyle;
         protected GUIStyle selectedStyle;
@@ -30,10 +30,11 @@ namespace BehaviourBase{
         protected int callNumber = 1;
         protected Color callNumberColor;
         public string displayName{get; set;} 
-        public string displayTask{get; set;}
+        public readonly string displayTask;
 
         // Constructor
         protected Node(
+            NodeType nodeType,
             string displayTask,
             string displayName,
             Rect rect,
@@ -46,6 +47,7 @@ namespace BehaviourBase{
             Action<Node> UpdatePanelDetails
         )
         {
+            this.nodeType = nodeType;
             this.displayTask = displayTask;
             this.displayName = displayName;
             this.rect = rect;
@@ -184,6 +186,10 @@ namespace BehaviourBase{
                 default:
                     return "Action";
             }
+        }
+
+        public bool IsRootNode(){
+            return (nodeType == NodeType.Root);
         }
 
     }

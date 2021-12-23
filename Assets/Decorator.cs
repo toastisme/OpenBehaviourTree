@@ -10,14 +10,14 @@ namespace BehaviourBase{
         /**
         * \class Decorator
         * Represents a decorator node in the BehaviourTree class.
-        * The decorator node stores a boolean (condition), the current value of which
+        * The decorator node refers to a boolean (blackboard.GetBoolKeys()[displayTask]), the current value of which
         * dictates the the node's Nodestate.
         */
 
         Action<Decorator> OnRemoveDecorator;
-        bool condition;
+        BehaviourTreeBlackboard blackboard;
         public Decorator(
-            ref bool condition,
+            ref BehaviourTreeBlackboard blackboard,
             string displayTask,
             string displayName,
             Rect rect,
@@ -31,6 +31,7 @@ namespace BehaviourBase{
             Action<Decorator> OnRemoveDecorator,
             Node childNode
         ) : base(
+            NodeType.Decorator,
             displayTask:displayTask,
             displayName:displayName,
             rect:rect,
@@ -43,15 +44,14 @@ namespace BehaviourBase{
             UpdatePanelDetails:UpdatePanelDetails
         ){
             this.OnRemoveDecorator = OnRemoveDecorator;
-            this.nodeType = NodeType.Decorator;
             this.childNodes = new List<Node>{childNode};
-            this.condition = condition;
+            this.blackboard = blackboard;
         }
 
         // Node Methods 
-        
+
         public override NodeState Evaluate(){
-            nodeState = condition ? childNodes[0].Evaluate() : NodeState.Failed;
+            nodeState = blackboard.GetBoolKeys()[displayTask] ? childNodes[0].Evaluate() : NodeState.Failed;
             if (nodeState == NodeState.Failed){childNodes[0].ResetState();} 
             return nodeState;
         } 
