@@ -30,7 +30,7 @@ namespace BehaviourBase{
         protected int callNumber = 1;
         protected Color callNumberColor;
         public string displayName{get; set;} 
-        public readonly string displayTask;
+        public string displayTask;
 
         // Constructor
         protected Node(

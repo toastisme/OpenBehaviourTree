@@ -46,7 +46,7 @@ namespace BehaviourBase{
             Action<ConnectionPoint> OnClickChildPoint,
             Action<ConnectionPoint> OnClickParentPoint,
             Action<AggregateNode> OnRemoveNode,
-            BehaviourTreeBlackboard blackboard
+            ref BehaviourTreeBlackboard blackboard
         ) : base(
             nodeType:nodeType,
             displayTask:displayTask,

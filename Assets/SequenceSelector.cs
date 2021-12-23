@@ -29,7 +29,7 @@ namespace BehaviourBase{
             Action<ConnectionPoint> OnClickChildPoint,
             Action<ConnectionPoint> OnClickParentPoint,
             Action<AggregateNode> OnRemoveNode,
-            BehaviourTreeBlackboard blackboard
+            ref BehaviourTreeBlackboard blackboard
         ) :base(
             nodeType:NodeType.SequenceSelector,
             displayTask:displayTask,
@@ -47,7 +47,7 @@ namespace BehaviourBase{
             OnClickChildPoint:OnClickChildPoint,
             OnClickParentPoint:OnClickParentPoint,
             OnRemoveNode:OnRemoveNode,
-            blackboard:blackboard
+            blackboard:ref blackboard
         ){}
         public override NodeState Evaluate() { 
             bool anyChildRunning = false; 
