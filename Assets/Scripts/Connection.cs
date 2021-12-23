@@ -104,4 +104,11 @@ public class Connection
 
     }
 
+    public string GetProbabilityWeightKey(){
+        if (HasProbabilityWeight()){
+            return probabilityWeight.GetTask();
+        }
+        return "";
+    }
+
 }

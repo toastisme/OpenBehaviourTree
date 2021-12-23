@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.Assertions;
+using System;
 
 public class BehaviourTreeBlackboard : ScriptableObject
 {
@@ -187,5 +188,17 @@ public class BehaviourTreeBlackboard : ScriptableObject
     }
 
     public bool ModifyingKeys(){return modifyingKeys;}
+
+    public float GetWeightValue(string weightKey){
+        if (intKeys.ContainsKey(weightKey)){
+            return (float)intKeys[weightKey];
+        }
+        else if (floatKeys.ContainsKey(weightKey)){
+            return floatKeys[weightKey];
+        }
+        else{
+            throw new Exception("weightKey not in intKeys or floatKeys.");
+        }
+    }
 
 }
