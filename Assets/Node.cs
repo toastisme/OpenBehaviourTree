@@ -73,6 +73,13 @@ namespace BehaviourBase{
                 childNode.ResetState();
             }
         }
+        public void ResetOtherStates(Node exceptionNode){
+            foreach(Node childNode in childNodes){
+                if (childNode != exceptionNode){
+                    childNode.ResetState();
+                }
+            }
+        }
         public List<Node> GetChildNodes(){return childNodes;}
         public Node GetParentNode(){return parentNode;}
         public Node GetRunningLeafNode(){

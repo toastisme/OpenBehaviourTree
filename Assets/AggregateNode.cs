@@ -246,9 +246,11 @@ namespace BehaviourBase{
         public Connection GetParentConnection(){return parentConnection;}
         public void AddChildConnection(Connection connection){
             this.childConnections.Add(connection);
+            this.childNodes.Add(connection.GetChildNode());
         }
         public void RemoveChildConnection(Connection connection){
-            childConnections.Remove(connection);
+            this.childConnections.Remove(connection);
+            this.childNodes.Remove(connection.GetChildNode());
         }
         public void RemoveParentConnection(){
             this.parentConnection = null;
@@ -260,6 +262,10 @@ namespace BehaviourBase{
             */
             if (childConnections != null){
                 childConnections.Sort((x,y) => x.GetChildNode().GetXPos().CompareTo(y.GetChildNode().GetXPos()));
+            }
+            childNodes = new List<Node>();
+            foreach(Connection connection in childConnections){
+                childNodes.Add(connection.GetChildNode());
             }
 
         }
