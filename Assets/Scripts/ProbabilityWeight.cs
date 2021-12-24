@@ -5,17 +5,15 @@ using UnityEditor;
 using System;
 
 namespace BehaviourBase{
-public class ProbabilityWeight : Node
+public class ProbabilityWeight : AggregateNode
     {
 
-        readonly BehaviourTreeBlackboard blackboard;
-        Connection parentConnection;
         public ProbabilityWeight(string displayWeight,
                     Rect rect,
                     GUIStyle defaultStyle,
                     GUIStyle selectedStyle, 
                     Color color,
-                    Action<Node> UpdatePanelDetails,
+                    Action<AggregateNode> UpdatePanelDetails,
                     ref BehaviourTreeBlackboard blackboard,
                     Connection parentConnection
                     ) : base(
@@ -24,12 +22,13 @@ public class ProbabilityWeight : Node
                         displayName:"",
                         rect:rect,
                         parentNode:null,
-                        defaultStyle:defaultStyle,
-                        selectedStyle:selectedStyle,
-                        callNumberStyle:null,
-                        color:color,
-                        callNumberColor:color,
-                        UpdatePanelDetails:UpdatePanelDetails
+                        UpdatePanelDetails:UpdatePanelDetails,
+                        nodeStyles:null,
+                        nodeColors:null,
+                        OnClickChildPoint:null,
+                        OnClickParentPoint:null,
+                        OnRemoveNode:null,
+                        blackboard:ref blackboard
                     )
         {
             

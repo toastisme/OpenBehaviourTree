@@ -27,6 +27,7 @@ namespace BehaviourBase{
         public Action<AggregateNode> OnRemoveNode;
         protected BehaviourTreeBlackboard blackboard;
         protected Rect subNodeRect;
+        protected Action<AggregateNode> UpdatePanelDetails;
 
         // Constructor
         public AggregateNode(
@@ -35,12 +36,7 @@ namespace BehaviourBase{
             string displayName,
             Rect rect,
             Node parentNode,
-            GUIStyle defaultStyle,
-            GUIStyle selectedStyle,
-            GUIStyle callNumberStyle,
-            Color color,
-            Color callNumberColor,
-            Action<Node> UpdatePanelDetails,
+            Action<AggregateNode> UpdatePanelDetails,
             NodeStyles nodeStyles,
             NodeColors nodeColors,
             Action<ConnectionPoint> OnClickChildPoint,
@@ -53,12 +49,11 @@ namespace BehaviourBase{
             displayName:displayName,
             rect:rect,
             parentNode:parentNode,
-            defaultStyle:defaultStyle,
-            selectedStyle:selectedStyle,
-            callNumberStyle:callNumberStyle,
-            color:color,
-            callNumberColor:callNumberColor,
-            UpdatePanelDetails:UpdatePanelDetails
+            defaultStyle:nodeStyles.guiNodeStyle,
+            selectedStyle:nodeStyles.selectedGuiNodeStyle,
+            callNumberStyle:nodeStyles.callNumberStyle,
+            color:nodeColors.GetColor(nodeType),
+            callNumberColor:nodeColors.callNumberColor
         )
         {
             this.nodeStyles = nodeStyles;
@@ -76,6 +71,7 @@ namespace BehaviourBase{
             ApplyNodeTypeSettings(nodeType, 
                                   OnClickParentPoint, 
                                   OnClickChildPoint);
+            this.UpdatePanelDetails = UpdatePanelDetails;
         }
 
         // GUINode methods
@@ -97,6 +93,14 @@ namespace BehaviourBase{
                                                       nodeStyles.parentPointStyle, 
                                                       OnClickParentPoint);
                     break; 
+                case NodeType.Decorator:
+                    childPoint = null;
+                    parentPoint = null;
+                    break;
+                case NodeType.ProbabilityWeight:
+                    childPoint = null;
+                    parentPoint = null;
+                    break;
                 default:
                     childPoint = new ConnectionPoint(this, 
                                                      ConnectionPointType.In, 
@@ -189,7 +193,7 @@ namespace BehaviourBase{
                 }
             }
             if (!decoratorSelected){
-                bool guiChangedFromNode =  base.ProcessEvents(e);
+                bool guiChangedFromNode =  ProcessSubNodeEvents(e);
                 if (guiChangedFromNode){
                     guiChanged = true;
                 }
@@ -199,6 +203,52 @@ namespace BehaviourBase{
             }
             return guiChanged;
         }
+
+
+        public virtual bool ProcessSubNodeEvents(Event e){
+            bool guiChanged = false;
+            switch (e.type)
+            {
+                case EventType.MouseDown:
+                    if (e.button == 0)
+                    {
+                        if (rect.Contains(e.mousePosition))
+                        {
+                            isDragged = true;
+                            guiChanged = true;
+                            SetSelected(true);
+                            UpdatePanelDetails(this);
+                        }
+                        else
+                        {
+                            guiChanged = true;
+                            SetSelected(false);
+                        }
+                    }
+
+                    if (e.button == 1 && rect.Contains(e.mousePosition))
+                    {
+                        ProcessContextMenu();
+                        e.Use();
+                    }
+                    break;
+
+                case EventType.MouseUp:
+                    isDragged = false;
+                    break;
+
+                case EventType.MouseDrag:
+                    if (e.button == 0 && isDragged)
+                    {
+                        Drag(e.delta);
+                        e.Use();
+                        return true;
+                    }
+                    break;
+            }
+            return guiChanged;
+        }
+
         protected void OnClickRemoveNode()
         {
             if (OnRemoveNode != null)
@@ -275,6 +325,15 @@ namespace BehaviourBase{
         }
         public void SetParentConnection(Connection connection){
             this.parentConnection = connection;       
+        }
+        public void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
+            if (decorators != null){
+                foreach(Decorator decorator in decorators){
+                    if (decorator.displayTask == oldKeyName){
+                        decorator.displayTask = newKeyName;
+                    }
+                }
+            }
         }
     }
 

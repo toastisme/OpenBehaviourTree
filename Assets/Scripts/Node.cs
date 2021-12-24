@@ -22,7 +22,6 @@ namespace BehaviourBase{
         protected GUIStyle activeStyle;
         protected GUIStyle defaultStyle;
         protected GUIStyle selectedStyle;
-        protected Action<Node> UpdatePanelDetails;
 
         // Call number
         protected GUIStyle callNumberStyle;
@@ -43,8 +42,7 @@ namespace BehaviourBase{
             GUIStyle selectedStyle,
             GUIStyle callNumberStyle,
             Color color,
-            Color callNumberColor,
-            Action<Node> UpdatePanelDetails
+            Color callNumberColor
         )
         {
             this.nodeType = nodeType;
@@ -61,7 +59,6 @@ namespace BehaviourBase{
             this.callNumberStyle = callNumberStyle;
             this.color = color;
             this.callNumberColor = callNumberColor;
-            this.UpdatePanelDetails = UpdatePanelDetails;
             this.nodeState = NodeState.Idle;
         }
 
@@ -112,45 +109,6 @@ namespace BehaviourBase{
 
         public virtual bool ProcessEvents(Event e){
             bool guiChanged = false;
-            switch (e.type)
-            {
-                case EventType.MouseDown:
-                    if (e.button == 0)
-                    {
-                        if (rect.Contains(e.mousePosition))
-                        {
-                            isDragged = true;
-                            guiChanged = true;
-                            SetSelected(true);
-                            UpdatePanelDetails(this);
-                        }
-                        else
-                        {
-                            guiChanged = true;
-                            SetSelected(false);
-                        }
-                    }
-
-                    if (e.button == 1 && rect.Contains(e.mousePosition))
-                    {
-                        ProcessContextMenu();
-                        e.Use();
-                    }
-                    break;
-
-                case EventType.MouseUp:
-                    isDragged = false;
-                    break;
-
-                case EventType.MouseDrag:
-                    if (e.button == 0 && isDragged)
-                    {
-                        Drag(e.delta);
-                        e.Use();
-                        return true;
-                    }
-                    break;
-            }
             return guiChanged;
         }
 
@@ -197,6 +155,10 @@ namespace BehaviourBase{
 
         public bool IsRootNode(){
             return (nodeType == NodeType.Root);
+        }
+
+        public void SetPosition(Vector2 pos){
+            rect.position = pos;
         }
 
     }

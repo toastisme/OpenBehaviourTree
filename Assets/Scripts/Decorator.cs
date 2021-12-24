@@ -5,7 +5,7 @@ using UnityEditor;
 using System;
 
 namespace BehaviourBase{
-    public class Decorator : Node
+    public class Decorator : AggregateNode
     {
         /**
         * \class Decorator
@@ -15,7 +15,20 @@ namespace BehaviourBase{
         */
 
         Action<Decorator> OnRemoveDecorator;
-        BehaviourTreeBlackboard blackboard;
+        /*
+            NodeType nodeType,
+            string displayTask,
+            string displayName,
+            Rect rect,
+            Node parentNode,
+            Action<AggregateNode> UpdatePanelDetails,
+            NodeStyles nodeStyles,
+            NodeColors nodeColors,
+            Action<ConnectionPoint> OnClickChildPoint,
+            Action<ConnectionPoint> OnClickParentPoint,
+            Action<AggregateNode> OnRemoveNode,
+            ref BehaviourTreeBlackboard blackboard
+        */
         public Decorator(
             ref BehaviourTreeBlackboard blackboard,
             string displayTask,
@@ -27,25 +40,25 @@ namespace BehaviourBase{
             GUIStyle callNumberStyle,
             Color color,
             Color callNumberColor,
-            Action<Node> UpdatePanelDetails,
+            Action<AggregateNode> UpdatePanelDetails,
             Action<Decorator> OnRemoveDecorator,
-            Node childNode
+            AggregateNode childNode
         ) : base(
             NodeType.Decorator,
             displayTask:displayTask,
             displayName:displayName,
             rect:rect,
             parentNode:parentNode,
-            defaultStyle:defaultStyle,
-            selectedStyle:selectedStyle,
-            callNumberStyle:callNumberStyle,
-            color:color,
-            callNumberColor:callNumberColor,
-            UpdatePanelDetails:UpdatePanelDetails
+            UpdatePanelDetails:UpdatePanelDetails,
+            nodeStyles:null,
+            nodeColors:null,
+            OnClickChildPoint:null,
+            OnClickParentPoint:null,
+            OnRemoveNode:null,
+            blackboard:ref blackboard
         ){
             this.OnRemoveDecorator = OnRemoveDecorator;
             this.childNodes = new List<Node>{childNode};
-            this.blackboard = blackboard;
         }
 
         // Node Methods 
@@ -77,6 +90,10 @@ namespace BehaviourBase{
             GenericMenu genericMenu = new GenericMenu();
             genericMenu.AddItem(new GUIContent("Remove decorator"), false, Remove);
             genericMenu.ShowAsContext();
+        }
+
+        public override bool ProcessEvents(Event e){
+            return base.ProcessSubNodeEvents(e);
         }
 
 
