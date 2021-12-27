@@ -584,7 +584,7 @@ namespace BehaviourBase{
                 
                 List<Connection> childConnections = node.GetChildConnections();
                 if (childConnections != null){
-                    for (int i=childConnections.Count-1; i>0; i--){
+                    for (int i=childConnections.Count-1; i>=0; i--){
                         bt.connections.Remove(childConnections[i]);
                         node.RemoveChildConnection(childConnections[i]);
                     }
