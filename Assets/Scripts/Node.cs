@@ -158,7 +158,7 @@ namespace BehaviourBase{
             return (nodeType == NodeType.Root);
         }
 
-        public void SetPosition(Vector2 pos){
+        public virtual void SetPosition(Vector2 pos){
             rect.position = pos;
         }
 

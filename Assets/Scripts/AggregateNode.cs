@@ -333,6 +333,11 @@ namespace BehaviourBase{
                 }
             }
         }
+
+        public override void SetPosition(Vector2 pos){
+            Drag(pos - rect.position);
+
+        }
     }
 
 }
