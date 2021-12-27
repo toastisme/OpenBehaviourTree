@@ -10,9 +10,8 @@ public class ProbabilityWeight : AggregateNode
 
         public ProbabilityWeight(string displayWeight,
                     Rect rect,
-                    GUIStyle defaultStyle,
-                    GUIStyle selectedStyle, 
-                    Color color,
+                    NodeStyles nodeStyles,
+                    NodeColors nodeColors,
                     Action<AggregateNode> UpdatePanelDetails,
                     ref BehaviourTreeBlackboard blackboard,
                     Connection parentConnection
@@ -23,8 +22,8 @@ public class ProbabilityWeight : AggregateNode
                         rect:rect,
                         parentNode:null,
                         UpdatePanelDetails:UpdatePanelDetails,
-                        nodeStyles:null,
-                        nodeColors:null,
+                        nodeStyles:nodeStyles,
+                        nodeColors:nodeColors,
                         OnClickChildPoint:null,
                         OnClickParentPoint:null,
                         OnRemoveNode:null,
@@ -34,6 +33,7 @@ public class ProbabilityWeight : AggregateNode
             
             this.blackboard = blackboard;
             this.parentConnection = parentConnection;
+            activeStyle = defaultStyle;
         }
 
         public void Move(Vector2 pos)

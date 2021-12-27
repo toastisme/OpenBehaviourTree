@@ -616,9 +616,8 @@ namespace BehaviourBase{
             childNode.SetParentConnection(newConnection);
             if (parentNode.nodeType == NodeType.ProbabilitySelector){
                 newConnection.AddProbabilityWeight(nodeSizes.subNodeSize,
-                                                nodeStyles.probabilityWeightStyle,
-                                                nodeStyles.selectedProbabilityWeightStyle,
-                                                nodeColors.probabilityWeightColor,
+                                                nodeStyles,
+                                                nodeColors,
                                                 UpdatePanelDetails,
                                                 ref bt.blackboard,
                                                 newConnection);

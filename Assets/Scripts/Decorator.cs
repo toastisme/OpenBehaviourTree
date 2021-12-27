@@ -15,31 +15,15 @@ namespace BehaviourBase{
         */
 
         Action<Decorator> OnRemoveDecorator;
-        /*
-            NodeType nodeType,
-            string displayTask,
-            string displayName,
-            Rect rect,
-            Node parentNode,
-            Action<AggregateNode> UpdatePanelDetails,
-            NodeStyles nodeStyles,
-            NodeColors nodeColors,
-            Action<ConnectionPoint> OnClickChildPoint,
-            Action<ConnectionPoint> OnClickParentPoint,
-            Action<AggregateNode> OnRemoveNode,
-            ref BehaviourTreeBlackboard blackboard
-        */
+
         public Decorator(
             ref BehaviourTreeBlackboard blackboard,
             string displayTask,
             string displayName,
             Rect rect,
             Node parentNode,
-            GUIStyle defaultStyle,
-            GUIStyle selectedStyle,
-            GUIStyle callNumberStyle,
-            Color color,
-            Color callNumberColor,
+            NodeStyles nodeStyles,
+            NodeColors nodeColors,
             Action<AggregateNode> UpdatePanelDetails,
             Action<Decorator> OnRemoveDecorator,
             AggregateNode childNode
@@ -50,8 +34,8 @@ namespace BehaviourBase{
             rect:rect,
             parentNode:parentNode,
             UpdatePanelDetails:UpdatePanelDetails,
-            nodeStyles:null,
-            nodeColors:null,
+            nodeStyles:nodeStyles,
+            nodeColors:nodeColors,
             OnClickChildPoint:null,
             OnClickParentPoint:null,
             OnRemoveNode:null,
@@ -59,6 +43,7 @@ namespace BehaviourBase{
         ){
             this.OnRemoveDecorator = OnRemoveDecorator;
             this.childNodes = new List<Node>{childNode};
+            this.callNumberRect.position = rect.position;
         }
 
         // Node Methods 
@@ -94,6 +79,21 @@ namespace BehaviourBase{
 
         public override bool ProcessEvents(Event e){
             return base.ProcessSubNodeEvents(e);
+        }
+
+        public override void Draw()
+        {
+            Color currentColor = GUI.backgroundColor;
+            GUI.backgroundColor = nodeColors.GetColor(nodeType);
+            if (isSelected){
+                GUI.Box(rect, "\n" + displayName + "\n" + displayTask, nodeStyles.selectedGuiNodeStyle);
+            }
+            else{
+                GUI.Box(rect, "\n" + displayName + "\n" + displayTask, nodeStyles.guiNodeStyle);
+            }
+            GUI.backgroundColor = nodeColors.callNumberColor;
+            GUI.Box(callNumberRect, callNumber.ToString(), nodeStyles.callNumberStyle);
+            GUI.backgroundColor = currentColor;
         }
 
 

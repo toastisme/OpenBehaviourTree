@@ -273,11 +273,8 @@ namespace BehaviourBase{
                                 subNodeSize[1] 
                                 ),
                                 parentNode:this.parentNode,
-                                defaultStyle:nodeStyles.decoratorStyle, 
-                                selectedStyle:nodeStyles.selectedDecoratorStyle, 
-                                callNumberStyle:nodeStyles.callNumberStyle,
-                                color:nodeColors.decoratorColor,
-                                callNumberColor:nodeColors.callNumberColor,
+                                nodeStyles:nodeStyles, 
+                                nodeColors:nodeColors,
                                 UpdatePanelDetails:UpdatePanelDetails,
                                 OnRemoveDecorator:OnClickRemoveDecorator,
                                 childNode:this

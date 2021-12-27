@@ -28,21 +28,19 @@ namespace BehaviourBase{
         }   
 
         public void AddProbabilityWeight(Vector2 size, 
-                                        GUIStyle nodeStyle,
-                                        GUIStyle selectedNodeStyle,
-                                        Color nodeColor,
-                                        Action<AggregateNode> UpdatePanelDetails,
-                                        ref BehaviourTreeBlackboard blackboard,
-                                        Connection parentConnection
+                                         NodeStyles nodeStyles,
+                                         NodeColors nodeColors,
+                                         Action<AggregateNode> UpdatePanelDetails,
+                                         ref BehaviourTreeBlackboard blackboard,
+                                         Connection parentConnection
                                         ){
             Vector2 centrePos = GetCentrePos();
             Rect probabilityWeightRect = new Rect(centrePos.x, centrePos.y, size.x, size.y);
 
             probabilityWeight = new ProbabilityWeight("Constant weight (1)",
                                                       probabilityWeightRect,
-                                                            nodeStyle,
-                                                            selectedNodeStyle,
-                                                            nodeColor,
+                                                            nodeStyles,
+                                                            nodeColors,
                                                             UpdatePanelDetails,
                                                             ref blackboard,
                                                             this
