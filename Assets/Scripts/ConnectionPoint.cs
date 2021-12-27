@@ -1,58 +1,60 @@
 using System;
 using UnityEngine;
 
-public enum ConnectionPointType { In, Out }
+namespace BehaviourBase{
+    public enum ConnectionPointType { In, Out }
 
-public class ConnectionPoint
-{
-    private Rect rect;
-    private Rect nodeRect;
-
-    public ConnectionPointType type;
-
-    public GUINode node;
-
-    public GUIStyle style;
-
-    public Action<ConnectionPoint> OnClickConnectionPoint;
-
-    public ConnectionPoint(GUINode node, ConnectionPointType type, GUIStyle style, Action<ConnectionPoint> OnClickConnectionPoint)
+    public class ConnectionPoint
     {
-        this.node = node;
-        nodeRect = node.GetRect();
-        this.type = type;
-        this.style = style;
-        this.OnClickConnectionPoint = OnClickConnectionPoint;
-        rect = new Rect(0, 0, nodeRect.width -12f, 20f);
-    }
+        private Rect rect;
+        private Rect nodeRect;
 
-    public GUINode GetNode(){return node;}
-    public Rect GetRect(){
-        return rect;
-    }
+        public ConnectionPointType type;
 
+        public AggregateNode node;
 
-    public void Draw()
-    {
-        nodeRect = node.GetRect();
-        rect.x = nodeRect.x + (nodeRect.width * 0.5f) - rect.width * 0.5f;
+        public GUIStyle style;
 
-        switch (type)
+        public Action<ConnectionPoint> OnClickConnectionPoint;
+
+        public ConnectionPoint(AggregateNode node, ConnectionPointType type, GUIStyle style, Action<ConnectionPoint> OnClickConnectionPoint)
         {
-            case ConnectionPointType.In:
-            rect.y = nodeRect.y + nodeRect.height - rect.height * .5f;
-            break;
-
-            case ConnectionPointType.Out:
-            rect.y = nodeRect.y - rect.height*.5f;
-            break;
+            this.node = node;
+            nodeRect = node.GetRect();
+            this.type = type;
+            this.style = style;
+            this.OnClickConnectionPoint = OnClickConnectionPoint;
+            rect = new Rect(0, 0, nodeRect.width -12f, 20f);
         }
 
-        if (GUI.Button(rect, "", style))
+        public AggregateNode GetNode(){return node;}
+        public Rect GetRect(){
+            return rect;
+        }
+
+
+        public void Draw()
         {
-            if (OnClickConnectionPoint != null)
+            nodeRect = node.GetRect();
+            rect.x = nodeRect.x + (nodeRect.width * 0.5f) - rect.width * 0.5f;
+
+            switch (type)
             {
-                OnClickConnectionPoint(this);
+                case ConnectionPointType.In:
+                rect.y = nodeRect.y + nodeRect.height - rect.height * .5f;
+                break;
+
+                case ConnectionPointType.Out:
+                rect.y = nodeRect.y - rect.height*.5f;
+                break;
+            }
+
+            if (GUI.Button(rect, "", style))
+            {
+                if (OnClickConnectionPoint != null)
+                {
+                    OnClickConnectionPoint(this);
+                }
             }
         }
     }
