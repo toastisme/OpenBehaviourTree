@@ -585,13 +585,16 @@ namespace BehaviourBase{
                 List<Connection> childConnections = node.GetChildConnections();
                 if (childConnections != null){
                     for (int i=childConnections.Count-1; i>=0; i--){
+                        ResetCallNumber(childConnections[i].GetChildNode());
                         bt.connections.Remove(childConnections[i]);
                         node.RemoveChildConnection(childConnections[i]);
+
                     }
                 }
             }
 
             bt.nodes.Remove(node);
+            GUI.changed = true;
 
         }
 
@@ -624,6 +627,7 @@ namespace BehaviourBase{
             } 
             bt.connections.Add(newConnection);
             drawingLine = false;
+            GUI.changed = true;
         }
 
         private void ClearConnectionSelection()
@@ -653,6 +657,24 @@ namespace BehaviourBase{
                 callNumber = UpdateCallNumbers(connection.GetChildNode(), callNumber);
             }
             return callNumber;
+        }
+
+        private void ResetCallNumber(AggregateNode startingNode){
+            // Update decorators first 
+            List<Decorator> decorators = startingNode.GetDecorators();
+            if (decorators != null){
+                foreach(Decorator decorator in decorators){
+                    decorator.SetCallNumber(-1);
+                }
+            }
+
+            // Update nodes
+            startingNode.SetCallNumber(-1);
+
+            foreach(Connection connection in startingNode.GetChildConnections()){
+                ResetCallNumber(connection.GetChildNode());
+            }
+
         }
 
         private void RefreshDecoratorTasks(string oldKeyName, string newKeyName){

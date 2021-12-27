@@ -300,6 +300,7 @@ namespace BehaviourBase{
             this.childNodes.Remove(connection.GetChildNode());
         }
         public void RemoveParentConnection(){
+            this.parentConnection.GetParentNode().RemoveChildConnection(this.parentConnection);
             this.parentConnection = null;
         }
 
