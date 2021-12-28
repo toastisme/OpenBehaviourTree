@@ -147,9 +147,6 @@ namespace BehaviourBase{
                 ResetRootNode();
             }
             if (selectedNode != null){
-                //GUILayout.Label("Task: " + selectedNode.displayTask);
-                //GUILayout.Label("Name");
-                //selectedNode.displayName = GUILayout.TextField(selectedNode.displayName, 50);
                 selectedNode.DrawDetails();
             }
         }
@@ -278,7 +275,7 @@ namespace BehaviourBase{
 
         private void ProcessEvents(Event e)
         {
-            drag = Vector2.zero;
+            //drag = Vector2.zero;
 
             switch (e.type)
             {
@@ -308,6 +305,7 @@ namespace BehaviourBase{
 
                         if (MousePosOnGrid(e.mousePosition)){
                             OnDrag(e.delta);
+                            e.Use();
                         }
                     }
                 break;
@@ -385,7 +383,6 @@ namespace BehaviourBase{
             if (startPos.x - mousePos.x > 0){
                 angle *= -1;
             }
-            Debug.Log(mousePos + " " + angle);
             GUIUtility.RotateAroundPivot(angle, mousePos);
             GUI.DrawTexture(new Rect(mousePos.x - arrowTexture.width/2f, 
                                     mousePos.y - arrowTexture.height/2f, 
@@ -414,7 +411,7 @@ namespace BehaviourBase{
 
         private void OnDrag(Vector2 delta)
         {
-            drag = delta;
+            //drag = delta;
 
             if (bt.nodes != null)
             {

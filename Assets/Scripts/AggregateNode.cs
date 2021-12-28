@@ -121,6 +121,18 @@ namespace BehaviourBase{
         {
             base.Drag(delta);
             subNodeRect.position += delta; 
+            if (decorators != null){
+                foreach(Decorator decorator in decorators){
+                    if (!decorator.isSelected){
+                        decorator.Drag(delta);
+                    }
+                }
+            }
+        }
+
+        public void DragWithChildren(Vector2 delta){
+            base.Drag(delta);
+            subNodeRect.position += delta; 
             if (childConnections != null){
                 foreach(Node childNode in childNodes){
                     childNode.Drag(delta);
@@ -133,6 +145,7 @@ namespace BehaviourBase{
                     }
                 }
             }
+
         }
 
         public override void Draw()
@@ -245,7 +258,7 @@ namespace BehaviourBase{
                 case EventType.MouseDrag:
                     if (e.button == 0 && isDragged)
                     {
-                        Drag(e.delta);
+                        DragWithChildren(e.delta);
                         e.Use();
                         return true;
                     }
