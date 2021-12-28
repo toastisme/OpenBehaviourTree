@@ -170,7 +170,12 @@ namespace BehaviourBase{
                 }
                 else{            
                     foreach(string boolName in blackboard.GetBoolKeys().Keys){
-                        genericMenu.AddItem(new GUIContent("Add Decorator/" + boolName), false, () => OnClickAddDecorator(boolName));
+                        if (!DecoratorKeyActive(boolName)){
+                            genericMenu.AddItem(new GUIContent("Add Decorator/" + boolName), false, () => OnClickAddDecorator(boolName));
+                        }
+                        else{
+                            genericMenu.AddDisabledItem(new GUIContent("Add Decorator/" + boolName));
+                        }
                     }
                 }
                 genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
@@ -337,6 +342,17 @@ namespace BehaviourBase{
         public override void SetPosition(Vector2 pos){
             Drag(pos - rect.position);
 
+        }
+
+        private bool DecoratorKeyActive(string boolName){
+            if (decorators != null){
+                for (int i=0; i < decorators.Count; i++){
+                    if (decorators[i].displayTask == boolName){
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 
