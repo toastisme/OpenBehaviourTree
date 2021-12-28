@@ -17,7 +17,7 @@ namespace BehaviourBase{
             BehaviourTree scriptableObject = AssetDatabase.LoadAssetAtPath<BehaviourTree>(assetPath);
             if (scriptableObject != null)
             {
-                NodeBasedEditor window = EditorWindow.GetWindow(typeof(NodeBasedEditor)) as NodeBasedEditor;
+                BehaviourTreeEditor window = EditorWindow.GetWindow(typeof(BehaviourTreeEditor)) as BehaviourTreeEditor;
                 window.SetScriptableObject(scriptableObject);
                 window.Show();
                 return true;

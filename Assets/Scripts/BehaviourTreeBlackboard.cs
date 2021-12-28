@@ -142,6 +142,7 @@ namespace BehaviourBase{
                 }
                 allKeyNames.Remove(oldKeyName);
                 allKeyNames.Insert(allKeyIdxAndType.Key, newKeyName, allKeyIdxAndType.Value);
+                GUI.changed = true;
             }
             modifyingKeys = false;
         }

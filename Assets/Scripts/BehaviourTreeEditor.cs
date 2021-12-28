@@ -6,7 +6,7 @@ using System.Linq;
 using System;
 
 namespace BehaviourBase{
-    public class NodeBasedEditor : EditorWindow
+    public class BehaviourTreeEditor : EditorWindow
     {
         // Node Properties
         public NodeColors nodeColors;
@@ -28,7 +28,11 @@ namespace BehaviourBase{
         // Details panel
         private Rect detailsPanel;
         private string[] toolbarStrings = {"Selected Node", "Blackboard"};
-        private int toolbarInt = 0;
+        private enum ToolbarTab{
+            SelectedNode = 0,
+            Blackboard = 1
+        }
+        private int toolbarInt;
 
         List<string> customTaskNames;
         Texture2D arrowTexture;
@@ -87,20 +91,22 @@ namespace BehaviourBase{
             DrawGrid(20, 0.2f, Color.gray);
             DrawGrid(100, 0.4f, Color.gray);
 
-            DrawNodes();
-            DrawConnections();
+            if (bt != null && bt.nodes != null ){
+                DrawNodes();
+                DrawConnections();
 
-            DrawConnectionLine(Event.current);
-            DrawDetailsPanel();
+                DrawConnectionLine(Event.current);
+                DrawDetailsPanel();
 
-            if (MousePosOnGrid(Event.current.mousePosition)){
-                ProcessNodeEvents(Event.current);
-            }
-            ProcessEvents(Event.current);
+                if (MousePosOnGrid(Event.current.mousePosition)){
+                    ProcessNodeEvents(Event.current);
+                }
+                ProcessEvents(Event.current);
 
-            if (GUI.changed) {
-                Repaint();
-                UpdateCallNumbers(bt.nodes[0], 1);
+                if (GUI.changed) {
+                    Repaint();
+                    UpdateCallNumbers(bt.nodes[0], 1);
+                }
             }
 
         }
@@ -119,11 +125,12 @@ namespace BehaviourBase{
         void DrawDetailInfo(int unusedWindowID)
         {
             toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
-            switch(toolbarInt){
-                case 0:
+            ToolbarTab activeToolbarTab = (ToolbarTab)toolbarInt;
+            switch(activeToolbarTab){
+                case ToolbarTab.SelectedNode:
                     DrawNodeDetails(unusedWindowID);
                     break;
-                case 1:
+                case ToolbarTab.Blackboard:
                     DrawBlackboardDetails(unusedWindowID);
                     break;
             }
@@ -316,6 +323,7 @@ namespace BehaviourBase{
         private void ProcessNodeEvents(Event e)
         {
             bool guiChanged = false;
+            AggregateNode currentSeletedNode = selectedNode; 
             if (bt.nodes != null)
             {
                 for (int i = bt.nodes.Count - 1; i >= 0; i--)
@@ -329,6 +337,9 @@ namespace BehaviourBase{
             if (selectedNode != null){
                 if (!selectedNode.isSelected){
                     selectedNode = null;
+                }
+                else if (selectedNode != currentSeletedNode){
+                    toolbarInt = (int)ToolbarTab.SelectedNode; 
                 }
             }
 
