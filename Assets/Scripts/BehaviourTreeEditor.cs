@@ -147,9 +147,10 @@ namespace BehaviourBase{
                 ResetRootNode();
             }
             if (selectedNode != null){
-                GUILayout.Label("Task: " + selectedNode.displayTask);
-                GUILayout.Label("Name");
-                selectedNode.displayName = GUILayout.TextField(selectedNode.displayName, 50);
+                //GUILayout.Label("Task: " + selectedNode.displayTask);
+                //GUILayout.Label("Name");
+                //selectedNode.displayName = GUILayout.TextField(selectedNode.displayName, 50);
+                selectedNode.DrawDetails();
             }
         }
 

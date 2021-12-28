@@ -374,6 +374,12 @@ namespace BehaviourBase{
             }
             return false;
         }
+
+        public virtual void DrawDetails(){
+            GUILayout.Label("Task: " + displayTask);
+            GUILayout.Label("Name");
+            displayName = GUILayout.TextField(displayName, 50);
+        }
     }
 
 }

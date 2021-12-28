@@ -15,6 +15,7 @@ namespace BehaviourBase{
         */
 
         Action<Decorator> OnRemoveDecorator;
+        bool invertCondition = false;
 
         public Decorator(
             ref BehaviourTreeBlackboard blackboard,
@@ -85,15 +86,24 @@ namespace BehaviourBase{
         {
             Color currentColor = GUI.backgroundColor;
             GUI.backgroundColor = nodeColors.GetColor(nodeType);
+            string displayTaskAndCondition = displayTask;
+            if (invertCondition){displayTaskAndCondition = "!" + displayTaskAndCondition;}
             if (isSelected){
-                GUI.Box(rect, "\n" + displayName + "\n" + displayTask, nodeStyles.selectedGuiNodeStyle);
+                GUI.Box(rect, "\n" + displayName + "\n" + displayTaskAndCondition, nodeStyles.selectedGuiNodeStyle);
             }
             else{
-                GUI.Box(rect, "\n" + displayName + "\n" + displayTask, nodeStyles.guiNodeStyle);
+                GUI.Box(rect, "\n" + displayName + "\n" + displayTaskAndCondition, nodeStyles.guiNodeStyle);
             }
             GUI.backgroundColor = nodeColors.callNumberColor;
             GUI.Box(callNumberRect, callNumber.ToString(), nodeStyles.callNumberStyle);
             GUI.backgroundColor = currentColor;
+        }
+
+        public override void DrawDetails()
+        {
+            base.DrawDetails();
+            invertCondition = EditorGUILayout.Toggle("Invert condition", invertCondition);
+            
         }
 
 
