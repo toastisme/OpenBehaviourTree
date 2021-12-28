@@ -263,7 +263,27 @@ namespace BehaviourBase{
         }
 
         protected void OnClickRemoveDecorator(Decorator decorator){
-            decorators.Remove(decorator);
+            int idx = decorators.FindIndex(a => a==decorator);
+            if (idx != -1){
+
+                decorators.Remove(decorator);
+
+                // Resize node 
+                rect.height -= subNodeSize[1];
+                subNodeRect.y -= subNodeSize[1];
+                callNumberRect.y -= subNodeSize[1];
+
+                // Move all decorators below the removed one up
+                Vector2 moveVec = new Vector2(0, -subNodeSize[1]);
+                for (int i = idx; i < decorators.Count; i++){
+                    decorators[i].Drag(moveVec);
+                }
+                GUI.changed = true;
+            }
+            else{
+                throw new Exception("Decorator not found in decorators list.");
+            }
+
         }
 
         protected void OnClickAddDecorator(string taskDisplayName){
