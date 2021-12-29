@@ -16,14 +16,14 @@ namespace BehaviourBase{
                                                         "Vector3",
                                                         "Vector2"
                                                         };
-        public OrderedDictionary allKeyNames = new OrderedDictionary();
-        public Dictionary<string, int> intKeys = new Dictionary<string, int>();
-        public Dictionary<string, float> floatKeys = new Dictionary<string, float>();
-        public Dictionary<string, bool> boolKeys = new Dictionary<string, bool>();
-        public Dictionary<string, Vector3> vector3Keys = new Dictionary<string, Vector3>();
-        public Dictionary<string, Vector2> vector2Keys = new Dictionary<string, Vector2>();
-        public Dictionary<string, GameObject> gameObjectKeys = new Dictionary<string, GameObject>();
-        public Dictionary<string, string> stringKeys = new Dictionary<string, string>();
+        public OrderedDictionary allKeyNames;
+        public Dictionary<string, int> intKeys;
+        public Dictionary<string, float> floatKeys;
+        public Dictionary<string, bool> boolKeys;
+        public Dictionary<string, Vector3> vector3Keys;
+        public Dictionary<string, Vector2> vector2Keys;
+        public Dictionary<string, GameObject> gameObjectKeys;
+        public Dictionary<string, string> stringKeys;
 
         public Dictionary<string, int> GetIntKeys(){return intKeys;}
         public Dictionary<string, float> GetFloatKeys(){return floatKeys;}
@@ -34,10 +34,18 @@ namespace BehaviourBase{
         public Dictionary<string, string> GetStringKeys(){return stringKeys;}
 
         public List<string> GetKeyTypes(){return keyTypes;}
-        public OrderedDictionary GetAllKeyNames(){return allKeyNames;}
+        public OrderedDictionary GetAllKeyNames(){
+            if (allKeyNames == null){
+                allKeyNames = new OrderedDictionary();
+            }
+            return allKeyNames;
+        }
         bool modifyingKeys = false;
 
         private void AddKeyName(string keyName, string keyType){
+            if (allKeyNames == null){
+                allKeyNames = new OrderedDictionary();
+            }
             allKeyNames.Add(keyName, keyType);
         }
         string GetUniqueKeyName(){
@@ -172,30 +180,51 @@ namespace BehaviourBase{
                 }
                 switch(keyType){
                     case "int":
+                        if (intKeys == null){
+                            intKeys = new Dictionary<string, int>();
+                        }
                         intKeys.Add(keyName, 0);
                         allKeyNames.Add(keyName, "int");
                         break;
                     case "bool":
+                        if (boolKeys == null){
+                            boolKeys = new Dictionary<string, bool>();
+                        }
                         boolKeys.Add(keyName, false);
                         allKeyNames.Add(keyName, "bool");
                         break;
                     case "float":
+                        if (floatKeys == null){
+                            floatKeys = new Dictionary<string, float>();
+                        }
                         floatKeys.Add(keyName, 0);
                         allKeyNames.Add(keyName, "float");
                         break;
                     case "GameObject":
+                        if (gameObjectKeys == null){
+                            gameObjectKeys = new Dictionary<string, GameObject>();
+                        }
                         gameObjectKeys.Add(keyName, null);
                         allKeyNames.Add(keyName, "GameObject");
                         break;
                     case "string":
+                        if (stringKeys == null){
+                            stringKeys = new Dictionary<string, string>();
+                        }
                         stringKeys.Add(keyName, "");
                         allKeyNames.Add(keyName, "string");
                         break;
                     case "Vector3":
+                        if (vector3Keys == null){
+                            vector3Keys = new Dictionary<string, Vector3>();
+                        }
                         vector3Keys.Add(keyName, new Vector3(0,0,0));
                         allKeyNames.Add(keyName, "Vector3");
                         break;
                     case "Vector2":
+                        if (vector2Keys == null){
+                            vector2Keys = new Dictionary<string, Vector2>();
+                        }
                         vector2Keys.Add(keyName, new Vector2(0,0));
                         allKeyNames.Add(keyName, "Vector2");
                         break;
