@@ -46,7 +46,7 @@ namespace BehaviourBase{
             SetupTask();
         }
 
-        public void LoadTask(string displayTask){
+        public void LoadTask(){
             Type type = TypeUtils.GetType(displayTask); // Full class name (include the namespaces)
             ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
             object[] EMPTY_PARAMETERS = new object[0]; 
