@@ -43,18 +43,18 @@ namespace BehaviourBase{
             OnRemoveNode:OnRemoveNode,
             blackboard:ref blackboard
         ){
-            btTask = LoadTask(displayTask);
             SetupTask();
         }
 
-        private BehaviourTreeTask LoadTask(string displayTask){
+        public void LoadTask(string displayTask){
             Type type = TypeUtils.GetType(displayTask); // Full class name (include the namespaces)
             ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
-            object[] EMPTY_PARAMETERS = new object[0]; // This can be made into a static variable
+            object[] EMPTY_PARAMETERS = new object[0]; 
             
             // Invoke the constructor
-            // Can also be cast to Shoot but I'd like to point out a possible usage
-            return (BehaviourTreeTask)constructor.Invoke(EMPTY_PARAMETERS);
+            btTask =  (BehaviourTreeTask)constructor.Invoke(EMPTY_PARAMETERS);
+            btTask.SetBlackboard(blackboard:ref blackboard);
+            btTask.Setup();
             
         }
 
