@@ -34,6 +34,8 @@ namespace BehaviourBase{
         public Color sequenceSelectorColor = NodeProperties.GetSequenceSelectorColor();
         public Color prioritySelectorColor = NodeProperties.GetPrioritySelectorColor();
         public Color probabilitySelectorColor = NodeProperties.GetProbabilitySelectorColor();
+        public Color runningTint = NodeProperties.GetRunningTint();
+        public Color defaultTint = NodeProperties.GetDefaultTint();
 
         public Color GetColor(NodeType nodeType){
             switch(nodeType){
@@ -120,6 +122,8 @@ namespace BehaviourBase{
         public static Color GetProbabilityWeightColor(){return new Color(248f/255.0f, 150f/255.0f, 30f/255.0f);}
         public static Color GetPrioritySelectorColor(){return new Color(39f/255.0f, 125f/255.0f, 161f/255.0f);}
         public static Color GetActionColor(){return new Color(249f/255.0f, 65f/255.0f, 68f/255.0f);}
+        public static Color GetRunningTint(){return new Color(0f, 1f, 0f);}
+        public static Color GetDefaultTint(){return new Color(1f, 1f, 1f);}
 
         // Style
 

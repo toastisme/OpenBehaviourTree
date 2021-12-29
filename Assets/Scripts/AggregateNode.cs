@@ -157,6 +157,9 @@ namespace BehaviourBase{
                 parentPoint.Draw();
             }
             Color currentColor = GUI.backgroundColor;
+            if (nodeState == NodeState.Running){
+                GUI.color = nodeColors.runningTint;
+            }
             GUI.backgroundColor = nodeColors.defaultColor;
             if (isSelected){
                 GUI.Box(rect, "", nodeStyles.selectedGuiNodeStyle);
@@ -172,6 +175,7 @@ namespace BehaviourBase{
                 decorator.Draw();
             }
             GUI.backgroundColor = currentColor;
+            GUI.color = nodeColors.defaultTint;
         }
         protected override void ProcessContextMenu()
         {
