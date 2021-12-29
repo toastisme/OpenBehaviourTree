@@ -85,6 +85,21 @@ namespace BehaviourBase{
             }
         }
 
+        public int GetInt(string keyName){return intKeys[keyName];}
+        public bool GetBool(string keyName){return boolKeys[keyName];}
+        public float GetFloat(string keyName){return floatKeys[keyName];}
+        public GameObject GetGameObject(string keyName){return gameObjectKeys[keyName];}
+        public string GetString(string keyName){return stringKeys[keyName];}
+        public Vector3 GetVector3(string keyName){return vector3Keys[keyName];}
+        public Vector2 GetVector2(string keyName){return vector2Keys[keyName];}
+        public void SetInt(string keyName, int val){intKeys[keyName] = val;}
+        public void SetBool(string keyName, bool val){boolKeys[keyName] = val;}
+        public void SetFloat(string keyName, float val){floatKeys[keyName] = val;}
+        public void SetGameObject(string keyName, GameObject val){gameObjectKeys[keyName] = val;}
+        public void SetString(string keyName, string val){stringKeys[keyName] = val;}
+        public void SetVector3(string keyName, Vector3 val){vector3Keys[keyName] = val;}
+        public void SetVector2(string keyName, Vector2 val){vector2Keys[keyName] = val;}
+
         KeyValuePair<int, string> GetKeyIdxAndType(string keyName){
             IDictionaryEnumerator allKeysEnumerator = allKeyNames.GetEnumerator();
             int idx = 0;
