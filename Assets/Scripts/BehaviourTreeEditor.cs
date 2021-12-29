@@ -309,6 +309,11 @@ namespace BehaviourBase{
                         }
                     }
                 break;
+                case EventType.KeyDown:
+                    if (renamingBlackboardKey){
+                        renamingBlackboardKey = false;
+                    }
+                break;
             }
         }
 
