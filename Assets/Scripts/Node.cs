@@ -64,7 +64,7 @@ namespace BehaviourBase{
 
         // Node methods
         public virtual NodeState Evaluate(){return nodeState;}
-        public void ResetState(){
+        public virtual void ResetState(){
             nodeState = NodeState.Idle;
             foreach(Node childNode in childNodes){
                 childNode.ResetState();
@@ -79,7 +79,7 @@ namespace BehaviourBase{
         }
         public List<Node> GetChildNodes(){return childNodes;}
         public Node GetParentNode(){return parentNode;}
-        public Node GetRunningLeafNode(){
+        public virtual Node GetRunningLeafNode(){
             if (nodeState != NodeState.Running){
                 foreach (Node childNode in childNodes){
                     Node runningLeafNode = childNode.GetRunningLeafNode();
