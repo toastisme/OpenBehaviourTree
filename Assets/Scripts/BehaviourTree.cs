@@ -12,13 +12,13 @@ namespace BehaviourBase{
         public float evaluationDelay = 0.0001f;
 
 
-        public void LoadTree(){
+        public void LoadTree(MonoBehaviour monoBehaviour){
             /**
              * Loads all actionNode tasks and runs their setup (getting required gameobject components etc.)
              */
             foreach(AggregateNode node in nodes){
                 if (node is ActionNode actionNode){
-                    actionNode.LoadTask();
+                    actionNode.LoadTask(monoBehaviour);
                 }
             }
         }

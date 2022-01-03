@@ -40,7 +40,11 @@ namespace BehaviourBase{
             OnClickParentPoint:OnClickParentPoint,
             OnRemoveNode:OnRemoveNode,
             blackboard: ref blackboard
-        ){}
+        ){
+            if (displayTask == "Root"){
+                nodeType = NodeType.Root;
+            }
+        }
         public override NodeState Evaluate() { 
             foreach (Node node in childNodes){
                 switch(node.Evaluate()){

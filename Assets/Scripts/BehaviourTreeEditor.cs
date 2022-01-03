@@ -63,8 +63,7 @@ namespace BehaviourBase{
         private void AddRootNode(){
 
             bt.nodes = new List<AggregateNode>();
-            bt.nodes.Add(new AggregateNode(
-                                nodeType:NodeType.Root,
+            bt.nodes.Add(new PrioritySelector(
                                 displayTask:"Root",
                                 displayName:"",
                                 new Rect(0,0, 

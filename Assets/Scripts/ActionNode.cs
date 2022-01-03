@@ -43,10 +43,9 @@ namespace BehaviourBase{
             OnRemoveNode:OnRemoveNode,
             blackboard:ref blackboard
         ){
-            SetupTask();
         }
 
-        public void LoadTask(){
+        public void LoadTask(MonoBehaviour monoBehaviour){
             Type type = TypeUtils.GetType(displayTask); // Full class name (include the namespaces)
             ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
             object[] EMPTY_PARAMETERS = new object[0]; 
@@ -54,7 +53,8 @@ namespace BehaviourBase{
             // Invoke the constructor
             btTask =  (BehaviourTreeTask)constructor.Invoke(EMPTY_PARAMETERS);
             btTask.SetBlackboard(blackboard:ref blackboard);
-            btTask.Setup();
+            btTask.Setup(monoBehaviour);
+            SetupTask();
             
         }
 
