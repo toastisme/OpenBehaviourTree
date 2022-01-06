@@ -1,14 +1,11 @@
 
 
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System;
-using UnityEditor;
 using System.Linq;
 
-namespace BehaviourBase{
-    public class ProbabilitySelector : AggregateNode
+namespace BehaviourTree{
+    public class ProbabilitySelector : Node
     {    
         /**
         * \class ProbabilitySelector
@@ -19,48 +16,34 @@ namespace BehaviourBase{
         */
 
         private Node selectedNode;
+        private BehaviourTreeBlackboard blackboard;
 
         public ProbabilitySelector(
-            string displayTask,
-            string displayName,
-            Rect rect,
+            string task,
             Node parentNode,
-            Action<AggregateNode> UpdatePanelDetails,
-            NodeStyles nodeStyles,
-            NodeColors nodeColors,
-            Action<ConnectionPoint> OnClickChildPoint,
-            Action<ConnectionPoint> OnClickParentPoint,
-            Action<AggregateNode> OnRemoveNode,
             ref BehaviourTreeBlackboard blackboard
         ) :base(
-            nodeType:NodeType.ProbabilitySelector,
-            displayTask:displayTask,
-            displayName:displayName,
-            rect:rect,
-            parentNode:parentNode,
-            UpdatePanelDetails:UpdatePanelDetails,
-            nodeStyles:nodeStyles,
-            nodeColors:nodeColors,
-            OnClickChildPoint:OnClickChildPoint,
-            OnClickParentPoint:OnClickParentPoint,
-            OnRemoveNode:OnRemoveNode,
-            blackboard: ref blackboard
+            task:task,
+            parentNode:parentNode
         ){
             selectedNode = null;
+            this.blackboard = blackboard;
         }
-        private Node SelectNode(List<Node> nodes, List<float> nodeWeights){
+        private Node SelectNode(List<float> nodeWeights){
 
             /**
             * Selects a node randomly, weighted by nodeWeights
             */
 
+            List<float> nodeWeights = GetWeights();
             float weightTotal = nodeWeights.Sum();
-            float randomVal = UnityEngine.Random.value;
+            float randomVal = System.Random.value;
             float currentProb = 0f;
             for(int i=0; i< nodes.Count; i++){
                 currentProb += nodeWeights[i]/weightTotal;
                 if (randomVal <= currentProb){
-                    return nodes[i];
+                    // Get the node attached to the ProbabilityWeight node
+                    return nodes[i].ChildNodes[0];
                 }
             }
             return null;
@@ -77,8 +60,7 @@ namespace BehaviourBase{
             */
 
             if (selectedNode == null){
-                List<float> weights = GetWeights();
-                selectedNode = SelectNode(childNodes, weights);
+                selectedNode = SelectNode();
             }
             nodeState = selectedNode.Evaluate();
             if (selectedNode.Evaluate() == NodeState.Failed || selectedNode.Evaluate() == NodeState.Succeeded){
@@ -87,11 +69,10 @@ namespace BehaviourBase{
             return nodeState;
         }
 
-        public List<float> GetWeights(){
+        List<float> GetWeights(){
             List<float> weights = new List<float>();
-            foreach(Connection connection in childConnections){
-                string weightKey = connection.GetProbabilityWeightKey();
-                weights.Add(blackboard.GetWeightValue(weightKey));
+            foreach(Node childNode in ChildNodes){
+                weights.Add(blackboard.GetWeightValue(childNode.NodeTask));
             }
             return weights;
         }
