@@ -16,37 +16,15 @@ namespace BehaviourBase{
         */
 
         public PrioritySelector(
-            string displayTask,
-            string displayName,
-            Rect rect,
-            Node parentNode,
-            Action<AggregateNode> UpdatePanelDetails,
-            NodeStyles nodeStyles,
-            NodeColors nodeColors,
-            Action<ConnectionPoint> OnClickChildPoint,
-            Action<ConnectionPoint> OnClickParentPoint,
-            Action<AggregateNode> OnRemoveNode,
-            ref BehaviourTreeBlackboard blackboard
+            string task,
+            Node parentNode
         ) :base(
-            nodeType:NodeType.PrioritySelector,
-            displayTask:displayTask,
-            displayName:displayName,
-            rect:rect,
-            parentNode:parentNode,
-            UpdatePanelDetails:UpdatePanelDetails,
-            nodeStyles:nodeStyles,
-            nodeColors:nodeColors,
-            OnClickChildPoint:OnClickChildPoint,
-            OnClickParentPoint:OnClickParentPoint,
-            OnRemoveNode:OnRemoveNode,
-            blackboard: ref blackboard
-        ){
-            if (displayTask == "Root"){
-                nodeType = NodeType.Root;
-            }
-        }
+            task:task,
+            parentNode:parentNode
+        ){}
+
         public override NodeState Evaluate() { 
-            foreach (Node node in childNodes){
+            foreach (Node node in ChildNodes){
                 switch(node.Evaluate()){
                     case NodeState.Idle:
                         nodeState = NodeState.Idle;
