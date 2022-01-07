@@ -17,11 +17,11 @@ namespace BehaviourTree{
         private BehaviourTreeBlackboard blackboard;
 
         public ProbabilitySelector(
-            string task,
+            string taskName,
             Node parentNode,
             ref BehaviourTreeBlackboard blackboard
         ) :base(
-            task:task,
+            taskName:taskName,
             parentNode:parentNode
         ){
             selectedNode = null;

@@ -19,11 +19,11 @@ namespace BehaviourTree{
         private BehaviourTreeBlackboard blackboard; // Used find the task class at runtime
 
         public ActionNode(
-            string task,
+            string taskName,
             Node parentNode,
             ref BehaviourTreeBlackboard blackboard
         ) :base(
-            task:task,
+            taskName:taskName,
             parentNode:parentNode
         ){
             this.blackboard = blackboard;

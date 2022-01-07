@@ -8,10 +8,10 @@ namespace BehaviourTree{
         */
 
         public SequenceSelector(
-            string task,
+            string taskname,
             Node parentNode
         ) :base(
-            task:task,
+            taskName:taskName,
             parentNode:parentNode
         ){}
         public override NodeState Evaluate() { 

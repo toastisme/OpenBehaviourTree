@@ -9,10 +9,10 @@ namespace BehaviourTree{
         */
 
         public PrioritySelector(
-            string task,
+            string taskName,
             Node parentNode
         ) :base(
-            task:task,
+            taskName:taskName,
             parentNode:parentNode
         ){}
 

@@ -19,21 +19,27 @@ namespace BehaviourTree{
     [Serializable]
     public struct SerializableNode{
         int type;
-        string task;
+        string taskName;
         int childCount;
     }
     public abstract class Node
     {
         public NodeState NodeState {get; protected set;}
-        public string NodeTask {get; protected set;}
+        /**
+         * If a decision node (SequenceSelector, ProbabilitySelector, PrioritySelector), 
+         * TaskName is the node type.
+         * If a decorator, TaskName is a boolean key in the BehaviourTreeBlackboard.
+         * If an ActionNode, TaskName is the name of a BehaviourTreeTask class.
+         */ 
+        public string TaskName {get; protected set;}
         public List<Node> ChildNodes{get; protected set;}
         protected Node ParentNode{get; protected set;}
 
         protected Node(
-            string task,
+            string taskName,
             Node parentNode
         ){
-            this.NodeTask = task;
+            this.TaskName = taskName;
             this.ParentNode = parentNode;
         }
         public virtual NodeState Evaluate(){return NodeState;}
