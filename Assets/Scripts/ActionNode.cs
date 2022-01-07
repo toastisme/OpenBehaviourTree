@@ -6,47 +6,37 @@ using System;
 using UnityEditor;
 using System.Reflection;
 
-namespace BehaviourBase{
-    public class ActionNode : AggregateNode
+namespace BehaviourTree{
+    public class ActionNode : Node
     {    
         /**
         * \class ActionNode
         * Represents an action node in the BehaviourTree class.
         */
 
-        BehaviourTreeTask btTask;
-        Task task;
+        BehaviourTreeTask btTask; // The task class
+        Task executeTask; // The actual execute coroutine, within a task wrapper
+        private BehaviourTreeBlackboard blackboard; // Used find the task class at runtime
 
         public ActionNode(
-            string displayTask,
-            string displayName,
-            Rect rect,
-            AggregateNode parentNode,
-            Action<AggregateNode> UpdatePanelDetails,
-            NodeStyles nodeStyles,
-            NodeColors nodeColors,
-            Action<ConnectionPoint> OnClickChildPoint,
-            Action<ConnectionPoint> OnClickParentPoint,
-            Action<AggregateNode> OnRemoveNode,
+            string task,
+            Node parentNode,
             ref BehaviourTreeBlackboard blackboard
         ) :base(
-            nodeType:NodeType.Action,
-            displayTask:displayTask,
-            displayName:displayName,
-            rect:rect,
-            parentNode:parentNode,
-            UpdatePanelDetails:UpdatePanelDetails,
-            nodeStyles:nodeStyles,
-            nodeColors:nodeColors,
-            OnClickChildPoint:OnClickChildPoint,
-            OnClickParentPoint:OnClickParentPoint,
-            OnRemoveNode:OnRemoveNode,
-            blackboard:ref blackboard
+            task:task,
+            parentNode:parentNode
         ){
+            this.blackboard = blackboard;
         }
 
         public void LoadTask(MonoBehaviour monoBehaviour){
-            Type type = TypeUtils.GetType(displayTask); // Full class name (include the namespaces)
+            /**
+             * Uses task to obtain the corresponding BehaviourTreeTask class,
+             * calls its constructor and runs the BehaviourTreeTask Setup, using
+             * the GameObject's monoBehaviour
+             */
+
+            Type type = TypeUtils.GetType(task); // Full class name (include the namespaces)
             ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
             object[] EMPTY_PARAMETERS = new object[0]; 
             
@@ -54,17 +44,18 @@ namespace BehaviourBase{
             btTask =  (BehaviourTreeTask)constructor.Invoke(EMPTY_PARAMETERS);
             btTask.SetBlackboard(blackboard:ref blackboard);
             btTask.Setup(monoBehaviour);
-            SetupTask();
+            ResetTask();
             
         }
 
-        private void SetupTask(){
+        private void ResetTask(){
+            // Stops the underlying coroutine and gets it ready to run again
             if(task != null){
                 if (task.Running){
                     task.Stop();
                 }
             }
-            task = new Task(btTask.ExecuteTask((x)=>nodeState=x), false);
+            executeTask = new Task(btTask.ExecuteTask((x)=>nodeState=x), false);
         }
 
         public override NodeState Evaluate(){
@@ -84,29 +75,15 @@ namespace BehaviourBase{
 
             /**
             * Stops the action if running.
-            * Sets the NodeState to IDLE.
+            * Sets the NodeState to Idle.
             */
 
             if (task.Running){
                 task.Stop();
             }
-            SetupTask();
+            ResetTask();
             nodeState = NodeState.Idle;
         }
-
-        public override Node GetRunningLeafNode(){
-
-            /**
-            * Returns this.name if action is running.
-            * Else null.
-            */
-
-            if (nodeState == NodeState.Running){
-                return this;
-            }
-            return null;
-        }
-
     }
 
 }
