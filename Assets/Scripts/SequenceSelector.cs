@@ -9,7 +9,7 @@ public class SequenceSelector : Node
 
     public SequenceSelector(
         string taskname,
-        Node parentNode
+        Node parentNode=null
     ) :base(
         taskName:taskName,
         parentNode:parentNode

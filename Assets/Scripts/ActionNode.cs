@@ -20,8 +20,8 @@ public class ActionNode : Node
 
     public ActionNode(
         string taskName,
-        Node parentNode,
-        ref BehaviourTreeBlackboard blackboard
+        ref BehaviourTreeBlackboard blackboard,
+        Node parentNode=null
     ) :base(
         taskName:taskName,
         parentNode:parentNode

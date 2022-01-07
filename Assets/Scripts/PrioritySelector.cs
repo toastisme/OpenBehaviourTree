@@ -10,7 +10,7 @@ public class PrioritySelector : Node
 
     public PrioritySelector(
         string taskName,
-        Node parentNode
+        Node parentNode=null
     ) :base(
         taskName:taskName,
         parentNode:parentNode

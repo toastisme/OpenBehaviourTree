@@ -22,6 +22,7 @@ public struct SerializableNode{
     int type;
     string taskName;
     int childCount;
+    int parentIdx;
 }
 public abstract class Node
 {
@@ -40,7 +41,7 @@ public abstract class Node
 
     protected Node(
         string taskName,
-        Node parentNode
+        Node parentNode = null
     ){
         this.TaskName = taskName;
         this.ParentNode = parentNode;
@@ -64,6 +65,9 @@ public abstract class Node
     public abstract NodeType GetNodeType();
 
     public void AddChildNode(Node childNode){
+        if (ChildNodes == null){
+            ChildNodes = new List<Node>();
+        }
         ChildNodes.Add(childNode);
     }
     public void SetParentNode(Node parentNode){

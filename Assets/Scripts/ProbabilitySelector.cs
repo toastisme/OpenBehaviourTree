@@ -18,8 +18,8 @@ public class ProbabilitySelector : Node
 
     public ProbabilitySelector(
         string taskName,
-        Node parentNode,
-        ref BehaviourTreeBlackboard blackboard
+        ref BehaviourTreeBlackboard blackboard,
+        Node parentNode=null
     ) :base(
         taskName:taskName,
         parentNode:parentNode

@@ -3,13 +3,15 @@ public class ProbabilityWeight : Node
 {
     public ProbabilityWeight(
         string taskName,
-        Node parentNode,
-        Node childNode
+        Node parentNode=null,
+        Node childNode=null
     ) : base(
         taskName:taskName,
         parentNode:parentNode
     ){
-        ChildNodes.Add(childNode);
+        if (childNode != null){
+            ChildNodes.Add(childNode);
+        }
     }
     public override NodeState Evaluate(){
         NodeState = ChildNodes[0].Evaluate();

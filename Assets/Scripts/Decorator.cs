@@ -19,14 +19,17 @@ public class Decorator : Node
 
     public Decorator(
         string taskName,
-        Node parentNode,
         ref BehaviourTreeBlackboard blackboard,
-        Node childNode
+        Node parentNode = null,
+        Node childNode = null
     ) : base(
         taskName:taskName,
         parentNode:parentNode
     ){
-        ChildNodes.Add(childNode);
+        if (childNode != null){
+            ChildNodes.Add(childNode);
+        }
+
         this.blackboard = blackboard;
     }
 
