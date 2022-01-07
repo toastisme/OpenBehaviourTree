@@ -27,6 +27,7 @@ public class Decorator : Node
         parentNode:parentNode
     ){
         ChildNodes.Add(childNode);
+        this.blackboard = blackboard;
     }
 
     public override NodeState Evaluate(){
@@ -39,5 +40,6 @@ public class Decorator : Node
         if (NodeState == NodeState.Failed){childNodes[0].ResetState();} 
         return NodeState;
     } 
+    public override NodeType GetNodeType(){return NodeType.Decorator;}
 }
 }
