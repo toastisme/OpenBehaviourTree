@@ -7,83 +7,84 @@ using UnityEditor;
 using System.Reflection;
 
 namespace BehaviourTree{
-    public class ActionNode : Node
-    {    
+public class ActionNode : Node
+{    
+    /**
+    * \class ActionNode
+    * Represents an action node in the BehaviourTree class.
+    */
+
+    BehaviourTreeTask btTask; // The task class
+    Task executeTask; // The actual execute coroutine, within a task wrapper
+    private BehaviourTreeBlackboard blackboard; // Used find the task class at runtime
+
+    public ActionNode(
+        string taskName,
+        Node parentNode,
+        ref BehaviourTreeBlackboard blackboard
+    ) :base(
+        taskName:taskName,
+        parentNode:parentNode
+    ){
+        this.blackboard = blackboard;
+    }
+
+    public void LoadTask(MonoBehaviour monoBehaviour){
         /**
-        * \class ActionNode
-        * Represents an action node in the BehaviourTree class.
-        */
-
-        BehaviourTreeTask btTask; // The task class
-        Task executeTask; // The actual execute coroutine, within a task wrapper
-        private BehaviourTreeBlackboard blackboard; // Used find the task class at runtime
-
-        public ActionNode(
-            string taskName,
-            Node parentNode,
-            ref BehaviourTreeBlackboard blackboard
-        ) :base(
-            taskName:taskName,
-            parentNode:parentNode
-        ){
-            this.blackboard = blackboard;
-        }
-
-        public void LoadTask(MonoBehaviour monoBehaviour){
-            /**
-             * Uses task to obtain the corresponding BehaviourTreeTask class,
-             * calls its constructor and runs the BehaviourTreeTask Setup, using
-             * the GameObject's monoBehaviour
-             */
-
-            Type type = TypeUtils.GetType(task); // Full class name (include the namespaces)
-            ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
-            object[] EMPTY_PARAMETERS = new object[0]; 
-            
-            // Invoke the constructor
-            btTask =  (BehaviourTreeTask)constructor.Invoke(EMPTY_PARAMETERS);
-            btTask.SetBlackboard(blackboard:ref blackboard);
-            btTask.Setup(monoBehaviour);
-            ResetTask();
-            
-        }
-
-        private void ResetTask(){
-            // Stops the underlying coroutine and gets it ready to run again
-            if(task != null){
-                if (task.Running){
-                    task.Stop();
-                }
-            }
-            executeTask = new Task(btTask.ExecuteTask((x)=>nodeState=x), false);
-        }
-
-        public override NodeState Evaluate(){
-
-            /**
-            * If the node is idle with no action running, starts the action.
-            * Returns the state of the node.
+            * Uses task to obtain the corresponding BehaviourTreeTask class,
+            * calls its constructor and runs the BehaviourTreeTask Setup, using
+            * the GameObject's monoBehaviour
             */
 
-            if (nodeState == NodeState.Idle && !task.Running){
-                task.Start();
-            }
-            return nodeState;        
-        }
+        Type type = TypeUtils.GetType(task); // Full class name (include the namespaces)
+        ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
+        object[] EMPTY_PARAMETERS = new object[0]; 
+        
+        // Invoke the constructor
+        btTask =  (BehaviourTreeTask)constructor.Invoke(EMPTY_PARAMETERS);
+        btTask.SetBlackboard(blackboard:ref blackboard);
+        btTask.Setup(monoBehaviour);
+        ResetTask();
+        
+    }
 
-        public override void ResetState(){
-
-            /**
-            * Stops the action if running.
-            * Sets the NodeState to Idle.
-            */
-
+    private void ResetTask(){
+        // Stops the underlying coroutine and gets it ready to run again
+        if(task != null){
             if (task.Running){
                 task.Stop();
             }
-            ResetTask();
-            nodeState = NodeState.Idle;
         }
+        executeTask = new Task(btTask.ExecuteTask((x)=>nodeState=x), false);
     }
 
+    public override NodeState Evaluate(){
+
+        /**
+        * If the node is idle with no action running, starts the action.
+        * Returns the state of the node.
+        */
+
+        if (nodeState == NodeState.Idle && !task.Running){
+            task.Start();
+        }
+        return nodeState;        
+    }
+
+    public override void ResetState(){
+
+        /**
+        * Stops the action if running.
+        * Sets the NodeState to Idle.
+        */
+
+        if (task.Running){
+            task.Stop();
+        }
+        ResetTask();
+        nodeState = NodeState.Idle;
+    }
+
+    public override NodeType GetNodeType(){return NodeType.Action;}
+}
 }

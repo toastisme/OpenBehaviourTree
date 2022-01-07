@@ -41,6 +41,7 @@ namespace BehaviourTree{
         ){
             this.TaskName = taskName;
             this.ParentNode = parentNode;
+            this.ChildNodes = new List<Node>();
         }
         public virtual NodeState Evaluate(){return NodeState;}
         public virtual void ResetState(){
@@ -56,6 +57,8 @@ namespace BehaviourTree{
                 }
             }
         }
+
+        public abstract NodeType GetNodeType();
 
         public void AddChildNode(Node childNode){
             ChildNodes.Add(childNode);
