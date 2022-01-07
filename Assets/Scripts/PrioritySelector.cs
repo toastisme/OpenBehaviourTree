@@ -1,12 +1,5 @@
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using UnityEditor;
-
-namespace BehaviourBase{
-    public class PrioritySelector : AggregateNode
+namespace BehaviourTree{
+    public class PrioritySelector : Node
     {    
         /**
         * \class PrioritySelector

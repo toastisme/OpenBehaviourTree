@@ -1,11 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using UnityEditor;
-
-namespace BehaviourBase{
-    public class SequenceSelector : AggregateNode
+namespace BehaviourTree{
+    public class SequenceSelector : Node
     {    
         /**
         * \class SequenceSelector
@@ -14,30 +8,11 @@ namespace BehaviourBase{
         */
 
         public SequenceSelector(
-            string displayTask,
-            string displayName,
-            Rect rect,
-            Node parentNode,
-            Action<AggregateNode> UpdatePanelDetails,
-            NodeStyles nodeStyles,
-            NodeColors nodeColors,
-            Action<ConnectionPoint> OnClickChildPoint,
-            Action<ConnectionPoint> OnClickParentPoint,
-            Action<AggregateNode> OnRemoveNode,
-            ref BehaviourTreeBlackboard blackboard
+            string task,
+            Node parentNode
         ) :base(
-            nodeType:NodeType.SequenceSelector,
-            displayTask:displayTask,
-            displayName:displayName,
-            rect:rect,
-            parentNode:parentNode,
-            UpdatePanelDetails:UpdatePanelDetails,
-            nodeStyles:nodeStyles,
-            nodeColors:nodeColors,
-            OnClickChildPoint:OnClickChildPoint,
-            OnClickParentPoint:OnClickParentPoint,
-            OnRemoveNode:OnRemoveNode,
-            blackboard:ref blackboard
+            task:task,
+            parentNode:parentNode
         ){}
         public override NodeState Evaluate() { 
             bool anyChildRunning = false; 
@@ -45,11 +20,11 @@ namespace BehaviourBase{
             foreach(Node node in childNodes) { 
                 switch (node.Evaluate()) { 
                     case NodeState.Idle:
-                        nodeState = NodeState.Idle;
-                        return nodeState;
+                        NodeState = NodeState.Idle;
+                        return NodeState;
                     case NodeState.Failed: 
-                        nodeState = NodeState.Failed; 
-                        return nodeState;                     
+                        NodeState = NodeState.Failed; 
+                        return NodeState;                     
                     case NodeState.Succeeded: 
                         continue; 
                     case NodeState.Running: 
@@ -57,12 +32,12 @@ namespace BehaviourBase{
                         anyChildRunning = true; 
                         break; 
                     default: 
-                        nodeState = NodeState.Succeeded; 
-                        return nodeState; 
+                        NodeState = NodeState.Succeeded; 
+                        return NodeState; 
                 } 
             } 
-            nodeState = anyChildRunning ? NodeState.Running : NodeState.Succeeded; 
-            return nodeState; 
+            NodeState = anyChildRunning ? NodeState.Running : NodeState.Succeeded; 
+            return NodeState; 
         }
     }
 

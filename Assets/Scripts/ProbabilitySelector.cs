@@ -1,5 +1,3 @@
-
-
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -62,11 +60,11 @@ namespace BehaviourTree{
             if (selectedNode == null){
                 selectedNode = SelectNode();
             }
-            nodeState = selectedNode.Evaluate();
+            NodeState = selectedNode.Evaluate();
             if (selectedNode.Evaluate() == NodeState.Failed || selectedNode.Evaluate() == NodeState.Succeeded){
                 selectedNode = null;
             }
-            return nodeState;
+            return NodeState;
         }
 
         List<float> GetWeights(){
