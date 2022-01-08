@@ -10,7 +10,6 @@ public abstract class GuiNode : IGuiNode
 
     // Actions
     protected Action<GuiNode> UpdatePanelDetails;
-    protected Action<GuiNode> OnRemoveNode;
 
     // Appearance 
     public string DisplayTask{
@@ -40,7 +39,6 @@ public abstract class GuiNode : IGuiNode
         string displayName,
         Rect rect,
         Action<GuiNode> UpdatePanelDetails,
-        Action<GuiNode> OnRemoveNode,
         ref BehaviourTreeBlackboard blackboard
     ){
         BtNode = node;
@@ -48,8 +46,11 @@ public abstract class GuiNode : IGuiNode
         DisplayName = displayName;
         this.rect = rect;
         this.UpdatePanelDetails = UpdatePanelDetails;
-        this.OnRemoveNode = OnRemoveNode;
+
+        ApplyDerivedSettings();
     }
+
+    protected virtual void ApplyDerivedSettings(){}
 
     public virtual void Drag(Vector2 delta){
         rect.position += delta;
@@ -63,16 +64,7 @@ public abstract class GuiNode : IGuiNode
 
     public virtual bool ProcessEvents(Event e){}
 
-    protected void OnClickRemoveNode()
-    {
-        if (OnRemoveNode != null)
-        {
-            OnRemoveNode(this);
-        }
-    }
-
     public virtual void SetSelected(bool selected);
-
 
     protected virtual bool IsRootNode(){return false;}
 
@@ -81,15 +73,6 @@ public abstract class GuiNode : IGuiNode
     }
     public void SetParentConnection(Connection connection){
         this.ParentConnection = connection;       
-    }
-    public void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
-        if (Decorators != null){
-            foreach(GuiDecorator decorator in Decorators){
-                if (decorator.displayTask == oldKeyName){
-                    decorator.displayTask = newKeyName;
-                }
-            }
-        }
     }
 
     public void SetPosition(Vector2 pos){

@@ -14,7 +14,7 @@ public class Decorator : Node
     * dictates the the node's Nodestate.
     */
 
-    bool invertCondition = false;
+    public bool invertCondition = false;
     BehaviourTreeBlackboard blackboard;
 
     public Decorator(

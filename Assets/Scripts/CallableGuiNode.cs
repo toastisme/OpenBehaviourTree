@@ -12,7 +12,6 @@ public class CallableGuiNode : GuiNode
         string displayName,
         Rect rect,
         Action<GuiNode> UpdatePanelDetails,
-        Action<GuiNode> OnRemoveNode,
         ref BehaviourTreeBlackboard blackboard
     ) :base(
         node:node,
@@ -20,7 +19,6 @@ public class CallableGuiNode : GuiNode
         displayName:displayName,
         rect:rect,
         UpdatePanelDetails:UpdatePanelDetails,
-        OnRemoveNode:OnRemoveNode,
         blackboard: ref blackboard
     )
     {

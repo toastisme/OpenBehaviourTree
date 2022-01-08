@@ -12,6 +12,7 @@ public class CompositeGuiNode : CallableGuiNode
      
     public Node BtNode {get; protected set;} // The node this GuiNode is displaying
     public List<GuiDecorator> Decorators{get; set;}
+    Action<CompositeGuiNode> OnRemoveNode;
 
     // Connection points
     public ConnectionPoint ChildPoint{get; set;}
@@ -33,7 +34,7 @@ public class CompositeGuiNode : CallableGuiNode
         Rect rect,
         Connection parentConnection,
         Action<GuiNode> UpdatePanelDetails,
-        Action<GuiNode> OnRemoveNode,
+        Action<CompositeGuiNode> OnRemoveNode,
         Action<ConnectionPoint> OnClickChildPoint,
         Action<ConnectionPoint> OnClickParentPoint,
         ref BehaviourTreeBlackboard blackboard
@@ -43,13 +44,14 @@ public class CompositeGuiNode : CallableGuiNode
         displayName:displayName,
         rect:rect,
         UpdatePanelDetails:UpdatePanelDetails,
-        OnRemoveNode:OnRemoveNode,
         blackboard: ref blackboard
     )
     {
         ParentConnection = parentConnection;
         ChildConnections = new List<Connection>();
         Decorators = new List<GuiDecorator>();
+        this.OnRemoveNode = OnRemoveNode;
+
 
         ApplyNodeTypeSettings(
             OnClickChildPoint:OnClickChildPoint,
@@ -58,7 +60,15 @@ public class CompositeGuiNode : CallableGuiNode
 
     }
 
-    virtual void ApplyNodeTypeSettings(
+    protected override void ApplyDerivedSettings(){
+        defaultStyle = NodeProperties.GUINodeStyle();
+        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        activeStyle = defaultStyle;
+        color = NodeProperties.DefaultColor();
+        taskRectColor = NodeProperties.DefaultColor();
+    }
+
+    protected virtual void ApplyNodeTypeSettings(
         Action<ConnectionPoint> OnClickChildPoint,
         Action<ConnectionPoint> OnClickParentPoint
     ){
@@ -73,11 +83,6 @@ public class CompositeGuiNode : CallableGuiNode
                                             nodeStyles.parentPointStyle, 
                                             OnClickParentPoint);
 
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
-        activeStyle = defaultStyle;
-        color = NodeProperties.DefaultColor();
-        taskRectColor = NodeProperties.DefaultColor();
     }
 
     public override void Drag(Vector2 delta){
@@ -319,6 +324,23 @@ public class CompositeGuiNode : CallableGuiNode
             }
         }
         return false;
+    }
+
+    public void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
+        if (Decorators != null){
+            foreach(GuiDecorator decorator in Decorators){
+                if (decorator.displayTask == oldKeyName){
+                    decorator.displayTask = newKeyName;
+                }
+            }
+        }
+    }
+    protected void OnClickRemoveNode()
+    {
+        if (OnRemoveNode != null)
+        {
+            OnRemoveNode(this);
+        }
     }
 }
 }
