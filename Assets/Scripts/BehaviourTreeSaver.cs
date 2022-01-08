@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BehaviourTree{
+namespace Behaviour{
 public class BehaviourTreeSaver
 {
     static void AddNodeToSerializedNodes(Node node, 

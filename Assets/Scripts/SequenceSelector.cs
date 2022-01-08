@@ -1,4 +1,4 @@
-namespace BehaviourTree{
+namespace Behaviour{
 public class SequenceSelector : Node
 {    
     /**

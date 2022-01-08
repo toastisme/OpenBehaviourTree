@@ -5,7 +5,7 @@ using System.Collections;
 using System.Linq;
 using System;
 
-namespace BehaviourTree{
+namespace Behaviour{
 
     public class NodeColors
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using UnityEditor;
 
-namespace BehaviourTree{
+namespace Behaviour{
 public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver 
 {
     public Node rootNode;

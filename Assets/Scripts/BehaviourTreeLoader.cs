@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 
-namespace BehaviourTree{
+namespace Behaviour{
 public class BehaviourTreeLoader
 {
     static int ReadNodeFromSerializedNodes(int index,

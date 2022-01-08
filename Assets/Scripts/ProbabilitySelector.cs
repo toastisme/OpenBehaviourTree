@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace BehaviourTree{
+namespace Behaviour{
 public class ProbabilitySelector : Node
 {    
     /**

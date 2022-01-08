@@ -6,7 +6,7 @@ using System;
 using UnityEditor;
 using System.Reflection;
 
-namespace BehaviourTree{
+namespace Behaviour{
 public class ActionNode : Node
 {    
     /**

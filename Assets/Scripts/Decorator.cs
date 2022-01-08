@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace BehaviourTree{
+namespace Behaviour{
 public class Decorator : Node
 {
     /**

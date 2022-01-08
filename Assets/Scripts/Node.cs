@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 
-namespace BehaviourTree{
+namespace Behaviour{
 public enum NodeState{
     Running,
     Failed,
