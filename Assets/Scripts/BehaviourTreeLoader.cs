@@ -4,9 +4,8 @@ using System.Collections.Generic;
 namespace BehaviourTree{
 public class BehaviourTreeLoader
 {
-    BehaviourTreeBlackboard blackboard;
-
     static int ReadNodeFromSerializedNodes(int index,
+                                           BehaviourTreeBlackboard blackboard,
                                            List<SerializableNode> serializedNodes,
                                            out Node node) {
         /**

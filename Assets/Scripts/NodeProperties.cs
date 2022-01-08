@@ -5,24 +5,7 @@ using System.Collections;
 using System.Linq;
 using System;
 
-namespace BehaviourBase{
-    public enum NodeType{
-        Root,
-        SequenceSelector,
-        ProbabilitySelector,
-        PrioritySelector,
-        Action,
-        Decorator,
-        ProbabilityWeight,
-        CallNumber
-    }
-
-    public enum NodeState{
-        Running,
-        Failed,
-        Succeeded,
-        Idle
-    }
+namespace BehaviourTree{
 
     public class NodeColors
     {
@@ -113,17 +96,25 @@ namespace BehaviourBase{
         // Size
         public static Vector2 GUINodeSize(){return new Vector2(200, 100);}
         public static Vector2 SubNodeSize(){return new Vector2(200, 60);}
+        public static Vector2 CallNumberSize(){
+            Vector2 guiNodeSize = NodeProperties.GUINodeSize();
+            return new Vector2(
+                guiNodeSize.x/6f,
+                guiNodeSize.x/6f
+            );
+        }
 
         // Color
-        public static Color GetDefaultColor(){return new Color(87f/255.0f, 117f/255.0f, 144f/255.0f);}
-        public static Color GetDecoratorColor(){return new Color(67f/255.0f, 170f/255.0f, 139f/255.0f);}
-        public static Color GetSequenceSelectorColor(){return new Color(249f/255.0f, 199f/255.0f, 79f/255.0f);}
-        public static Color GetProbabilitySelectorColor(){return new Color(249f/255.0f, 132f/255.0f, 74f/255.0f);}
-        public static Color GetProbabilityWeightColor(){return new Color(248f/255.0f, 150f/255.0f, 30f/255.0f);}
-        public static Color GetPrioritySelectorColor(){return new Color(39f/255.0f, 125f/255.0f, 161f/255.0f);}
-        public static Color GetActionColor(){return new Color(249f/255.0f, 65f/255.0f, 68f/255.0f);}
-        public static Color GetRunningTint(){return new Color(0f, 1f, 0f);}
-        public static Color GetDefaultTint(){return new Color(1f, 1f, 1f);}
+        public static Color DefaultColor(){return new Color(87f/255.0f, 117f/255.0f, 144f/255.0f);}
+        public static Color CallNumberColor(){return NodeProperties.GetDefaultColor();}
+        public static Color DecoratorColor(){return new Color(67f/255.0f, 170f/255.0f, 139f/255.0f);}
+        public static Color SequenceSelectorColor(){return new Color(249f/255.0f, 199f/255.0f, 79f/255.0f);}
+        public static Color ProbabilitySelectorColor(){return new Color(249f/255.0f, 132f/255.0f, 74f/255.0f);}
+        public static Color ProbabilityWeightColor(){return new Color(248f/255.0f, 150f/255.0f, 30f/255.0f);}
+        public static Color PrioritySelectorColor(){return new Color(39f/255.0f, 125f/255.0f, 161f/255.0f);}
+        public static Color ActionColor(){return new Color(249f/255.0f, 65f/255.0f, 68f/255.0f);}
+        public static Color RunningTint(){return new Color(0f, 1f, 0f);}
+        public static Color DefaultTint(){return new Color(1f, 1f, 1f);}
 
         // Style
 

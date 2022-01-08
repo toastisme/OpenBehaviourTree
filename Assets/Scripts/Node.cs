@@ -9,6 +9,7 @@ public enum NodeState{
     Idle
 }
 public enum NodeType{
+    Root,
     SequenceSelector,
     ProbabilitySelector,
     ProbabilityWeight,
