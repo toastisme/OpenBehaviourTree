@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Behaviour{
 public class GuiProbabilityWeight : GuiNode
@@ -28,13 +29,13 @@ public class GuiProbabilityWeight : GuiNode
         ApplyDerivedSettings();
     }
 
-        protected override void ApplyDerivedSettings()
-        {
-            color = NodeProperties.ProbabilityWeightColor;
-            defaultStyle = NodeProperties.ProbabilityWeightStyle;
-            selectedStyle = NodeProperties.SelectedGUINodeStyle;
-            activeStyle = defaultStyle;
-        }
+    protected override void ApplyDerivedSettings()
+    {
+        color = NodeProperties.ProbabilityWeightColor();
+        defaultStyle = NodeProperties.ProbabilityWeightStyle();
+        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        activeStyle = defaultStyle;
+    }
 
     
 

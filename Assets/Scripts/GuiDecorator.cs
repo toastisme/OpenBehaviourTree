@@ -36,6 +36,7 @@ public class GuiDecorator : CallableGuiNode
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
         color = NodeProperties.DecoratorColor();
+        taskRectColor = NodeProperties.DefaultColor();
     }
 
     private void Remove(){

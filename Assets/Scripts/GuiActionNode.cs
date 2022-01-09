@@ -1,14 +1,15 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 
 namespace Behaviour{
-public class GuiPrioritySelector : CompositeGuiNode
+public class GuiActionNode : CompositeGuiNode
 {
-    PrioritySelector prioritySelector;
-    public GuiPrioritySelector(
-        PrioritySelector node,
+    ActionNode actionNode;
+    public GuiActionNode(
+        ActionNode node,
         string displayTask,
         string displayName,
         Rect rect,
@@ -31,16 +32,31 @@ public class GuiPrioritySelector : CompositeGuiNode
         blackboard:blackboard
     )
     {
-        this.prioritySelector = prioritySelector;
+        this.actionNode = actionNode;
         ApplyDerivedSettings();
+        ApplyNodeTypeSettings(OnClickChildPoint,OnClickParentParent);
     }
     protected override void ApplyDerivedSettings()
     {
-        color = NodeProperties.PrioritySelectorColor();
-        defaultStyle = NodeProperties.PrioritySelectorStyle();
+        color = NodeProperties.ActionNodeColor();
+        defaultStyle = NodeProperties.ActionNodeStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
         taskRectColor = NodeProperties.DefaultColor();
+    }
+
+    protected override void ApplyNodeTypeSettings(
+        Action<ConnectionPoint> OnClickChildPoint,
+        Action<ConnectionPoint> OnClickParentPoint
+    ){
+
+        // Default GuiNode has a child and parent point
+        ChildPoint = null;
+        ParentPoint = new ConnectionPoint(this, 
+                                            ConnectionPointType.Out, 
+                                            nodeStyles.parentPointStyle, 
+                                            OnClickParentPoint);
+
     }
 }
 }

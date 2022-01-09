@@ -4,11 +4,11 @@ using UnityEngine;
 using System;
 
 namespace Behaviour{
-public class GuiPrioritySelector : CompositeGuiNode
+public class GuiProbabilitySelector : CompositeGuiNode
 {
-    PrioritySelector prioritySelector;
-    public GuiPrioritySelector(
-        PrioritySelector node,
+    ProbabilitySelector probabilitySelector;
+    public GuiProbabilitySelector(
+        ProbabilitySelector node,
         string displayTask,
         string displayName,
         Rect rect,
@@ -31,13 +31,13 @@ public class GuiPrioritySelector : CompositeGuiNode
         blackboard:blackboard
     )
     {
-        this.prioritySelector = prioritySelector;
+        this.probabilitySelector = probabilitySelector;
         ApplyDerivedSettings();
     }
     protected override void ApplyDerivedSettings()
     {
-        color = NodeProperties.PrioritySelectorColor();
-        defaultStyle = NodeProperties.PrioritySelectorStyle();
+        color = NodeProperties.ProbabilitySelectorColor();
+        defaultStyle = NodeProperties.ProbabilitySelectorStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
         taskRectColor = NodeProperties.DefaultColor();

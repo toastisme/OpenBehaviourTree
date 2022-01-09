@@ -7,6 +7,7 @@ namespace Behaviour{
 public abstract class GuiNode : IGuiNode
 {
     protected BehaviourTreeBlackboard blackboard;
+    protected Node btNode;
 
     // Actions
     protected Action<GuiNode> UpdatePanelDetails;

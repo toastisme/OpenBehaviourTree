@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +40,7 @@ public class GuiSequenceSelector : CompositeGuiNode
         defaultStyle = NodeProperties.SequenceSelectorStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
+        taskRectColor = NodeProperties.DefaultColor();
     }
 }
 }

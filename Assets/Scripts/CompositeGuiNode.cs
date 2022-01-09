@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Behaviour{
 public class CompositeGuiNode : CallableGuiNode
@@ -79,7 +80,7 @@ public class CompositeGuiNode : CallableGuiNode
                                             ConnectionPointType.In, 
                                             nodeStyles.childPointStyle, 
                                             OnClickChildPoint);
-        CarentPoint = new ConnectionPoint(this, 
+        ParentPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.Out, 
                                             nodeStyles.parentPointStyle, 
                                             OnClickParentPoint);
