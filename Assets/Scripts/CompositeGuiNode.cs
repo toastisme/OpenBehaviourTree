@@ -32,7 +32,7 @@ public class CompositeGuiNode : CallableGuiNode
         Node node,
         string displayTask,
         string displayName,
-        Rect rect,
+        Vector2 pos,
         Connection parentConnection,
         Action<GuiNode> UpdatePanelDetails,
         Action<CompositeGuiNode> OnRemoveNode,
@@ -43,7 +43,7 @@ public class CompositeGuiNode : CallableGuiNode
         node:node,
         displayTask:displayTask,
         displayName:displayName,
-        rect:rect,
+        pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
         blackboard: ref blackboard
     )
@@ -52,6 +52,12 @@ public class CompositeGuiNode : CallableGuiNode
         ChildConnections = new List<Connection>();
         Decorators = new List<GuiDecorator>();
         this.OnRemoveNode = OnRemoveNode;
+        taskRect = new Rect(
+            rect.x,
+            rect.y+taskRectSize.y*.5f,
+            taskRectSize.x,
+            taskRectSize.y
+        );
 
 
         ApplyDerivedSettings();
@@ -68,6 +74,7 @@ public class CompositeGuiNode : CallableGuiNode
         activeStyle = defaultStyle;
         color = NodeProperties.DefaultColor();
         taskRectColor = NodeProperties.DefaultColor();
+
     }
 
     protected virtual void ApplyNodeTypeSettings(

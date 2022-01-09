@@ -10,14 +10,14 @@ public class CallableGuiNode : GuiNode
         Node node,
         string displayTask,
         string displayName,
-        Rect rect,
+        Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         ref BehaviourTreeBlackboard blackboard
     ) :base(
         node:node,
         displayTask:displayTask,
         displayName:displayName,
-        rect:rect,
+        pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
         blackboard: ref blackboard
     )

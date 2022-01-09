@@ -38,14 +38,18 @@ public abstract class GuiNode : IGuiNode
         Node node,
         string displayTask,
         string displayName,
-        Rect rect,
+        Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         ref BehaviourTreeBlackboard blackboard
     ){
         BtNode = node;
         DisplayTask = displayTask;
         DisplayName = displayName;
-        this.rect = rect;
+        Vector2 size = NodeProperties.GuiNodeSize();
+        this.rect = new Rect(pos.x, 
+                             pos.y, 
+                             size.x, 
+                             size.y);
         this.UpdatePanelDetails = UpdatePanelDetails;
 
     }

@@ -6,11 +6,11 @@ namespace BehaviourBase{
     public class Connection
     {
         public ConnectionPoint childPoint;
-        private AggregateNode childNode;
+        private CompositeGuiNode childNode;
         public ConnectionPoint parentPoint;
-        private AggregateNode parentNode;
+        private CompoiteGuiNode parentNode;
         public Action<Connection> OnClickRemoveConnection;
-        private ProbabilityWeight probabilityWeight;
+        private GuiProbabilityWeight probabilityWeight;
 
         private Vector2 probabilityWeightOffset;
 
@@ -27,23 +27,22 @@ namespace BehaviourBase{
             this.OnClickRemoveConnection = OnClickRemoveConnection;
         }   
 
-        public void AddProbabilityWeight(Vector2 size, 
-                                         NodeStyles nodeStyles,
-                                         NodeColors nodeColors,
-                                         Action<AggregateNode> UpdatePanelDetails,
-                                         ref BehaviourTreeBlackboard blackboard,
-                                         Connection parentConnection
+        public void AddProbabilityWeight(ProbabilityWeight node,
+                                         string displayTask,
+                                         string displayName,
+                                         Action<GuiNode> UpdatePanelDetails,
+                                         ref BehaviourTreeBlackboard blackboard
                                         ){
             Vector2 centrePos = GetCentrePos();
             Rect probabilityWeightRect = new Rect(centrePos.x, centrePos.y, size.x, size.y);
 
-            probabilityWeight = new ProbabilityWeight("Constant weight (1)",
-                                                      probabilityWeightRect,
-                                                            nodeStyles,
-                                                            nodeColors,
-                                                            UpdatePanelDetails,
-                                                            ref blackboard,
-                                                            this
+            probabilityWeight = new ProbabilityWeight(
+                node:node,
+                displayTask:displayTask,
+                pos:centrePos,
+                UpdatePanelDetails:UpdatePanelDetails,
+                blackboard:ref blackboard,
+                this
                                                             );
             probabilityWeightOffset = new Vector2(size.x*.5f, 0);
         }
@@ -87,10 +86,10 @@ namespace BehaviourBase{
             }
         }
 
-        public AggregateNode GetParentNode(){
+        public CompositeGuiNode GetParentNode(){
             return parentNode;
         }
-        public AggregateNode GetChildNode(){
+        public CompositeGuiNode GetChildNode(){
             return childNode;
         }
 

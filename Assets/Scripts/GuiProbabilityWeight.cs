@@ -12,7 +12,7 @@ public class GuiProbabilityWeight : GuiNode
         ProbabilityWeight node,
         string displayTask,
         string displayName,
-        Rect rect,
+        Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         ref BehaviourTreeBlackboard blackboard,
         Connection parentConnection
@@ -20,7 +20,7 @@ public class GuiProbabilityWeight : GuiNode
         node:node,
         displayTask:displayTask,
         displayName:displayName,
-        rect:rect,
+        pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
         blackboard:blackboard
     )
@@ -35,6 +35,7 @@ public class GuiProbabilityWeight : GuiNode
         defaultStyle = NodeProperties.ProbabilityWeightStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
+        rect.size = NodeProperties.SubNodeSize();
     }
 
     

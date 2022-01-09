@@ -13,7 +13,7 @@ public class GuiDecorator : CallableGuiNode
         Decorator decorator,
         string displayTask,
         string displayName,
-        Rect rect,
+        Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         Action<GuiDecorator> OnRemoveDecorator,
         ref BehaviourTreeBlackboard blackboard,
@@ -22,7 +22,7 @@ public class GuiDecorator : CallableGuiNode
         node:decorator,
         displayTask:displayTask,
         displayName:displayName,
-        rect:rect,
+        pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
         blackboard: ref blackboard
     )
@@ -37,6 +37,7 @@ public class GuiDecorator : CallableGuiNode
         activeStyle = defaultStyle;
         color = NodeProperties.DecoratorColor();
         taskRectColor = NodeProperties.DefaultColor();
+        rect.size = NodeProperties.SubNodeSize();
     }
 
     private void Remove(){

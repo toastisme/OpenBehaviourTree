@@ -71,8 +71,25 @@ public abstract class Node
         }
         ChildNodes.Add(childNode);
     }
+
+    public void RemoveChildNode(Node childNode){
+        if (ChildNodes != null){
+            ChildNodes.Remove(childNode);
+        }
+    }
+
     public void SetParentNode(Node parentNode){
         ParentNode = parentNode;
+    }
+
+    public void Unlink(){
+        foreach(Node childNode in ChildNodes){
+            childNode.SetParentNode(null);
+        }
+        ParentNode.RemoveChildNode(this);
+        SetParentNode(null);
+        ChildNodes = null;
+
     }
 
 
