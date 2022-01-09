@@ -53,6 +53,7 @@ public class CompositeGuiNode : CallableGuiNode
         this.OnRemoveNode = OnRemoveNode;
 
 
+        ApplyDerivedSettings();
         ApplyNodeTypeSettings(
             OnClickChildPoint:OnClickChildPoint,
             OnClickParentPoint:OnClickParentPoint

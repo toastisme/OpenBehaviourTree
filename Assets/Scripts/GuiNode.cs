@@ -47,7 +47,6 @@ public abstract class GuiNode : IGuiNode
         this.rect = rect;
         this.UpdatePanelDetails = UpdatePanelDetails;
 
-        ApplyDerivedSettings();
     }
 
     protected virtual void ApplyDerivedSettings(){}
