@@ -2,13 +2,13 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace BehaviourBase{
+namespace Behaviour{
     public class Connection
     {
         public ConnectionPoint childPoint;
         private CompositeGuiNode childNode;
         public ConnectionPoint parentPoint;
-        private CompoiteGuiNode parentNode;
+        private CompositeGuiNode parentNode;
         public Action<Connection> OnClickRemoveConnection;
         private GuiProbabilityWeight probabilityWeight;
 
@@ -34,15 +34,17 @@ namespace BehaviourBase{
                                          ref BehaviourTreeBlackboard blackboard
                                         ){
             Vector2 centrePos = GetCentrePos();
+            Vector2 size = NodeProperties.SubNodeSize();
             Rect probabilityWeightRect = new Rect(centrePos.x, centrePos.y, size.x, size.y);
 
-            probabilityWeight = new ProbabilityWeight(
+            probabilityWeight = new GuiProbabilityWeight(
                 node:node,
                 displayTask:displayTask,
+                displayName:displayName,
                 pos:centrePos,
                 UpdatePanelDetails:UpdatePanelDetails,
                 blackboard:ref blackboard,
-                this
+                parentConnection:this
                                                             );
             probabilityWeightOffset = new Vector2(size.x*.5f, 0);
         }
@@ -105,7 +107,7 @@ namespace BehaviourBase{
 
         public string GetProbabilityWeightKey(){
             if (HasProbabilityWeight()){
-                return probabilityWeight.displayTask;
+                return probabilityWeight.DisplayTask;
             }
             return "";
         }

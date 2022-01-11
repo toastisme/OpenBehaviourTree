@@ -4,67 +4,74 @@ using System.Collections.Generic;
 namespace Behaviour{
 public class BehaviourTreeLoader
 {
-    static int ReadNodeFromSerializedNodes(int index,
+    public static Node NodeFactory(NodeType nodeType, 
+                            string taskName,
+                            ref BehaviourTreeBlackboard blackboard
+                            ){
+        switch(nodeType){
+            case NodeType.Root:
+                return new PrioritySelector(
+                            taskName:"Root"
+                            );
+            case NodeType.SequenceSelector:
+                return new SequenceSelector(
+                        taskName:taskName
+                );
+            case NodeType.PrioritySelector:
+                return new PrioritySelector(
+                        taskName:taskName
+                );
+            case NodeType.ProbabilitySelector:
+                return new ProbabilitySelector(
+                        taskName:taskName,
+                        blackboard:ref blackboard
+                );
+            case NodeType.ProbabilityWeight:
+                return new ProbabilityWeight(
+                        taskName:taskName
+                );
+            case NodeType.Decorator:
+                return new Decorator(
+                        taskName:taskName,
+                        blackboard:ref blackboard
+                );
+            case NodeType.Action:
+                return new ActionNode(
+                        taskName:taskName,
+                        blackboard:ref blackboard
+                );
+            default:
+                throw new System.Exception("Unknown node type");
+        }
+
+    }
+    public static Node ReadNodeFromSerializedNodes(ref int index,
                                            BehaviourTreeBlackboard blackboard,
-                                           List<SerializableNode> serializedNodes,
-                                           out Node node) {
+                                           List<SerializableNode> serializedNodes
+                                           ) {
         /**
          *Recursive function to write all serializedNodes into node
          */
 
         var serializedNode = serializedNodes [index];
-        NodeType nodeType = (NodeType)serializedNode.nodeType;
-
+        Node node = BehaviourTreeLoader.NodeFactory(
+            nodeType:(NodeType)serializedNode.type,
+            taskName:serializedNode.taskName,
+            blackboard:ref blackboard
+        );
         // Parent/child nodes are set after calling the constructor
-        switch(nodeType){
-            case NodeType.Root:
-                node = new PrioritySelector(
-                            taskName:"Root"
-                            );
-            case NodeType.SequenceSelector:
-                node = new SequenceSelector(
-                        taskName:serializedNode.taskName
-                );
-                break;
-            case NodeType.PrioritySelector:
-                node = new PrioritySelector(
-                        takeName:serializedNode.taskName
-                );
-                break;
-            case NodeType.ProbabilitySelector:
-                node = new ProbabilitySelector(
-                        serializedNode.taskName,
-                        ref bt.blackboard
-                );
-                break;
-            case NodeType.ProbabilityWeight:
-                node = new ProbabilityWeight(
-                        serializedNode.taskName
-                );
-                break;
-            case NodeType.Decorator:
-                node = new Decorator(
-                        serializedNode.taskName,
-                        ref bt.blackboard
-                );
-                break;
-            case NodeType.Action:
-                node = new ActionNode(
-                        serializedNode.taskName,
-                        ref bt.blackboard
-                );
-                break;
-        }
 
-        ;
         // The tree needs to be read in depth-first, since that's how we wrote it out.
         for (int i = 0; i != serializedNode.childCount; i++) {
-            Node childNode;
-            index = ReadNodeFromSerializedNodes (++index, out childNode);
+            index++;
+            Node childNode = BehaviourTreeLoader.ReadNodeFromSerializedNodes(
+                index:ref index,
+                blackboard:blackboard,
+                serializedNodes:serializedNodes
+                );
             childNode.SetParentNode(node);
-            node.AddChildNode(childNode);
         }
-        return index;
+        return node;
     }
 }
 }

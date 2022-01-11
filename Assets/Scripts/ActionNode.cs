@@ -36,7 +36,7 @@ public class ActionNode : Node
             * the GameObject's monoBehaviour
             */
 
-        Type type = TypeUtils.GetType(task); // Full class name (include the namespaces)
+        Type type = TypeUtils.GetType(TaskName); // Full class name (include the namespaces)
         ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
         object[] EMPTY_PARAMETERS = new object[0]; 
         
@@ -50,12 +50,12 @@ public class ActionNode : Node
 
     private void ResetTask(){
         // Stops the underlying coroutine and gets it ready to run again
-        if(task != null){
-            if (task.Running){
-                task.Stop();
+        if(executeTask != null){
+            if (executeTask.Running){
+                executeTask.Stop();
             }
         }
-        executeTask = new Task(btTask.ExecuteTask((x)=>nodeState=x), false);
+        executeTask = new Task(btTask.ExecuteTask((x)=>NodeState=x), false);
     }
 
     public override NodeState Evaluate(){
@@ -65,10 +65,10 @@ public class ActionNode : Node
         * Returns the state of the node.
         */
 
-        if (nodeState == NodeState.Idle && !task.Running){
-            task.Start();
+        if (NodeState == NodeState.Idle && !executeTask.Running){
+            executeTask.Start();
         }
-        return nodeState;        
+        return NodeState;        
     }
 
     public override void ResetState(){
@@ -78,11 +78,11 @@ public class ActionNode : Node
         * Sets the NodeState to Idle.
         */
 
-        if (task.Running){
-            task.Stop();
+        if (executeTask.Running){
+            executeTask.Stop();
         }
         ResetTask();
-        nodeState = NodeState.Idle;
+        NodeState = NodeState.Idle;
     }
 
     public override NodeType GetNodeType(){return NodeType.Action;}

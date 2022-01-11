@@ -27,7 +27,7 @@ public class ProbabilitySelector : Node
         selectedNode = null;
         this.blackboard = blackboard;
     }
-    private Node SelectNode(List<float> nodeWeights){
+    private Node SelectNode(){
 
         /**
         * Selects a node randomly, weighted by nodeWeights
@@ -35,13 +35,13 @@ public class ProbabilitySelector : Node
 
         List<float> nodeWeights = GetWeights();
         float weightTotal = nodeWeights.Sum();
-        float randomVal = System.Random.value;
+        float randomVal = UnityEngine.Random.value;
         float currentProb = 0f;
-        for(int i=0; i< nodes.Count; i++){
+        for(int i=0; i< ChildNodes.Count; i++){
             currentProb += nodeWeights[i]/weightTotal;
             if (randomVal <= currentProb){
                 // Get the node attached to the ProbabilityWeight node
-                return nodes[i].ChildNodes[0];
+                return ChildNodes[i].ChildNodes[0];
             }
         }
         return null;
@@ -70,7 +70,7 @@ public class ProbabilitySelector : Node
     List<float> GetWeights(){
         List<float> weights = new List<float>();
         foreach(Node childNode in ChildNodes){
-            weights.Add(blackboard.GetWeightValue(childNode.NodeTask));
+            weights.Add(blackboard.GetWeightValue(childNode.TaskName));
         }
         return weights;
     }

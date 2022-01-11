@@ -28,10 +28,10 @@ public class GuiProbabilitySelector : CompositeGuiNode
         OnRemoveNode:OnRemoveNode,
         OnClickChildPoint:OnClickChildPoint,
         OnClickParentPoint:OnClickParentPoint,
-        blackboard:blackboard
+        blackboard:ref blackboard
     )
     {
-        this.probabilitySelector = probabilitySelector;
+        this.probabilitySelector = node;
         ApplyDerivedSettings();
     }
     protected override void ApplyDerivedSettings()

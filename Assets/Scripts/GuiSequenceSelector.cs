@@ -28,10 +28,10 @@ public class GuiSequenceSelector : CompositeGuiNode
         OnRemoveNode:OnRemoveNode,
         OnClickChildPoint:OnClickChildPoint,
         OnClickParentPoint:OnClickParentPoint,
-        blackboard:blackboard
+        blackboard:ref blackboard
     )
     {
-        this.sequenceSelector = sequenceSelector;
+        this.sequenceSelector = node;
         ApplyDerivedSettings();
     }
     protected override void ApplyDerivedSettings()

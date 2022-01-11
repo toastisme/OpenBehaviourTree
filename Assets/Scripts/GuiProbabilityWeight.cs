@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor;
 
 namespace Behaviour{
 public class GuiProbabilityWeight : GuiNode
@@ -22,7 +23,7 @@ public class GuiProbabilityWeight : GuiNode
         displayName:displayName,
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
-        blackboard:blackboard
+        blackboard:ref blackboard
     )
     {
         this.parentConnection = parentConnection;
@@ -78,7 +79,7 @@ public class GuiProbabilityWeight : GuiNode
 
     public override void Drag(Vector2 delta){}
 
-    protected override void ProcessContextMenu(){
+    protected void ProcessContextMenu(){
         Dictionary<string, int> intKeys = blackboard.GetIntKeys();
         Dictionary<string, float> floatKeys = blackboard.GetFloatKeys();
         GenericMenu genericMenu = new GenericMenu();
@@ -103,11 +104,11 @@ public class GuiProbabilityWeight : GuiNode
     {
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(rect, "\n" + displayName + "\n" + displayTask, activeStyle);
+        GUI.Box(rect, "\n" + DisplayName + "\n" + DisplayTask, activeStyle);
         GUI.backgroundColor = currentColor;
     }
     public void SetTask(string newTask){
-        displayTask = newTask;
+        DisplayTask = newTask;
     }
 
 

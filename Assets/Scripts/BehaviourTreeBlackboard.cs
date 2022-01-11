@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using System;
 
-namespace BehaviourBase{
+namespace Behaviour{
     [Serializable]
     public class BehaviourTreeBlackboard : ScriptableObject
     {

@@ -8,7 +8,7 @@ public class SequenceSelector : Node
     */
 
     public SequenceSelector(
-        string taskname,
+        string taskName,
         Node parentNode=null
     ) :base(
         taskName:taskName,
@@ -17,7 +17,7 @@ public class SequenceSelector : Node
     public override NodeState Evaluate() { 
         bool anyChildRunning = false; 
         
-        foreach(Node node in childNodes) { 
+        foreach(Node node in ChildNodes) { 
             switch (node.Evaluate()) { 
                 case NodeState.Idle:
                     NodeState = NodeState.Idle;

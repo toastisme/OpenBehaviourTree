@@ -7,7 +7,7 @@ using UnityEditor;
 namespace Behaviour{
 public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver 
 {
-    public Node rootNode;
+    public PrioritySelector rootNode;
     [SerializeField]
     public BehaviourTreeBlackboard blackboard;
     [SerializeField]
@@ -18,11 +18,24 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
 
     public void LoadTree(MonoBehaviour monoBehaviour){
         /**
-            * Loads all actionNode tasks and runs their setup (getting required gameobject components etc.)
-            */
-        foreach(Node node in nodes){
-            if (node is ActionNode actionNode){
-                actionNode.LoadTask(monoBehaviour);
+        * Loads all actionNode tasks and runs their setup (getting required gameobject components etc.)
+        */
+        LoadActionNodes(monoBehaviour, rootNode);
+    }
+
+    public void LoadActionNodes(
+        MonoBehaviour monoBehaviour,
+        Node node
+    )
+    {
+        if (node is ActionNode actionNode){
+            actionNode.LoadTask(monoBehaviour);
+        }
+        else{
+            if (node.ChildNodes != null){
+                foreach(Node childNode in node.ChildNodes){
+                    LoadActionNodes(monoBehaviour, childNode);
+                }
             }
         }
     }
@@ -56,11 +69,13 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         //Unity has just written new data into the serializedNodes field.
         //let's populate our actual runtime data with those new values.
         if (serializedNodes.Count > 0) {
-            BehaviourTreeSaver.ReadNodeFromSerializedNodes (0, 
+            //int idx = 0;
+            /*
+            rootNode = BehaviourTreeLoader.ReadNodeFromSerializedNodes (ref idx, 
                                                             blackboard,
-                                                            serializedNodes, 
-                                                            out rootNode
+                                                            serializedNodes
                                                             );
+            */
         } 
     }
     public void OnBeforeSerialize() {
@@ -69,8 +84,8 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         serializedNodes = new List<SerializableNode>();
         serializedNodes.Clear();
         if (rootNode != null){
-            jBehaviourTreeSaver.AddNodeToSerializedNodes(rootNode, 
-                                                        out serializedNodes);
+            BehaviourTreeSaver.AddNodeToSerializedNodes(rootNode, 
+                                                        ref serializedNodes);
         }
         // Now Unity is free to serialize this field, and we should get back the expected 
         // data when it is deserialized later.

@@ -1,4 +1,4 @@
-
+using System;
 using System.Collections.Generic;
 
 namespace Behaviour{
@@ -20,10 +20,10 @@ public enum NodeType{
 
 [Serializable]
 public struct SerializableNode{
-    int type;
-    string taskName;
-    int childCount;
-    int parentIdx;
+    public int type;
+    public string taskName;
+    public int childCount;
+    public int parentIdx;
 }
 public abstract class Node
 {
@@ -36,9 +36,9 @@ public abstract class Node
         * in the BehaviourTreeBlackboard.
         * If an ActionNode, TaskName is the name of a BehaviourTreeTask class.
         */ 
-    public string TaskName {get; protected set;}
+    public string TaskName {get; set;}
     public List<Node> ChildNodes{get; protected set;}
-    protected Node ParentNode{get; protected set;}
+    public Node ParentNode{get; protected set;}
 
     protected Node(
         string taskName,
@@ -56,7 +56,7 @@ public abstract class Node
         }
     }
     public virtual void ResetOtherStates(Node exceptionNode){
-        foreach(Node childNode in childNodes){
+        foreach(Node childNode in ChildNodes){
             if (childNode != exceptionNode){
                 childNode.ResetState();
             }
@@ -69,29 +69,53 @@ public abstract class Node
         if (ChildNodes == null){
             ChildNodes = new List<Node>();
         }
-        ChildNodes.Add(childNode);
+        if (!ChildNodes.Contains(childNode)){
+            ChildNodes.Add(childNode);
+            childNode.SetParentNode(this);
+        }
     }
 
     public void RemoveChildNode(Node childNode){
         if (ChildNodes != null){
-            ChildNodes.Remove(childNode);
+            if (ChildNodes.Contains(childNode)){
+                childNode.SetParentNode(null);
+                ChildNodes.Remove(childNode);
+            }
         }
     }
 
     public void SetParentNode(Node parentNode){
         ParentNode = parentNode;
+        if (ParentNode != null){
+            ParentNode.AddChildNode(this);
+        }
     }
 
-    public void Unlink(){
-        foreach(Node childNode in ChildNodes){
-            childNode.SetParentNode(null);
+    public void Unlink(bool updateList=true){
+        if (updateList){
+            if (ChildNodes != null){
+                foreach(Node childNode in ChildNodes){
+                    childNode.SetParentNode(this.ParentNode);
+                    ParentNode.AddChildNode(childNode);
+                }
+            }
+        }
+        else{
+            if (ChildNodes != null){
+                foreach(Node childNode in ChildNodes){
+                    childNode.SetParentNode(null);
+                }
+            }
         }
         ParentNode.RemoveChildNode(this);
-        SetParentNode(null);
         ChildNodes = null;
-
     }
 
+    public void InsertBeforeSelf(Node node){
+        node.SetParentNode(ParentNode);
+        ParentNode.RemoveChildNode(this);
+        node.AddChildNode(this);
+    }
 
 }
 }

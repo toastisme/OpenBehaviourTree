@@ -42,7 +42,7 @@ namespace Behaviour{
 
         public void SetScriptableObject(BehaviourTree behaviourTree){
             bt = behaviourTree;
-            if (bt.rootNode == null || bt.guiNodes.Count == 0){
+            if (bt.rootNode == null || guiNodes.Count == 0){
                 AddRootNode();
             }
         }
@@ -78,7 +78,7 @@ namespace Behaviour{
         }
 
         private void ResetRootNode(){
-            guiNodes[0].displayName = "";
+            guiNodes[0].DisplayName = "";
             guiNodes[0].SetPosition(new Vector2(0,0));
         }
 
@@ -329,7 +329,7 @@ namespace Behaviour{
         private void ProcessNodeEvents(Event e)
         {
             bool guiChanged = false;
-            CompositeGuiNode currentSeletedNode = selectedNode; 
+            GuiNode currentSeletedNode = selectedNode; 
             if (guiNodes != null)
             {
                 for (int i = guiNodes.Count - 1; i >= 0; i--)
@@ -341,7 +341,7 @@ namespace Behaviour{
             }
 
             if (selectedNode != null){
-                if (!selectedNode.isSelected){
+                if (!selectedNode.IsSelected){
                     selectedNode = null;
                 }
                 else if (selectedNode != currentSeletedNode){
@@ -387,7 +387,7 @@ namespace Behaviour{
         {
             GenericMenu genericMenu = new GenericMenu();
             foreach(NodeType nodeType in decisionNodeTypes){
-                string nodeTypeString = Node.GetDefaultStringFromNodeType(nodeType);
+                string nodeTypeString = NodeProperties.GetDefaultStringFromNodeType(nodeType);
                 genericMenu.AddItem(new GUIContent(nodeTypeString), false, () => OnClickAddNode(mousePosition, nodeType, nodeTypeString)); 
             }
             foreach(string taskName in customTaskNames){
@@ -417,7 +417,7 @@ namespace Behaviour{
         {
             if (guiNodes == null)
             {
-                guiNodes = new List<CompositeNode>();
+                guiNodes = new List<CompositeGuiNode>();
             }
 
             Node parentNode = selectedChildPoint.node.BtNode;
@@ -425,20 +425,20 @@ namespace Behaviour{
 
             switch(nodeType){
                 case NodeType.SequenceSelector:
-                    SequenceSelector node = new SequenceSelector(
-                        taskname:displayTask,
+                    SequenceSelector sequenceNode = new SequenceSelector(
+                        taskName:displayTask,
                         parentNode:parentNode
                     );
-                    parentNode.AddChildNode(node);
+                    parentNode.AddChildNode(sequenceNode);
                     guiNodes.Add(
                         new GuiSequenceSelector(
-                            node:node,
+                            node:sequenceNode,
                             displayTask:displayTask,
                             displayName:displayName,
                             pos:mousePosition,
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
-                            OnClickRemoveNode:OnClickRemoveNode,
+                            OnRemoveNode:OnClickRemoveNode,
                             OnClickChildPoint:OnClickChildPoint,
                             OnClickParentPoint:OnClickParentPoint,
                             blackboard:ref bt.blackboard
@@ -446,20 +446,20 @@ namespace Behaviour{
                     );
                     break;
                 case NodeType.PrioritySelector:
-                    PrioritySelector node = new PrioritySelector(
-                        taskname:displayTask,
+                    PrioritySelector priorityNode = new PrioritySelector(
+                        taskName:displayTask,
                         parentNode:parentNode
                     );
-                    parentNode.AddChildNode(node);
+                    parentNode.AddChildNode(priorityNode);
                     guiNodes.Add(
                         new GuiPrioritySelector(
-                            node:node,
+                            node:priorityNode,
                             displayTask:displayTask,
                             displayName:displayName,
                             pos:mousePosition,
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
-                            OnClickRemoveNode:OnClickRemoveNode,
+                            OnRemoveNode:OnClickRemoveNode,
                             OnClickChildPoint:OnClickChildPoint,
                             OnClickParentPoint:OnClickParentPoint,
                             blackboard:ref bt.blackboard
@@ -467,20 +467,21 @@ namespace Behaviour{
                     );
                     break;
                 case NodeType.ProbabilitySelector:
-                    ProbabilitySelector node = new ProbabilitySelector(
-                        taskname:displayTask,
+                    ProbabilitySelector probNode = new ProbabilitySelector(
+                        taskName:displayTask,
+                        blackboard:ref bt.blackboard,
                         parentNode:parentNode
                     );
-                    parentNode.AddChildNode(node);
+                    parentNode.AddChildNode(probNode);
                     guiNodes.Add(
                         new GuiProbabilitySelector(
-                            node:node,
+                            node:probNode,
                             displayTask:displayTask,
                             displayName:displayName,
                             pos:mousePosition,
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
-                            OnClickRemoveNode:OnClickRemoveNode,
+                            OnRemoveNode:OnClickRemoveNode,
                             OnClickChildPoint:OnClickChildPoint,
                             OnClickParentPoint:OnClickParentPoint,
                             blackboard:ref bt.blackboard
@@ -488,20 +489,21 @@ namespace Behaviour{
                     );
                     break;
                 case NodeType.Action:
-                    ActionNode node = new ActionNode(
-                        taskname:displayTask,
+                    ActionNode actionNode = new ActionNode(
+                        taskName:displayTask,
+                        blackboard:ref bt.blackboard,
                         parentNode:parentNode
                     );
-                    parentNode.AddChildNode(node);
+                    parentNode.AddChildNode(actionNode);
                     guiNodes.Add(
                         new GuiActionNode(
-                            node:node,
+                            node:actionNode,
                             displayTask:displayTask,
                             displayName:displayName,
                             pos:mousePosition,
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
-                            OnClickRemoveNode:OnClickRemoveNode,
+                            OnRemoveNode:OnClickRemoveNode,
                             OnClickChildPoint:OnClickChildPoint,
                             OnClickParentPoint:OnClickParentPoint,
                             blackboard:ref bt.blackboard
@@ -512,7 +514,7 @@ namespace Behaviour{
                     throw new Exception($"Unexpected node type {nodeType}");
             }
 
-            selectedParentPoint = guiNodes[guiNodes.Count-1].GetParentPoint();
+            selectedParentPoint = guiNodes[guiNodes.Count-1].ParentPoint;
             CreateConnection();
             ClearConnectionSelection();
             guiNodes[guiNodes.Count-1].SetParentConnection(connections[connections.Count-1]);
@@ -568,10 +570,10 @@ namespace Behaviour{
             // Remove connections 
             if (connections != null)
             {
-                connections.Remove(node.GetParentConnection());
+                connections.Remove(node.ParentConnection);
                 node.RemoveParentConnection();
                 
-                List<Connection> childConnections = node.GetChildConnections();
+                List<Connection> childConnections = node.ChildConnections;
                 if (childConnections != null){
                     for (int i=childConnections.Count-1; i>=0; i--){
                         ResetCallNumber(childConnections[i].GetChildNode());
@@ -609,13 +611,10 @@ namespace Behaviour{
             CompositeGuiNode childNode = selectedParentPoint.GetNode();
             parentNode.AddChildConnection(newConnection);
             childNode.SetParentConnection(newConnection);
-            if (parentNode.nodeType == NodeType.ProbabilitySelector){
-                newConnection.AddProbabilityWeight(nodeSizes.subNodeSize,
-                                                nodeStyles,
-                                                nodeColors,
-                                                UpdatePanelDetails,
-                                                ref bt.blackboard,
-                                                newConnection);
+            if (parentNode.GetNodeType() == NodeType.ProbabilitySelector){
+                AddProbabilityWeight(
+                    newConnection
+                );
             } 
             connections.Add(newConnection);
             drawingLine = false;
@@ -634,7 +633,7 @@ namespace Behaviour{
                 childNode:childNode
             );              
             parentNode.RemoveChildNode(childNode);
-            parentNode.AddchildNode(probabilityWeight);
+            parentNode.AddChildNode(probabilityWeight);
             childNode.SetParentNode(probabilityWeight);
 
             //Update Gui
@@ -658,13 +657,8 @@ namespace Behaviour{
             CompositeGuiNode childNode = parentPoint.GetNode();
             parentNode.AddChildConnection(newConnection);
             childNode.SetParentConnection(newConnection);
-            if (parentNode.nodeType == NodeType.ProbabilitySelector){
-                newConnection.AddProbabilityWeight(nodeSizes.subNodeSize,
-                                                nodeStyles,
-                                                nodeColors,
-                                                UpdatePanelDetails,
-                                                ref bt.blackboard,
-                                                newConnection);
+            if (parentNode.GetNodeType() == NodeType.ProbabilitySelector){
+                AddProbabilityWeight(newConnection);
             } 
             connections.Add(newConnection);
             GUI.changed = true;
@@ -679,9 +673,9 @@ namespace Behaviour{
         private int UpdateCallNumbers(CompositeGuiNode startingNode, int callNumber){
 
             // Update decorators first 
-            List<Decorator> decorators = startingNode.Decorators;
+            List<GuiDecorator> decorators = startingNode.Decorators;
             if (decorators != null){
-                foreach(Decorator decorator in decorators){
+                foreach(GuiDecorator decorator in decorators){
                     decorator.SetCallNumber(callNumber);
                     callNumber++;
                 }
@@ -693,7 +687,7 @@ namespace Behaviour{
 
             // Update child guiNodes
             startingNode.RefreshChildOrder();
-            foreach(Connection connection in startingNode.GetChildConnections()){
+            foreach(Connection connection in startingNode.ChildConnections){
                 callNumber = UpdateCallNumbers(connection.GetChildNode(), callNumber);
             }
             return callNumber;
@@ -701,9 +695,9 @@ namespace Behaviour{
 
         private void ResetCallNumber(CompositeGuiNode startingNode){
             // Update decorators first 
-            List<Decorator> decorators = startingNode.Decorators;
+            List<GuiDecorator> decorators = startingNode.Decorators;
             if (decorators != null){
-                foreach(Decorator decorator in decorators){
+                foreach(GuiDecorator decorator in decorators){
                     decorator.SetCallNumber(-1);
                 }
             }
@@ -711,7 +705,7 @@ namespace Behaviour{
             // Update guiNodes
             startingNode.SetCallNumber(-1);
 
-            foreach(Connection connection in startingNode.GetChildConnections()){
+            foreach(Connection connection in startingNode.ChildConnections){
                 ResetCallNumber(connection.GetChildNode());
             }
 
@@ -739,21 +733,25 @@ namespace Behaviour{
             return taskNames;
         }
 
+        /*
         void LoadFromRoot(CompositeGuiNode rootNode){
             guiNodes = new List<CompositeGuiNode>();
             connections = new List<Connection>();
             AddNodeAndConnections(bt.rootNode);
             
         }
+        */
 
+        /*
         void AddNodeAndConnections(CompositeGuiNode node){
             guiNodes.Add(node);
             foreach(CompositeGuiNode childNode in node.GetChildNodes()){
-                CreateConnection(node.childPoint, childNode.parentPoint);
+                CreateConnection(node.ChildPoint, childNode.ParentPoint);
                 AddNodeAndConnections(childNode);
             }
 
         }
+        */
 
     }
 }

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System;
 
 namespace Behaviour{
 public class BehaviourTreeSaver
 {
-    static void AddNodeToSerializedNodes(Node node, 
-                                         out List<SerializedNode> serializedNodes) {
+    public static void AddNodeToSerializedNodes(Node node, 
+                                         ref List<SerializableNode> serializedNodes) {
         /**
          *Recursive function to write all nodes depth first into serializedNodes
          */
@@ -12,12 +13,12 @@ public class BehaviourTreeSaver
         var serializedNode = new SerializableNode () {
             type = (int)node.GetNodeType(),
             taskName = node.TaskName,
-            childCount = node.GetChildNodes().Count,
+            childCount = node.ChildNodes.Count,
         }
         ;
         serializedNodes.Add (serializedNode);
-        foreach (var child in n.children) {
-            BehaviourTreeSaver.AddNodeToSerializedNodes (child, out serializedNodes);
+        foreach (var child in node.ChildNodes) {
+            BehaviourTreeSaver.AddNodeToSerializedNodes (child, ref serializedNodes);
         }
     }
 

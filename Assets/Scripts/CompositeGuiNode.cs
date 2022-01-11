@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using System;
 
 namespace Behaviour{
@@ -11,7 +12,6 @@ public class CompositeGuiNode : CallableGuiNode
      * and have connections to other CompositeGuiNodes.
      */
      
-    public Node BtNode {get; protected set;} // The node this GuiNode is displaying
     public List<GuiDecorator> Decorators{get; set;}
     Action<CompositeGuiNode> OnRemoveNode;
 
@@ -26,7 +26,8 @@ public class CompositeGuiNode : CallableGuiNode
     // Appearance
     Rect taskRect; // Rect containing the task and display name
     protected Color taskRectColor;
-    protected Vector2 taskRectSize = NodeProperites.SubNodeSize();
+    protected Vector2 taskRectSize = NodeProperties.SubNodeSize();
+    private Vector2 initDecoratorPos = NodeProperties.InitDecoratorPos();
 
     public CompositeGuiNode(
         Node node,
@@ -85,11 +86,11 @@ public class CompositeGuiNode : CallableGuiNode
         // Default GuiNode has a child and parent point
         ChildPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.In, 
-                                            nodeStyles.childPointStyle, 
+                                            NodeProperties.ChildPointStyle(), 
                                             OnClickChildPoint);
         ParentPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.Out, 
-                                            nodeStyles.parentPointStyle, 
+                                            NodeProperties.ParentPointStyle(), 
                                             OnClickParentPoint);
 
     }
@@ -112,7 +113,7 @@ public class CompositeGuiNode : CallableGuiNode
         Drag(delta);
         if (ChildConnections != null){
             foreach(Connection connection in ChildConnections){
-                connection.ChildNode.Drag(delta);
+                connection.GetChildNode().Drag(delta);
             }
         }
     }
@@ -122,13 +123,13 @@ public class CompositeGuiNode : CallableGuiNode
         ChildPoint?.Draw();
         ParentPoint?.Draw();
         if (IsRunning()){
-            GUI.color = NodeProperties.RunningTint;
+            GUI.color = NodeProperties.RunningTint();
         }
         DrawSelf();
         callNumber.Draw();
         DrawDecorators();
         GUI.backgroundColor = currentColor;
-        GUI.color = NodeProperties.DefaultTint;
+        GUI.color = NodeProperties.DefaultTint();
     }
 
     void DrawSelf(){
@@ -150,7 +151,7 @@ public class CompositeGuiNode : CallableGuiNode
         bool guiChanged = false;
         bool decoratorSelected = false;
 
-        guiChanged = ProcessDecoratorEvents(e, decoratorSelected);
+        guiChanged = ProcessDecoratorEvents(e, out decoratorSelected);
         // Only bother processing taskRect events if no decorator was selected
         if (!decoratorSelected){
             bool guiChangedFromNode =  ProcessTaskRectEvents(e);
@@ -166,13 +167,14 @@ public class CompositeGuiNode : CallableGuiNode
 
     bool ProcessDecoratorEvents(Event e, out bool decoratorSelected){
         bool guiChanged = false;
-        if (decorators != null){
+        decoratorSelected = false;
+        if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
                 bool guiChangedFromDecorator = decorator.ProcessEvents(e);
                 if (!guiChanged && guiChangedFromDecorator){
                     guiChanged = true;
                 }
-                if (!decoratorSelected && decorator.IsSelected()){
+                if (!decoratorSelected && decorator.IsSelected){
                     decoratorSelected = true;
                 }
             }
@@ -225,6 +227,9 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     protected void OnClickRemoveDecorator(GuiDecorator decorator){
+
+        decorator.BtNode.Unlink();
+
         int idx = Decorators.FindIndex(a => a==decorator);
         if (idx != -1){
 
@@ -233,12 +238,12 @@ public class CompositeGuiNode : CallableGuiNode
             // Resize node 
             rect.height -= taskRectSize[1];
             taskRect.y -= taskRectSize[1];
-            CallNumber.NodeRect.y -= taskRectSize[1];
+            callNumber.Drag(new Vector2(0, -taskRectSize[1]));
 
             // Move all decorators below the removed one up
             Vector2 moveVec = new Vector2(0, -taskRectSize[1]);
-            for (int i = idx; i < decorators.Count; i++){
-                decorators[i].Drag(moveVec);
+            for (int i = idx; i < Decorators.Count; i++){
+                Decorators[i].Drag(moveVec);
             }
             GUI.changed = true;
         }
@@ -249,30 +254,37 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     protected void OnClickAddDecorator(string displayTask){
-        //TODO update this constructor
-        GuiDecorator decorator = new GuiDecorator( 
-                            blackboard:ref blackboard,
-                            displayTask:displayTask,
-                            displayName:"",
-                            rect:new Rect(
-                            rect.x + initDecoratorPos[0], 
-                            rect.y + initDecoratorPos[1]+(taskRectSize[1]*decorators.Count+1),
-                            taskRectSize[0],
-                            taskRectSize[1] 
-                            ),
-                            parentNode:this.parentNode,
-                            UpdatePanelDetails:UpdatePanelDetails,
-                            OnRemoveDecorator:OnClickRemoveDecorator,
-                            childNode:this
-                            );
-        decorator.SetCallNumber(callNumber);
+
+        // Add actual decorator
+        Decorator decorator = new Decorator(
+            taskName:displayTask,
+            blackboard:ref blackboard
+        );
+
+        // Insert before this node in list
+        BtNode.InsertBeforeSelf(decorator);
+
+        // Add gui decorator
+        GuiDecorator guiDecorator = new GuiDecorator( 
+            decorator:decorator,
+            displayTask:displayTask,
+            displayName:"",
+            pos:new Vector2(
+                rect.x + initDecoratorPos[0],
+                rect.y + initDecoratorPos[1]+(taskRectSize[1]*Decorators.Count+1)),
+            UpdatePanelDetails:UpdatePanelDetails,
+            OnRemoveDecorator:OnClickRemoveDecorator,
+            blackboard:ref blackboard,
+            parentNode:this
+            );
+        guiDecorator.SetCallNumber(callNumber.CallNumber);
         callNumber.CallNumber++;
-        this.parentNode = decorator;
-        decorators.Add(decorator);
+        Decorators.Add(guiDecorator);
                 
+        // Update params to make space for gui decorator
         rect.height += taskRectSize[1];
         taskRect.y += taskRectSize[1];
-        callNumber.NodeRect.y += taskRectSize[1];
+        callNumber.Drag(new Vector2(0, taskRectSize[1]));
         GUI.changed = true;
     }
 
@@ -317,17 +329,12 @@ public class CompositeGuiNode : CallableGuiNode
         if (ChildConnections != null){
             ChildConnections.Sort((x,y) => x.GetChildNode().GetXPos().CompareTo(y.GetChildNode().GetXPos()));
         }
-        childNodes = new List<Node>();
-        foreach(Connection connection in ChildConnections){
-            ChildNodes.Add(connection.GetChildNode());
-        }
-
     }
 
     private bool DecoratorKeyActive(string boolName){
         if (Decorators != null){
             for (int i=0; i < Decorators.Count; i++){
-                if (Decorators[i].displayTask == boolName){
+                if (Decorators[i].DisplayTask == boolName){
                     return true;
                 }
             }
@@ -338,8 +345,8 @@ public class CompositeGuiNode : CallableGuiNode
     public void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
         if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
-                if (decorator.displayTask == oldKeyName){
-                    decorator.displayTask = newKeyName;
+                if (decorator.DisplayTask == oldKeyName){
+                    decorator.DisplayTask = newKeyName;
                 }
             }
         }
@@ -350,6 +357,10 @@ public class CompositeGuiNode : CallableGuiNode
         {
             OnRemoveNode(this);
         }
+    }
+
+    public void SetParentConnection(Connection connection){
+        this.ParentConnection = connection;       
     }
 }
 }

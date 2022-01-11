@@ -29,17 +29,17 @@ public class GuiActionNode : CompositeGuiNode
         OnRemoveNode:OnRemoveNode,
         OnClickChildPoint:OnClickChildPoint,
         OnClickParentPoint:OnClickParentPoint,
-        blackboard:blackboard
+        blackboard:ref blackboard
     )
     {
-        this.actionNode = actionNode;
+        this.actionNode = node;
         ApplyDerivedSettings();
-        ApplyNodeTypeSettings(OnClickChildPoint,OnClickParentParent);
+        ApplyNodeTypeSettings(OnClickChildPoint,OnClickParentPoint);
     }
     protected override void ApplyDerivedSettings()
     {
-        color = NodeProperties.ActionNodeColor();
-        defaultStyle = NodeProperties.ActionNodeStyle();
+        color = NodeProperties.ActionColor();
+        defaultStyle = NodeProperties.ActionStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
         taskRectColor = NodeProperties.DefaultColor();
@@ -54,7 +54,7 @@ public class GuiActionNode : CompositeGuiNode
         ChildPoint = null;
         ParentPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.Out, 
-                                            nodeStyles.parentPointStyle, 
+                                            NodeProperties.ParentPointStyle(), 
                                             OnClickParentPoint);
 
     }

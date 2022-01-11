@@ -7,7 +7,7 @@ using System;
 namespace Behaviour{
 public class GuiRootNode : GuiPrioritySelector
 {
-    public GuiPrioritySelector(
+    public GuiRootNode(
         PrioritySelector node,
         string displayTask,
         string displayName,
@@ -28,7 +28,7 @@ public class GuiRootNode : GuiPrioritySelector
         OnRemoveNode:OnRemoveNode,
         OnClickChildPoint:OnClickChildPoint,
         OnClickParentPoint:OnClickParentPoint,
-        blackboard:blackboard
+        blackboard:ref blackboard
     )
     {
         ApplyDerivedSettings();
@@ -51,7 +51,7 @@ public class GuiRootNode : GuiPrioritySelector
         // Default GuiNode has a child and parent point
         ChildPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.In, 
-                                            nodeStyles.childPointStyle, 
+                                            NodeProperties.ChildPointStyle(), 
                                             OnClickChildPoint);
         ParentPoint = null;
 

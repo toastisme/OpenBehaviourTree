@@ -28,10 +28,10 @@ public class GuiPrioritySelector : CompositeGuiNode
         OnRemoveNode:OnRemoveNode,
         OnClickChildPoint:OnClickChildPoint,
         OnClickParentPoint:OnClickParentPoint,
-        blackboard:blackboard
+        blackboard:ref blackboard
     )
     {
-        this.prioritySelector = prioritySelector;
+        this.prioritySelector = node;
         ApplyDerivedSettings();
     }
     protected override void ApplyDerivedSettings()

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Behaviour{
 interface IGuiNode 
 {

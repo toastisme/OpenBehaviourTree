@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Behaviour{
 public class CallableGuiNode : GuiNode
 {
-    CallNumberNode callNumber; // Displays when the node will be called in the tree
+    public CallNumberNode callNumber; // Displays when the node will be called in the tree
     protected CallableGuiNode(
         Node node,
         string displayTask,
@@ -23,11 +24,11 @@ public class CallableGuiNode : GuiNode
     )
     {
         callNumber = new CallNumberNode();
-        callNumber.NodeRect.position = rect.position;
+        callNumber.SetPosition(rect.position);
     }
 
     public override void Drag(Vector2 delta){
-        base.Drag();
+        base.Drag(delta);
         callNumber.Drag(delta);
     }
 

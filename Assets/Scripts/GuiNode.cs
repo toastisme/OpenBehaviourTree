@@ -7,7 +7,7 @@ namespace Behaviour{
 public abstract class GuiNode : IGuiNode
 {
     protected BehaviourTreeBlackboard blackboard;
-    protected Node btNode;
+    public Node BtNode{get; protected set;}
 
     // Actions
     protected Action<GuiNode> UpdatePanelDetails;
@@ -16,14 +16,14 @@ public abstract class GuiNode : IGuiNode
     public string DisplayTask{
         // What the node actually does
         get{
-            return Node.TaskName;
+            return BtNode.TaskName;
         }
         set{
-            Node.TaskName = value;
+            BtNode.TaskName = value;
         }
     }
     
-    Rect rect; // The base rect decorators and tasks are drawn on
+    protected Rect rect; // The base rect decorators and tasks are drawn on
     public string DisplayName{get; set;}
     protected GUIStyle activeStyle;
     protected GUIStyle defaultStyle;
@@ -60,23 +60,29 @@ public abstract class GuiNode : IGuiNode
         rect.position += delta;
     }
 
-    bool IsRunning(){
+    public bool IsRunning(){
         return (BtNode.NodeState == NodeState.Running);
     }
 
     public virtual void Draw(){}
 
-    public virtual bool ProcessEvents(Event e){}
+    public virtual bool ProcessEvents(Event e){return false;}
 
-    public virtual void SetSelected(bool selected);
+    public virtual void SetSelected(bool selected){
+            if (selected){
+                IsSelected = true;
+                activeStyle = selectedStyle;
+            }
+            else{
+                IsSelected = false;
+                activeStyle = defaultStyle;
+            }
+        }
 
     protected virtual bool IsRootNode(){return false;}
 
     public float GetXPos(){
         return rect.x;
-    }
-    public void SetParentConnection(Connection connection){
-        this.ParentConnection = connection;       
     }
 
     public void SetPosition(Vector2 pos){
@@ -89,5 +95,8 @@ public abstract class GuiNode : IGuiNode
         GUILayout.Label("Name");
         DisplayName = GUILayout.TextField(DisplayName, 50);
     }
+
+    public NodeType GetNodeType(){return BtNode.GetNodeType();}
+    public Rect GetRect(){return rect;}
 }
 }

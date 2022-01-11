@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Behaviour{
 public class CallNumberNode : IGuiNode
 {
     GUIStyle style;
-    public Rect NodeRect{get; set;}
+    Rect rect;
     Color color;
     public int CallNumber{get; set;}
 
@@ -20,18 +21,17 @@ public class CallNumberNode : IGuiNode
     public void Draw(){
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(NodeRect, CallNumber.ToString(), style);
+        GUI.Box(rect, CallNumber.ToString(), style);
         GUI.backgroundColor = currentColor;
     }
 
     public void Drag(Vector2 delta){
-        NodeRect.position += delta;
+        rect.position += delta;
     }
-    /** 
-     * Finish GuiNode
-     * Update BehaviourTreeEditor
-     * Blackboard saving/loading 
-     */
+
+    public void SetPosition(Vector2 pos){
+        rect.position = pos;
+    }
 
 }
 }
