@@ -168,7 +168,7 @@ namespace Behaviour{
                 case NodeType.Decorator:
                     return "Decorator";
                 case NodeType.ProbabilityWeight:
-                    return "Constant weight (1)";
+                    return "Constant weight";
                 default:
                     return "Action";
             }

@@ -155,6 +155,8 @@ namespace Behaviour{
         }
 
         void DrawKey(string keyName, string keyType){
+
+            // Active text field for renaming
             if (keyName == activeBlackboardKey[0] && renamingBlackboardKey){
                 activeBlackboardKey[1] = GUILayout.TextField(activeBlackboardKey[1], 50);
             }
@@ -177,7 +179,12 @@ namespace Behaviour{
                     if (GUILayout.Button(newName + " (" + keyType + ")")){
                         GenericMenu menu = new GenericMenu();
                         menu.AddItem(new GUIContent("Rename"), false, () => OnClickRenameBlackboardKey(keyName));
-                        menu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(keyName));
+                        if ((keyType == "float" || keyType == "int") && WeightKeyInUse(keyName)){
+                            menu.AddDisabledItem(new GUIContent("Remove (being used by a node)"));
+                        }
+                        else{
+                            menu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(keyName));
+                        }
                         menu.ShowAsContext();
                     }
                 }
@@ -189,11 +196,18 @@ namespace Behaviour{
                 if (GUILayout.Button(keyName + " (" + keyType + ")")){
                     GenericMenu menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Rename"), false, () => OnClickRenameBlackboardKey(keyName));
-                    menu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(keyName));
+                    if ((keyType == "float" || keyType == "int") && WeightKeyInUse(keyName)){
+                        menu.AddDisabledItem(new GUIContent("Remove (being used by a node)"));
+                    }
+                    else{
+                        menu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(keyName));
+                    }
                     menu.ShowAsContext();
                 }
             }
         }
+
+
         void DrawBlackboardDetails(int unusedWindowID){
             if (GUILayout.Button("New Key")){
                 GenericMenu genericMenu = new GenericMenu();
@@ -625,7 +639,7 @@ namespace Behaviour{
         }
 
         void AddProbabilityWeight(Connection connection, 
-                                  string taskName="Constant weight (1)",
+                                  string taskName="Constant weight",
                                   string displayName=""){
             // Update behaviour tree
             Node childNode = connection.GetChildNode().BtNode;
@@ -734,6 +748,23 @@ namespace Behaviour{
                     }
                 }
             }
+        }
+
+        bool WeightKeyInUse(string keyName){
+            if (guiNodes!=null){
+                foreach(CompositeGuiNode node in guiNodes){
+                    if (node is GuiProbabilitySelector probabilitySelectorNode){
+                        if (probabilitySelectorNode.ChildConnections != null){
+                            foreach(Connection connection in probabilitySelectorNode.ChildConnections){
+                                if (connection.GetProbabilityWeightKey() == keyName){
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         List<BehaviourTreeTask> GetCustomTasks()

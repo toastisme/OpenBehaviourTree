@@ -98,10 +98,10 @@ public class GuiProbabilityWeight : GuiNode
         GenericMenu genericMenu = new GenericMenu();
         if(NoCustomKeys(intKeys, floatKeys)){
             genericMenu.AddDisabledItem(new GUIContent("Add blackboard float or int keys to use as weights"));
-            genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight (1)"));
+            genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight"));
         }
         else{
-            genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight (1)"));
+            genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight"));
             if (intKeys != null){
                 foreach(KeyValuePair<string, int> kvp in blackboard.GetIntKeys()){
                             genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key, (float)kvp.Value));
