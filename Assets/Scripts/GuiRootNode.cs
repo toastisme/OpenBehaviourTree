@@ -56,5 +56,7 @@ public class GuiRootNode : GuiPrioritySelector
         ParentPoint = null;
 
     }
+
+    protected override bool IsRootNode(){return true;}
 }
 }

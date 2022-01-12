@@ -606,6 +606,9 @@ namespace Behaviour{
                     }
                 }
             }
+            if (node == selectedNode){
+                selectedNode = null;
+            }
             // Remove corresponding node on the BehaviourTree
             node.BtNode.Unlink();
 
