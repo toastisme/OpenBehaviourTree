@@ -79,21 +79,36 @@ public class GuiProbabilityWeight : GuiNode
 
     public override void Drag(Vector2 delta){}
 
+    bool NoCustomKeys(Dictionary<string, int> intKeys, Dictionary<string,float> floatKeys){
+        if (intKeys == null && floatKeys == null) {
+            return true;
+        }
+        if ((intKeys != null && intKeys.Count == 0) && (floatKeys!=null && floatKeys.Count == 0)){
+            return true;
+        }
+        return false;
+
+    }
+
     protected void ProcessContextMenu(){
         Dictionary<string, int> intKeys = blackboard.GetIntKeys();
         Dictionary<string, float> floatKeys = blackboard.GetFloatKeys();
         GenericMenu genericMenu = new GenericMenu();
-        if ((intKeys == null && floatKeys == null) || (intKeys.Count == 0 && floatKeys.Count == 0)){
+        if(NoCustomKeys(intKeys, floatKeys)){
             genericMenu.AddDisabledItem(new GUIContent("Add blackboard float or int keys to use as weights"));
             genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight (1)"));
         }
         else{
             genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight (1)"));
-            foreach(KeyValuePair<string, int> kvp in blackboard.GetIntKeys()){
-                        genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
+            if (intKeys != null){
+                foreach(KeyValuePair<string, int> kvp in blackboard.GetIntKeys()){
+                            genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
+                }
             }
-            foreach(KeyValuePair<string, float> kvp in blackboard.GetFloatKeys()){
-                    genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
+            if (floatKeys != null){
+                foreach(KeyValuePair<string, float> kvp in floatKeys){
+                        genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
+                }
             }
         }
         genericMenu.AddItem(new GUIContent("Remove connection"), false, () => parentConnection.OnClickRemoveConnection(parentConnection));

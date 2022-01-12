@@ -14,8 +14,8 @@ public class ProbabilityWeight : Node
         }
     }
     public override NodeState Evaluate(){
-        NodeState = ChildNodes[0].Evaluate();
-        return NodeState;
+        CurrentState = ChildNodes[0].Evaluate();
+        return CurrentState;
     }
 
         public override NodeType GetNodeType()

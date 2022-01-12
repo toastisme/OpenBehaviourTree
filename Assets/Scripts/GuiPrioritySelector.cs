@@ -36,11 +36,11 @@ public class GuiPrioritySelector : CompositeGuiNode
     }
     protected override void ApplyDerivedSettings()
     {
-        color = NodeProperties.PrioritySelectorColor();
+        taskRectColor = NodeProperties.PrioritySelectorColor();
         defaultStyle = NodeProperties.PrioritySelectorStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
-        taskRectColor = NodeProperties.DefaultColor();
+        color = NodeProperties.DefaultColor();
     }
 }
 }

@@ -51,6 +51,7 @@ public abstract class GuiNode : IGuiNode
                              size.x, 
                              size.y);
         this.UpdatePanelDetails = UpdatePanelDetails;
+        this.blackboard = blackboard;
 
     }
 
@@ -61,7 +62,7 @@ public abstract class GuiNode : IGuiNode
     }
 
     public bool IsRunning(){
-        return (BtNode.NodeState == NodeState.Running);
+        return (BtNode.CurrentState == NodeState.Running);
     }
 
     public virtual void Draw(){}

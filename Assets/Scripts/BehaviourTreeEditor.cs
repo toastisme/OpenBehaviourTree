@@ -75,6 +75,7 @@ namespace Behaviour{
                                 OnClickParentPoint, 
                                 ref bt.blackboard
                                 ));
+            guiNodes[0].callNumber.CallNumber = 1;
         }
 
         private void ResetRootNode(){
@@ -88,8 +89,8 @@ namespace Behaviour{
             DrawGrid(100, 0.4f, Color.gray);
 
             if (bt != null && guiNodes != null ){
-                DrawNodes();
                 DrawConnections();
+                DrawNodes();
 
                 DrawConnectionLine(Event.current);
                 DrawDetailsPanel();
@@ -421,7 +422,6 @@ namespace Behaviour{
             }
 
             Node parentNode = selectedChildPoint.node.BtNode;
-            Connection newConnection = connections[connections.Count-1];
 
             switch(nodeType){
                 case NodeType.SequenceSelector:
@@ -519,7 +519,7 @@ namespace Behaviour{
             ClearConnectionSelection();
             guiNodes[guiNodes.Count-1].SetParentConnection(connections[connections.Count-1]);
             int numNodes = UpdateCallNumbers(guiNodes[0], 1);
-            AssetDatabase.SaveAssets();
+            //AssetDatabase.SaveAssets();
         }
 
         

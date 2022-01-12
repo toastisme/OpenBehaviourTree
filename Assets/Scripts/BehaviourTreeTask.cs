@@ -19,7 +19,7 @@ namespace Behaviour{
             this.monoBehaviour = monoBehaviour;
         }
         
-        public abstract IEnumerator ExecuteTask(System.Action<NodeState> NodeState);
+        public abstract IEnumerator ExecuteTask(System.Action<NodeState> currentState);
 
 
 

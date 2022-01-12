@@ -35,13 +35,13 @@ public class Decorator : Node
 
     public override NodeState Evaluate(){
         if (!invertCondition){
-            NodeState = blackboard.GetBoolKeys()[TaskName] ? ChildNodes[0].Evaluate() : NodeState.Failed;
+            CurrentState = blackboard.GetBoolKeys()[TaskName] ? ChildNodes[0].Evaluate() : NodeState.Failed;
         }
         else{
-            NodeState = !blackboard.GetBoolKeys()[TaskName] ? ChildNodes[0].Evaluate() : NodeState.Failed;
+            CurrentState = !blackboard.GetBoolKeys()[TaskName] ? ChildNodes[0].Evaluate() : NodeState.Failed;
         }
-        if (NodeState == NodeState.Failed){ChildNodes[0].ResetState();} 
-        return NodeState;
+        if (CurrentState == NodeState.Failed){ChildNodes[0].ResetState();} 
+        return CurrentState;
     } 
     public override NodeType GetNodeType(){return NodeType.Decorator;}
 }

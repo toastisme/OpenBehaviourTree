@@ -20,11 +20,11 @@ public class SequenceSelector : Node
         foreach(Node node in ChildNodes) { 
             switch (node.Evaluate()) { 
                 case NodeState.Idle:
-                    NodeState = NodeState.Idle;
-                    return NodeState;
+                    CurrentState = NodeState.Idle;
+                    return CurrentState;
                 case NodeState.Failed: 
-                    NodeState = NodeState.Failed; 
-                    return NodeState;                     
+                    CurrentState = NodeState.Failed; 
+                    return CurrentState;                     
                 case NodeState.Succeeded: 
                     continue; 
                 case NodeState.Running: 
@@ -32,12 +32,12 @@ public class SequenceSelector : Node
                     anyChildRunning = true; 
                     break; 
                 default: 
-                    NodeState = NodeState.Succeeded; 
-                    return NodeState; 
+                    CurrentState = NodeState.Succeeded; 
+                    return CurrentState; 
             } 
         } 
-        NodeState = anyChildRunning ? NodeState.Running : NodeState.Succeeded; 
-        return NodeState; 
+        CurrentState = anyChildRunning ? NodeState.Running : NodeState.Succeeded; 
+        return CurrentState; 
     }
     public override NodeType GetNodeType(){return NodeType.SequenceSelector;}
 }

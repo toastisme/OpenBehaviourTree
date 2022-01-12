@@ -59,6 +59,7 @@ public class CompositeGuiNode : CallableGuiNode
             taskRectSize.x,
             taskRectSize.y
         );
+        callNumber.SetPosition(taskRect.position);
 
 
         ApplyDerivedSettings();

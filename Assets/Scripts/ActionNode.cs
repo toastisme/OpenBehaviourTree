@@ -55,7 +55,7 @@ public class ActionNode : Node
                 executeTask.Stop();
             }
         }
-        executeTask = new Task(btTask.ExecuteTask((x)=>NodeState=x), false);
+        executeTask = new Task(btTask.ExecuteTask((x)=>CurrentState=x), false);
     }
 
     public override NodeState Evaluate(){
@@ -65,24 +65,24 @@ public class ActionNode : Node
         * Returns the state of the node.
         */
 
-        if (NodeState == NodeState.Idle && !executeTask.Running){
+        if (CurrentState == NodeState.Idle && !executeTask.Running){
             executeTask.Start();
         }
-        return NodeState;        
+        return CurrentState;        
     }
 
     public override void ResetState(){
 
         /**
         * Stops the action if running.
-        * Sets the NodeState to Idle.
+        * Sets the CurrentState to Idle.
         */
 
         if (executeTask.Running){
             executeTask.Stop();
         }
         ResetTask();
-        NodeState = NodeState.Idle;
+        CurrentState = NodeState.Idle;
     }
 
     public override NodeType GetNodeType(){return NodeType.Action;}

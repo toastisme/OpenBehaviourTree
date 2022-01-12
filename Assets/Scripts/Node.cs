@@ -27,7 +27,7 @@ public struct SerializableNode{
 }
 public abstract class Node
 {
-    public NodeState NodeState {get; protected set;}
+    public NodeState CurrentState {get; protected set;}
     /**
         * If a decision node (SequenceSelector, ProbabilitySelector, PrioritySelector), 
         * TaskName is the node type.
@@ -47,10 +47,11 @@ public abstract class Node
         this.TaskName = taskName;
         this.ParentNode = parentNode;
         this.ChildNodes = new List<Node>();
+        CurrentState = NodeState.Idle;
     }
-    public virtual NodeState Evaluate(){return NodeState;}
+    public virtual NodeState Evaluate(){return CurrentState;}
     public virtual void ResetState(){
-        NodeState = NodeState.Idle;
+        CurrentState = NodeState.Idle;
         foreach(Node childNode in ChildNodes){
             childNode.ResetState();
         }

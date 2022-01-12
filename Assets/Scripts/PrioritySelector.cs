@@ -20,23 +20,23 @@ public class PrioritySelector : Node
         foreach (Node node in ChildNodes){
             switch(node.Evaluate()){
                 case NodeState.Idle:
-                    NodeState = NodeState.Idle;
-                    return NodeState;
+                    CurrentState = NodeState.Idle;
+                    return CurrentState;
                 case NodeState.Failed:
                     continue;
                 case NodeState.Succeeded:
-                    NodeState = NodeState.Succeeded;
-                    return NodeState;
+                    CurrentState = NodeState.Succeeded;
+                    return CurrentState;
                 case NodeState.Running:
-                    NodeState = NodeState.Running;
+                    CurrentState = NodeState.Running;
                     ResetOtherStates(node);
-                    return NodeState;
+                    return CurrentState;
                 default:
                     continue;
             }
         }
-        NodeState = NodeState.Failed;
-        return NodeState;
+        CurrentState = NodeState.Failed;
+        return CurrentState;
     }
     public override NodeType GetNodeType(){return NodeType.PrioritySelector;}
 }

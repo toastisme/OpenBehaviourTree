@@ -60,11 +60,11 @@ public class ProbabilitySelector : Node
         if (selectedNode == null){
             selectedNode = SelectNode();
         }
-        NodeState = selectedNode.Evaluate();
+        CurrentState = selectedNode.Evaluate();
         if (selectedNode.Evaluate() == NodeState.Failed || selectedNode.Evaluate() == NodeState.Succeeded){
             selectedNode = null;
         }
-        return NodeState;
+        return CurrentState;
     }
 
     List<float> GetWeights(){

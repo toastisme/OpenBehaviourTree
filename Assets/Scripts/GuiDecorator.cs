@@ -32,6 +32,7 @@ public class GuiDecorator : CallableGuiNode
         this.decorator = decorator;
         this.parentNode = parentNode;
         this.OnRemoveDecorator = OnRemoveDecorator;
+        ApplyDerivedSettings();
     }
     protected override void ApplyDerivedSettings(){
         defaultStyle = NodeProperties.GUINodeStyle();
