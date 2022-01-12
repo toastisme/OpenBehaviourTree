@@ -90,9 +90,9 @@ namespace Behaviour{
 
             if (bt != null && guiNodes != null ){
                 DrawConnections();
+                DrawConnectionLine(Event.current);
                 DrawNodes();
 
-                DrawConnectionLine(Event.current);
                 DrawDetailsPanel();
 
                 if (MousePosOnGrid(Event.current.mousePosition)){
