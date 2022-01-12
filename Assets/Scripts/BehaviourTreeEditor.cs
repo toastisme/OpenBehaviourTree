@@ -149,6 +149,9 @@ namespace Behaviour{
                 }
                 ResetRootNode();
             }
+            if (selectedNode != null && selectedNode.IsSelected == false){
+                selectedNode = null;
+            }
             if (selectedNode != null){
                 selectedNode.DrawDetails();
             }

@@ -100,9 +100,16 @@ namespace Behaviour{
         }
         private void ProcessContextMenu(){
             GenericMenu genericMenu = new GenericMenu();
-            genericMenu.AddItem(new GUIContent("Remove connection"), false, () => OnClickRemoveConnection(this));
+            genericMenu.AddItem(new GUIContent("Remove connection"), false, () => RemoveConnection());
             genericMenu.ShowAsContext();
 
+        }
+
+        public void RemoveConnection(){
+            if (HasProbabilityWeight()){
+                probabilityWeight.SetSelected(false);
+            }
+            OnClickRemoveConnection(this);
         }
 
         public string GetProbabilityWeightKey(){

@@ -113,7 +113,7 @@ public class GuiProbabilityWeight : GuiNode
                 }
             }
         }
-        genericMenu.AddItem(new GUIContent("Remove connection"), false, () => parentConnection.OnClickRemoveConnection(parentConnection));
+        genericMenu.AddItem(new GUIContent("Remove connection"), false, () => parentConnection.RemoveConnection());
         genericMenu.ShowAsContext();
 
     }

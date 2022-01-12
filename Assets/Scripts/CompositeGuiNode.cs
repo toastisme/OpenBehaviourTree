@@ -314,14 +314,21 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     public void AddChildConnection(Connection connection){
+        if (this.ChildConnections == null){
+            this.ChildConnections = new List<Connection>();
+        }
         this.ChildConnections.Add(connection);
     }
     public void RemoveChildConnection(Connection connection){
-        this.ChildConnections.Remove(connection);
+        if (this.ChildConnections != null){
+            this.ChildConnections.Remove(connection);
+        }
     }
     public void RemoveParentConnection(){
-        this.ParentConnection.GetParentNode().RemoveChildConnection(this.ParentConnection);
-        this.ParentConnection = null;
+        if (this.ParentConnection != null){
+            this.ParentConnection.GetParentNode().RemoveChildConnection(this.ParentConnection);
+            this.ParentConnection = null;
+        }
     }
 
     public void RefreshChildOrder(){
