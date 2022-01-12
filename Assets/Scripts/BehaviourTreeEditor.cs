@@ -182,6 +182,9 @@ namespace Behaviour{
                         if ((keyType == "float" || keyType == "int") && WeightKeyInUse(keyName)){
                             menu.AddDisabledItem(new GUIContent("Remove (being used by a node)"));
                         }
+                        else if (keyType == "bool" && BoolKeyInUse(keyName)){
+                            menu.AddDisabledItem(new GUIContent("Remove (being used by a node)"));
+                        }
                         else{
                             menu.AddItem(new GUIContent("Remove"), false, () => OnClickRemoveBlackboardKey(keyName));
                         }
@@ -197,6 +200,9 @@ namespace Behaviour{
                     GenericMenu menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Rename"), false, () => OnClickRenameBlackboardKey(keyName));
                     if ((keyType == "float" || keyType == "int") && WeightKeyInUse(keyName)){
+                        menu.AddDisabledItem(new GUIContent("Remove (being used by a node)"));
+                    }
+                    else if (keyType == "bool" && BoolKeyInUse(keyName)){
                         menu.AddDisabledItem(new GUIContent("Remove (being used by a node)"));
                     }
                     else{
@@ -762,6 +768,22 @@ namespace Behaviour{
                             }
                         }
                     }
+                }
+            }
+            return false;
+        }
+
+
+        bool BoolKeyInUse(string keyName){
+            if (guiNodes != null){
+                foreach(CompositeGuiNode node in guiNodes){
+                    if (node.Decorators != null){
+                        foreach (GuiDecorator decorator in node.Decorators){
+                            if (decorator.DisplayTask == keyName){
+                                return true;
+                            }
+                        }
+                    }                    
                 }
             }
             return false;
