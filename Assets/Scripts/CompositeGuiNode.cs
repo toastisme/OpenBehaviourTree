@@ -230,6 +230,7 @@ public class CompositeGuiNode : CallableGuiNode
     protected void OnClickRemoveDecorator(GuiDecorator decorator){
 
         decorator.BtNode.Unlink();
+        decorator.SetSelected(false);
 
         int idx = Decorators.FindIndex(a => a==decorator);
         if (idx != -1){
