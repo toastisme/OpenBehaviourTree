@@ -1,72 +1,43 @@
+namespace Behaviour{
+public class PrioritySelector : Node
+{    
+    /**
+    * \class PrioritySelector
+    * Represents a priority node in the BehaviourTree class.
+    * Child nodes are evaluated in order, and if any succeed this node evaluates as succeeded.
+    * Returns failed if all child nodes return failed.
+    */
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using UnityEditor;
+    public PrioritySelector(
+        string taskName,
+        Node parentNode=null
+    ) :base(
+        taskName:taskName,
+        parentNode:parentNode
+    ){}
 
-namespace BehaviourBase{
-    public class PrioritySelector : AggregateNode
-    {    
-        /**
-        * \class PrioritySelector
-        * Represents a priority node in the BehaviourTree class.
-        * Child nodes are evaluated in order, and if any succeed this node evaluates as succeeded.
-        * Returns failed if all child nodes return failed.
-        */
-
-        public PrioritySelector(
-            string displayTask,
-            string displayName,
-            Rect rect,
-            Node parentNode,
-            Action<AggregateNode> UpdatePanelDetails,
-            NodeStyles nodeStyles,
-            NodeColors nodeColors,
-            Action<ConnectionPoint> OnClickChildPoint,
-            Action<ConnectionPoint> OnClickParentPoint,
-            Action<AggregateNode> OnRemoveNode,
-            ref BehaviourTreeBlackboard blackboard
-        ) :base(
-            nodeType:NodeType.PrioritySelector,
-            displayTask:displayTask,
-            displayName:displayName,
-            rect:rect,
-            parentNode:parentNode,
-            UpdatePanelDetails:UpdatePanelDetails,
-            nodeStyles:nodeStyles,
-            nodeColors:nodeColors,
-            OnClickChildPoint:OnClickChildPoint,
-            OnClickParentPoint:OnClickParentPoint,
-            OnRemoveNode:OnRemoveNode,
-            blackboard: ref blackboard
-        ){
-            if (displayTask == "Root"){
-                nodeType = NodeType.Root;
+    public override NodeState Evaluate() { 
+        foreach (Node node in ChildNodes){
+            switch(node.Evaluate()){
+                case NodeState.Idle:
+                    CurrentState = NodeState.Idle;
+                    return CurrentState;
+                case NodeState.Failed:
+                    continue;
+                case NodeState.Succeeded:
+                    CurrentState = NodeState.Succeeded;
+                    return CurrentState;
+                case NodeState.Running:
+                    CurrentState = NodeState.Running;
+                    ResetOtherStates(node);
+                    return CurrentState;
+                default:
+                    continue;
             }
         }
-        public override NodeState Evaluate() { 
-            foreach (Node node in childNodes){
-                switch(node.Evaluate()){
-                    case NodeState.Idle:
-                        nodeState = NodeState.Idle;
-                        return nodeState;
-                    case NodeState.Failed:
-                        continue;
-                    case NodeState.Succeeded:
-                        nodeState = NodeState.Succeeded;
-                        return nodeState;
-                    case NodeState.Running:
-                        nodeState = NodeState.Running;
-                        ResetOtherStates(node);
-                        return nodeState;
-                    default:
-                        continue;
-                }
-            }
-            nodeState = NodeState.Failed;
-            return nodeState;
-        }
+        CurrentState = NodeState.Failed;
+        return CurrentState;
     }
-
+    public override NodeType GetNodeType(){return NodeType.PrioritySelector;}
+}
 }

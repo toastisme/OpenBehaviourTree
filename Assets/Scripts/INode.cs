@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BehaviourBase{
+namespace Behaviour{
 
     interface INode
     {

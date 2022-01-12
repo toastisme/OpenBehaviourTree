@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace BehaviourBase{
+namespace Behaviour{
     public enum ConnectionPointType { In, Out }
 
     public class ConnectionPoint
@@ -11,13 +11,13 @@ namespace BehaviourBase{
 
         public ConnectionPointType type;
 
-        public AggregateNode node;
+        public CompositeGuiNode node;
 
         public GUIStyle style;
 
         public Action<ConnectionPoint> OnClickConnectionPoint;
 
-        public ConnectionPoint(AggregateNode node, ConnectionPointType type, GUIStyle style, Action<ConnectionPoint> OnClickConnectionPoint)
+        public ConnectionPoint(CompositeGuiNode node, ConnectionPointType type, GUIStyle style, Action<ConnectionPoint> OnClickConnectionPoint)
         {
             this.node = node;
             nodeRect = node.GetRect();
@@ -27,7 +27,7 @@ namespace BehaviourBase{
             rect = new Rect(0, 0, nodeRect.width -12f, 20f);
         }
 
-        public AggregateNode GetNode(){return node;}
+        public CompositeGuiNode GetNode(){return node;}
         public Rect GetRect(){
             return rect;
         }

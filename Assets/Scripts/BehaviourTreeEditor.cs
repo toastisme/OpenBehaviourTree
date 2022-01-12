@@ -5,18 +5,17 @@ using System.Collections;
 using System.Linq;
 using System;
 
-namespace BehaviourBase{
+namespace Behaviour{
     public class BehaviourTreeEditor : EditorWindow
     {
-        // Node Properties
-        public NodeColors nodeColors;
-        public NodeStyles nodeStyles;
-        public NodeSizes nodeSizes;
         List<NodeType> decisionNodeTypes;
 
         // Bookkeeping
+        [SerializeField]
         public BehaviourTree bt;
-        private AggregateNode selectedNode;
+        public List<CompositeGuiNode> guiNodes;
+        public List<Connection> connections;
+        private GuiNode selectedNode;
         private ConnectionPoint selectedChildPoint;
         private ConnectionPoint selectedParentPoint;
 
@@ -43,46 +42,45 @@ namespace BehaviourBase{
 
         public void SetScriptableObject(BehaviourTree behaviourTree){
             bt = behaviourTree;
-            if (bt.nodes == null){
+            if (bt.rootNode == null || guiNodes.Count == 0){
                 AddRootNode();
             }
         }
 
         private void OnEnable()
         {
-            nodeSizes = new NodeSizes();
-            nodeStyles = new NodeStyles();
-            nodeColors = new NodeColors();
+            customTaskNames = GetCustomTaskNames();
             decisionNodeTypes = new List<NodeType>{NodeType.PrioritySelector, 
                                                 NodeType.ProbabilitySelector,
                                                 NodeType.SequenceSelector};
-            customTaskNames = GetCustomTaskNames();
-            arrowTexture = NodeProperties.GetArrowTexture();
         }
 
         private void AddRootNode(){
 
-            bt.nodes = new List<AggregateNode>();
-            bt.nodes.Add(new PrioritySelector(
+            if (bt.rootNode == null){
+                bt.rootNode = new PrioritySelector(
+                    taskName:"Root"
+                );
+            }
+            guiNodes = new List<CompositeGuiNode>();
+            guiNodes.Add(new GuiRootNode(
+                                node:bt.rootNode,
                                 displayTask:"Root",
                                 displayName:"",
-                                new Rect(0,0, 
-                                        nodeSizes.guiNodeSize[0], 
-                                        nodeSizes.guiNodeSize[1]), 
+                                Vector2.zero,
                                 null,
                                 UpdatePanelDetails,
-                                nodeStyles,
-                                nodeColors,
+                                OnClickRemoveNode,
                                 OnClickChildPoint, 
                                 OnClickParentPoint, 
-                                OnClickRemoveNode,
                                 ref bt.blackboard
                                 ));
+            guiNodes[0].callNumber.CallNumber = 1;
         }
 
         private void ResetRootNode(){
-            bt.nodes[0].displayName = "";
-            bt.nodes[0].SetPosition(new Vector2(0,0));
+            guiNodes[0].DisplayName = "";
+            guiNodes[0].SetPosition(new Vector2(0,0));
         }
 
         private void OnGUI()
@@ -90,9 +88,9 @@ namespace BehaviourBase{
             DrawGrid(20, 0.2f, Color.gray);
             DrawGrid(100, 0.4f, Color.gray);
 
-            if (bt != null && bt.nodes != null ){
-                DrawNodes();
+            if (bt != null && guiNodes != null ){
                 DrawConnections();
+                DrawNodes();
 
                 DrawConnectionLine(Event.current);
                 DrawDetailsPanel();
@@ -104,7 +102,7 @@ namespace BehaviourBase{
 
                 if (GUI.changed) {
                     Repaint();
-                    UpdateCallNumbers(bt.nodes[0], 1);
+                    UpdateCallNumbers(guiNodes[0], 1);
                 }
             }
 
@@ -112,12 +110,18 @@ namespace BehaviourBase{
 
         private void DrawDetailsPanel(){
             BeginWindows();
-            detailsPanel = new Rect(position.width*.8f, 0, position.width*.2f, position.height);
-            detailsPanel = GUILayout.Window(1, detailsPanel, DrawDetailInfo, "Details");
+            detailsPanel = new Rect(position.width*.8f, 
+                                    0, 
+                                    position.width*.2f, 
+                                    position.height);
+            detailsPanel = GUILayout.Window(1, 
+                                            detailsPanel, 
+                                            DrawDetailInfo, 
+                                            "Details");
             EndWindows();
         }
 
-        public void UpdatePanelDetails(AggregateNode node){
+        public void UpdatePanelDetails(GuiNode node){
             selectedNode = node;
         }
 
@@ -137,11 +141,11 @@ namespace BehaviourBase{
 
         void DrawNodeDetails(int unusedWindowID){
             if (GUILayout.Button("Clear All")){
-                for (int i=bt.nodes.Count-1; i>0;i--){
-                    if (selectedNode == bt.nodes[i]){
+                for (int i=guiNodes.Count-1; i>0;i--){
+                    if (selectedNode == guiNodes[i]){
                         selectedNode = null;
                     }
-                    RemoveNode(bt.nodes[i]);
+                    RemoveNode(guiNodes[i]);
                 }
                 ResetRootNode();
             }
@@ -252,22 +256,22 @@ namespace BehaviourBase{
 
         private void DrawNodes()
         {
-            if (bt.nodes != null)
+            if (guiNodes != null)
             {
-                for (int i = 0; i < bt.nodes.Count; i++)
+                for (int i = 0; i < guiNodes.Count; i++)
                 {
-                    bt.nodes[i].Draw();
+                    guiNodes[i].Draw();
                 }
             }
         }
 
         private void DrawConnections()
         {
-            if (bt.connections != null)
+            if (connections != null)
             {
-                for (int i = 0; i < bt.connections.Count; i++)
+                for (int i = 0; i < connections.Count; i++)
                 {
-                    bt.connections[i].Draw();
+                    connections[i].Draw();
                 } 
             }
         }
@@ -326,19 +330,19 @@ namespace BehaviourBase{
         private void ProcessNodeEvents(Event e)
         {
             bool guiChanged = false;
-            AggregateNode currentSeletedNode = selectedNode; 
-            if (bt.nodes != null)
+            GuiNode currentSeletedNode = selectedNode; 
+            if (guiNodes != null)
             {
-                for (int i = bt.nodes.Count - 1; i >= 0; i--)
+                for (int i = guiNodes.Count - 1; i >= 0; i--)
                 {
-                    if (bt.nodes[i].ProcessEvents(e)){
+                    if (guiNodes[i].ProcessEvents(e)){
                         guiChanged = true;
                     }
             }
             }
 
             if (selectedNode != null){
-                if (!selectedNode.isSelected){
+                if (!selectedNode.IsSelected){
                     selectedNode = null;
                 }
                 else if (selectedNode != currentSeletedNode){
@@ -346,9 +350,9 @@ namespace BehaviourBase{
                 }
             }
 
-            if (bt.connections != null){
-                for (int i = bt.connections.Count - 1; i>=0; i--){
-                    if (bt.connections[i].ProcessProbabilityWeightEvents(e)){
+            if (connections != null){
+                for (int i = connections.Count - 1; i>=0; i--){
+                    if (connections[i].ProcessProbabilityWeightEvents(e)){
                         guiChanged = true;
                     }
                 }
@@ -380,30 +384,11 @@ namespace BehaviourBase{
             }
         }
 
-
-        private void DrawConnectionArrow(Vector2 startPos, Vector2 mousePos){
-            float angle = Mathf.Acos(Vector2.Dot(Vector2.up, (startPos - mousePos).normalized));  
-            angle *= 180f/Mathf.PI;
-            if (startPos.x - mousePos.x > 0){
-                angle *= -1;
-            }
-            GUIUtility.RotateAroundPivot(angle, mousePos);
-            GUI.DrawTexture(new Rect(mousePos.x - arrowTexture.width/2f, 
-                                    mousePos.y - arrowTexture.height/2f, 
-                                    arrowTexture.width, 
-                                    arrowTexture.height), 
-                                    arrowTexture, 
-                                    ScaleMode.StretchToFill);
-            GUIUtility.RotateAroundPivot(-angle, mousePos);
-            
-        }
-
-
         private void ProcessCreateContextMenu(Vector2 mousePosition)
         {
             GenericMenu genericMenu = new GenericMenu();
             foreach(NodeType nodeType in decisionNodeTypes){
-                string nodeTypeString = Node.GetDefaultStringFromNodeType(nodeType);
+                string nodeTypeString = NodeProperties.GetDefaultStringFromNodeType(nodeType);
                 genericMenu.AddItem(new GUIContent(nodeTypeString), false, () => OnClickAddNode(mousePosition, nodeType, nodeTypeString)); 
             }
             foreach(string taskName in customTaskNames){
@@ -415,112 +400,113 @@ namespace BehaviourBase{
 
         private void OnDrag(Vector2 delta)
         {
-            //drag = delta;
-
-            if (bt.nodes != null)
+            if (guiNodes != null)
             {
-                for (int i = 0; i < bt.nodes.Count; i++)
+                for (int i = 0; i < guiNodes.Count; i++)
                 {
-                    bt.nodes[i].Drag(delta);
+                    guiNodes[i].Drag(delta);
                 }
             }
 
             GUI.changed = true;
         }
 
-        private void OnClickAddNode(Vector2 mousePosition, NodeType nodeType, string displayTask)
+        private void OnClickAddNode(Vector2 mousePosition, 
+                                    NodeType nodeType, 
+                                    string displayTask, 
+                                    string displayName="")
         {
-            if (bt.nodes == null)
+            if (guiNodes == null)
             {
-                bt.nodes = new List<AggregateNode>();
+                guiNodes = new List<CompositeGuiNode>();
             }
+
+            Node parentNode = selectedChildPoint.node.BtNode;
 
             switch(nodeType){
                 case NodeType.SequenceSelector:
-                    bt.nodes.Add(
-                        new SequenceSelector(
-                            displayTask,
-                            "",
-                            new Rect(
-                                mousePosition.x,
-                                mousePosition.y,
-                                nodeSizes.guiNodeSize[0],
-                                nodeSizes.guiNodeSize[1] 
-                            ),
-                            selectedChildPoint.node,
-                            UpdatePanelDetails,
-                            nodeStyles,
-                            nodeColors,
-                            OnClickChildPoint,
-                            OnClickParentPoint,
-                            OnClickRemoveNode,
-                            ref bt.blackboard
+                    SequenceSelector sequenceNode = new SequenceSelector(
+                        taskName:displayTask,
+                        parentNode:parentNode
+                    );
+                    parentNode.AddChildNode(sequenceNode);
+                    guiNodes.Add(
+                        new GuiSequenceSelector(
+                            node:sequenceNode,
+                            displayTask:displayTask,
+                            displayName:displayName,
+                            pos:mousePosition,
+                            parentConnection:null,
+                            UpdatePanelDetails:UpdatePanelDetails,
+                            OnRemoveNode:OnClickRemoveNode,
+                            OnClickChildPoint:OnClickChildPoint,
+                            OnClickParentPoint:OnClickParentPoint,
+                            blackboard:ref bt.blackboard
                         )
                     );
                     break;
                 case NodeType.PrioritySelector:
-                    bt.nodes.Add(
-                        new PrioritySelector(
-                            displayTask,
-                            "",
-                            new Rect(
-                                mousePosition.x,
-                                mousePosition.y,
-                                nodeSizes.guiNodeSize[0],
-                                nodeSizes.guiNodeSize[1] 
-                            ),
-                            selectedChildPoint.node,
-                            UpdatePanelDetails,
-                            nodeStyles,
-                            nodeColors,
-                            OnClickChildPoint,
-                            OnClickParentPoint,
-                            OnClickRemoveNode,
-                            ref bt.blackboard
+                    PrioritySelector priorityNode = new PrioritySelector(
+                        taskName:displayTask,
+                        parentNode:parentNode
+                    );
+                    parentNode.AddChildNode(priorityNode);
+                    guiNodes.Add(
+                        new GuiPrioritySelector(
+                            node:priorityNode,
+                            displayTask:displayTask,
+                            displayName:displayName,
+                            pos:mousePosition,
+                            parentConnection:null,
+                            UpdatePanelDetails:UpdatePanelDetails,
+                            OnRemoveNode:OnClickRemoveNode,
+                            OnClickChildPoint:OnClickChildPoint,
+                            OnClickParentPoint:OnClickParentPoint,
+                            blackboard:ref bt.blackboard
                         )
                     );
                     break;
                 case NodeType.ProbabilitySelector:
-                    bt.nodes.Add(
-                        new ProbabilitySelector(
-                            displayTask,
-                            "",
-                            new Rect(
-                                mousePosition.x,
-                                mousePosition.y,
-                                nodeSizes.guiNodeSize[0],
-                                nodeSizes.guiNodeSize[1] 
-                            ),
-                            selectedChildPoint.node,
-                            UpdatePanelDetails,
-                            nodeStyles,
-                            nodeColors,
-                            OnClickChildPoint,
-                            OnClickParentPoint,
-                            OnClickRemoveNode,
-                            ref bt.blackboard
+                    ProbabilitySelector probNode = new ProbabilitySelector(
+                        taskName:displayTask,
+                        blackboard:ref bt.blackboard,
+                        parentNode:parentNode
+                    );
+                    parentNode.AddChildNode(probNode);
+                    guiNodes.Add(
+                        new GuiProbabilitySelector(
+                            node:probNode,
+                            displayTask:displayTask,
+                            displayName:displayName,
+                            pos:mousePosition,
+                            parentConnection:null,
+                            UpdatePanelDetails:UpdatePanelDetails,
+                            OnRemoveNode:OnClickRemoveNode,
+                            OnClickChildPoint:OnClickChildPoint,
+                            OnClickParentPoint:OnClickParentPoint,
+                            blackboard:ref bt.blackboard
                         )
                     );
                     break;
                 case NodeType.Action:
-                    bt.nodes.Add(
-                        new ActionNode(
-                            displayTask,
-                            "",
-                            new Rect(
-                                mousePosition.x,
-                                mousePosition.y,
-                                nodeSizes.guiNodeSize[0],
-                                nodeSizes.guiNodeSize[1] 
-                            ),
-                            selectedChildPoint.node,
-                            UpdatePanelDetails,
-                            nodeStyles,
-                            nodeColors,
-                            OnClickChildPoint,
-                            OnClickParentPoint,
-                            OnClickRemoveNode,
-                            ref bt.blackboard
+                    ActionNode actionNode = new ActionNode(
+                        taskName:displayTask,
+                        blackboard:ref bt.blackboard,
+                        parentNode:parentNode
+                    );
+                    parentNode.AddChildNode(actionNode);
+                    guiNodes.Add(
+                        new GuiActionNode(
+                            node:actionNode,
+                            displayTask:displayTask,
+                            displayName:displayName,
+                            pos:mousePosition,
+                            parentConnection:null,
+                            UpdatePanelDetails:UpdatePanelDetails,
+                            OnRemoveNode:OnClickRemoveNode,
+                            OnClickChildPoint:OnClickChildPoint,
+                            OnClickParentPoint:OnClickParentPoint,
+                            blackboard:ref bt.blackboard
                         )
                     );
                     break;
@@ -528,10 +514,12 @@ namespace BehaviourBase{
                     throw new Exception($"Unexpected node type {nodeType}");
             }
 
-            selectedParentPoint = bt.nodes[bt.nodes.Count-1].GetParentPoint();
+            selectedParentPoint = guiNodes[guiNodes.Count-1].ParentPoint;
             CreateConnection();
             ClearConnectionSelection();
-            int numNodes = UpdateCallNumbers(bt.nodes[0], 1);
+            guiNodes[guiNodes.Count-1].SetParentConnection(connections[connections.Count-1]);
+            int numNodes = UpdateCallNumbers(guiNodes[0], 1);
+            //AssetDatabase.SaveAssets();
         }
 
         
@@ -544,14 +532,8 @@ namespace BehaviourBase{
             {
                 if (selectedParentPoint.node != selectedChildPoint.node)
                 {
-                    if (selectedParentPoint.node.nodeType != NodeType.Root){
-                        CreateConnection();
-                        ClearConnectionSelection(); 
-                    }
-                    else
-                    {
-                        ClearConnectionSelection(); 
-                    }
+                    CreateConnection();
+                    ClearConnectionSelection(); 
                 }
                 else
                 {
@@ -568,14 +550,8 @@ namespace BehaviourBase{
             {
                 if (selectedParentPoint.node != selectedChildPoint.node)
                 {
-                    if (selectedParentPoint.node.nodeType != NodeType.Root){
-                        CreateConnection();
-                        ClearConnectionSelection();
-                    }
-                    else
-                    {
-                        ClearConnectionSelection();
-                    }
+                    CreateConnection();
+                    ClearConnectionSelection();
                 }
                 else
                 {
@@ -584,62 +560,107 @@ namespace BehaviourBase{
             }
         }
 
-        private void OnClickRemoveNode(AggregateNode node)
+        private void OnClickRemoveNode(CompositeGuiNode node)
         {
             RemoveNode(node);
         }
 
-        private void RemoveNode(AggregateNode node){
-            if (bt.connections != null)
+        private void RemoveNode(CompositeGuiNode node){
+
+            // Remove connections 
+            if (connections != null)
             {
-                bt.connections.Remove(node.GetParentConnection());
+                connections.Remove(node.ParentConnection);
                 node.RemoveParentConnection();
                 
-                List<Connection> childConnections = node.GetChildConnections();
+                List<Connection> childConnections = node.ChildConnections;
                 if (childConnections != null){
                     for (int i=childConnections.Count-1; i>=0; i--){
                         ResetCallNumber(childConnections[i].GetChildNode());
-                        bt.connections.Remove(childConnections[i]);
+                        connections.Remove(childConnections[i]);
                         node.RemoveChildConnection(childConnections[i]);
 
                     }
                 }
             }
+            // Remove corresponding node on the BehaviourTree
+            node.BtNode.Unlink();
 
-            bt.nodes.Remove(node);
+            // Remove the GuiNode
+            guiNodes.Remove(node);
             GUI.changed = true;
 
         }
 
         private void OnClickRemoveConnection(Connection connection)
         {
-            bt.connections.Remove(connection);
+            connections.Remove(connection);
             connection.GetChildNode().RemoveParentConnection();
             connection.GetParentNode().RemoveChildConnection(connection);
         }
 
         private void CreateConnection()
         {
-            if (bt.connections == null)
+            if (connections == null)
             {
-                bt.connections = new List<Connection>();
+                connections = new List<Connection>();
             }
 
             Connection newConnection = new Connection(selectedChildPoint, selectedParentPoint, OnClickRemoveConnection);
-            AggregateNode parentNode = selectedChildPoint.GetNode();
-            AggregateNode childNode = selectedParentPoint.GetNode();
+            CompositeGuiNode parentNode = selectedChildPoint.GetNode();
+            CompositeGuiNode childNode = selectedParentPoint.GetNode();
             parentNode.AddChildConnection(newConnection);
             childNode.SetParentConnection(newConnection);
-            if (parentNode.nodeType == NodeType.ProbabilitySelector){
-                newConnection.AddProbabilityWeight(nodeSizes.subNodeSize,
-                                                nodeStyles,
-                                                nodeColors,
-                                                UpdatePanelDetails,
-                                                ref bt.blackboard,
-                                                newConnection);
+            if (parentNode.GetNodeType() == NodeType.ProbabilitySelector){
+                AddProbabilityWeight(
+                    newConnection
+                );
             } 
-            bt.connections.Add(newConnection);
+            connections.Add(newConnection);
             drawingLine = false;
+            GUI.changed = true;
+        }
+
+        void AddProbabilityWeight(Connection connection, 
+                                  string taskName="Constant weight (1)",
+                                  string displayName=""){
+            // Update behaviour tree
+            Node childNode = connection.GetChildNode().BtNode;
+            Node parentNode = connection.GetParentNode().BtNode;
+            ProbabilityWeight probabilityWeight = new ProbabilityWeight(
+                taskName:taskName,
+                parentNode:parentNode,
+                childNode:childNode
+            );              
+            parentNode.RemoveChildNode(childNode);
+            parentNode.AddChildNode(probabilityWeight);
+            childNode.SetParentNode(probabilityWeight);
+
+            //Update Gui
+            connection.AddProbabilityWeight(
+                node:probabilityWeight,
+                displayTask:taskName,
+                displayName:displayName,
+                UpdatePanelDetails:UpdatePanelDetails,
+                blackboard:ref bt.blackboard
+            );
+        }
+
+        private void CreateConnection(ConnectionPoint childPoint, ConnectionPoint parentPoint){
+            if (connections == null)
+            {
+                connections = new List<Connection>();
+            }
+
+            Connection newConnection = new Connection(childPoint, parentPoint, OnClickRemoveConnection);
+            CompositeGuiNode parentNode = childPoint.GetNode();
+            CompositeGuiNode childNode = parentPoint.GetNode();
+            parentNode.AddChildConnection(newConnection);
+            childNode.SetParentConnection(newConnection);
+            if (parentNode.GetNodeType() == NodeType.ProbabilitySelector){
+                AddProbabilityWeight(newConnection);
+            } 
+            connections.Add(newConnection);
             GUI.changed = true;
         }
 
@@ -649,50 +670,50 @@ namespace BehaviourBase{
             selectedParentPoint = null;
         }
 
-        private int UpdateCallNumbers(AggregateNode startingNode, int callNumber){
+        private int UpdateCallNumbers(CompositeGuiNode startingNode, int callNumber){
 
             // Update decorators first 
-            List<Decorator> decorators = startingNode.GetDecorators();
+            List<GuiDecorator> decorators = startingNode.Decorators;
             if (decorators != null){
-                foreach(Decorator decorator in decorators){
+                foreach(GuiDecorator decorator in decorators){
                     decorator.SetCallNumber(callNumber);
                     callNumber++;
                 }
             }
 
-            // Update nodes
+            // Update guiNodes
             startingNode.SetCallNumber(callNumber);
             callNumber++;
 
-            // Update child nodes
+            // Update child guiNodes
             startingNode.RefreshChildOrder();
-            foreach(Connection connection in startingNode.GetChildConnections()){
+            foreach(Connection connection in startingNode.ChildConnections){
                 callNumber = UpdateCallNumbers(connection.GetChildNode(), callNumber);
             }
             return callNumber;
         }
 
-        private void ResetCallNumber(AggregateNode startingNode){
+        private void ResetCallNumber(CompositeGuiNode startingNode){
             // Update decorators first 
-            List<Decorator> decorators = startingNode.GetDecorators();
+            List<GuiDecorator> decorators = startingNode.Decorators;
             if (decorators != null){
-                foreach(Decorator decorator in decorators){
+                foreach(GuiDecorator decorator in decorators){
                     decorator.SetCallNumber(-1);
                 }
             }
 
-            // Update nodes
+            // Update guiNodes
             startingNode.SetCallNumber(-1);
 
-            foreach(Connection connection in startingNode.GetChildConnections()){
+            foreach(Connection connection in startingNode.ChildConnections){
                 ResetCallNumber(connection.GetChildNode());
             }
 
         }
 
         private void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
-            if (bt.nodes!=null){
-                foreach(AggregateNode node in bt.nodes){
+            if (guiNodes!=null){
+                foreach(CompositeGuiNode node in guiNodes){
                     node.RefreshDecoratorTasks(oldKeyName, newKeyName);
                 }
             }
@@ -711,6 +732,26 @@ namespace BehaviourBase{
             GetCustomTasks().ForEach(x => taskNames.Add(x.GetType().ToString()));
             return taskNames;
         }
+
+        /*
+        void LoadFromRoot(CompositeGuiNode rootNode){
+            guiNodes = new List<CompositeGuiNode>();
+            connections = new List<Connection>();
+            AddNodeAndConnections(bt.rootNode);
+            
+        }
+        */
+
+        /*
+        void AddNodeAndConnections(CompositeGuiNode node){
+            guiNodes.Add(node);
+            foreach(CompositeGuiNode childNode in node.GetChildNodes()){
+                CreateConnection(node.ChildPoint, childNode.ParentPoint);
+                AddNodeAndConnections(childNode);
+            }
+
+        }
+        */
 
     }
 }

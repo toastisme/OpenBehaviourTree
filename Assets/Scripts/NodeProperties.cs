@@ -5,125 +5,32 @@ using System.Collections;
 using System.Linq;
 using System;
 
-namespace BehaviourBase{
-    public enum NodeType{
-        Root,
-        SequenceSelector,
-        ProbabilitySelector,
-        PrioritySelector,
-        Action,
-        Decorator,
-        ProbabilityWeight,
-        CallNumber
-    }
-
-    public enum NodeState{
-        Running,
-        Failed,
-        Succeeded,
-        Idle
-    }
-
-    public class NodeColors
-    {
-        public Color defaultColor = NodeProperties.GetDefaultColor();
-        public Color callNumberColor = NodeProperties.GetDefaultColor();
-        public Color actionColor = NodeProperties.GetActionColor();
-        public Color probabilityWeightColor = NodeProperties.GetProbabilityWeightColor();
-        public Color decoratorColor = NodeProperties.GetDecoratorColor();
-        public Color sequenceSelectorColor = NodeProperties.GetSequenceSelectorColor();
-        public Color prioritySelectorColor = NodeProperties.GetPrioritySelectorColor();
-        public Color probabilitySelectorColor = NodeProperties.GetProbabilitySelectorColor();
-        public Color runningTint = NodeProperties.GetRunningTint();
-        public Color defaultTint = NodeProperties.GetDefaultTint();
-
-        public Color GetColor(NodeType nodeType){
-            switch(nodeType){
-                case NodeType.Root:
-                    return defaultColor;
-                case NodeType.Decorator:
-                    return decoratorColor;
-                case NodeType.SequenceSelector:
-                    return sequenceSelectorColor;
-                case NodeType.PrioritySelector:
-                    return prioritySelectorColor;
-                case NodeType.ProbabilitySelector:
-                    return probabilitySelectorColor;
-                case NodeType.CallNumber:
-                    return callNumberColor;
-                case NodeType.ProbabilityWeight:
-                    return probabilityWeightColor;
-                case NodeType.Action:
-                    return actionColor;
-                default:   
-                    throw new Exception("Unknown NodeType");
-            }
-        }
-    }
-
-    public class NodeSizes
-    {
-        public Vector2 guiNodeSize = NodeProperties.GUINodeSize();    
-        public Vector2 subNodeSize = NodeProperties.SubNodeSize();
-    }
-
-    public class NodeStyles
-    {
-        public GUIStyle guiNodeStyle = NodeProperties.GUINodeStyle();
-        public GUIStyle selectedGuiNodeStyle = NodeProperties.SelectedGUINodeStyle();
-        public GUIStyle rootStyle = NodeProperties.RootStyle();
-        public GUIStyle sequenceSelectorStyle = NodeProperties.SequenceSelectorStyle();
-        public GUIStyle prioritySelectorStyle = NodeProperties.PrioritySelectorStyle();
-        public GUIStyle probabilitySelectorStyle = NodeProperties.ProbabilitySelectorStyle();
-        public GUIStyle probabilityWeightStyle = NodeProperties.ProbabilityWeightStyle();
-        public GUIStyle selectedProbabilityWeightStyle = NodeProperties.SelectedProbabilityWeightStyle();
-        public GUIStyle decoratorStyle = NodeProperties.DecoratorStyle();
-        public GUIStyle selectedDecoratorStyle = NodeProperties.SelectedDecoratorStyle();
-        public GUIStyle callNumberStyle = NodeProperties.CallNumberStyle();
-        public GUIStyle actionStyle = NodeProperties.ActionStyle();
-        public GUIStyle childPointStyle = NodeProperties.ChildPointStyle();
-        public GUIStyle parentPointStyle = NodeProperties.ParentPointStyle();
-
-        public GUIStyle GetStyle(NodeType nodeType){
-            switch(nodeType){
-                case NodeType.Root:
-                    return rootStyle;
-                case NodeType.SequenceSelector:
-                    return sequenceSelectorStyle;
-                case NodeType.ProbabilitySelector:
-                    return probabilitySelectorStyle;
-                case NodeType.ProbabilityWeight:
-                    return probabilityWeightStyle;
-                case NodeType.PrioritySelector:
-                    return prioritySelectorStyle;
-                case NodeType.Action:
-                    return actionStyle;
-                case NodeType.CallNumber:
-                    return callNumberStyle;
-                case NodeType.Decorator:
-                    return decoratorStyle;
-                default:
-                    throw new Exception("Unknown node type");
-            }
-        }
-    }
+namespace Behaviour{
 
     public class NodeProperties
     {
         // Size
-        public static Vector2 GUINodeSize(){return new Vector2(200, 100);}
+        public static Vector2 GuiNodeSize(){return new Vector2(200, 100);}
         public static Vector2 SubNodeSize(){return new Vector2(200, 60);}
+        public static Vector2 CallNumberSize(){
+            Vector2 guiNodeSize = NodeProperties.GuiNodeSize();
+            return new Vector2(
+                guiNodeSize.x/6f,
+                guiNodeSize.x/6f
+            );
+        }
 
         // Color
-        public static Color GetDefaultColor(){return new Color(87f/255.0f, 117f/255.0f, 144f/255.0f);}
-        public static Color GetDecoratorColor(){return new Color(67f/255.0f, 170f/255.0f, 139f/255.0f);}
-        public static Color GetSequenceSelectorColor(){return new Color(249f/255.0f, 199f/255.0f, 79f/255.0f);}
-        public static Color GetProbabilitySelectorColor(){return new Color(249f/255.0f, 132f/255.0f, 74f/255.0f);}
-        public static Color GetProbabilityWeightColor(){return new Color(248f/255.0f, 150f/255.0f, 30f/255.0f);}
-        public static Color GetPrioritySelectorColor(){return new Color(39f/255.0f, 125f/255.0f, 161f/255.0f);}
-        public static Color GetActionColor(){return new Color(249f/255.0f, 65f/255.0f, 68f/255.0f);}
-        public static Color GetRunningTint(){return new Color(0f, 1f, 0f);}
-        public static Color GetDefaultTint(){return new Color(1f, 1f, 1f);}
+        public static Color DefaultColor(){return new Color(87f/255.0f, 117f/255.0f, 144f/255.0f);}
+        public static Color CallNumberColor(){return NodeProperties.DefaultColor();}
+        public static Color DecoratorColor(){return new Color(67f/255.0f, 170f/255.0f, 139f/255.0f);}
+        public static Color SequenceSelectorColor(){return new Color(249f/255.0f, 199f/255.0f, 79f/255.0f);}
+        public static Color ProbabilitySelectorColor(){return new Color(249f/255.0f, 132f/255.0f, 74f/255.0f);}
+        public static Color ProbabilityWeightColor(){return new Color(248f/255.0f, 150f/255.0f, 30f/255.0f);}
+        public static Color PrioritySelectorColor(){return new Color(39f/255.0f, 125f/255.0f, 161f/255.0f);}
+        public static Color ActionColor(){return new Color(249f/255.0f, 65f/255.0f, 68f/255.0f);}
+        public static Color RunningTint(){return new Color(0f, 1f, 0f, .5f);}
+        public static Color DefaultTint(){return new Color(1f, 1f, 1f);}
 
         // Style
 
@@ -244,10 +151,27 @@ namespace BehaviourBase{
             return parentPointStyle;
         }
 
+        public static Vector2 InitDecoratorPos(){
+            return new Vector2(0, NodeProperties.GuiNodeSize().y*.21f);
+        }
 
-        public static Texture2D GetArrowTexture(){
-            return EditorGUIUtility.Load("icons/uparrow.png") as Texture2D;
+        public static string GetDefaultStringFromNodeType(NodeType nodeType){
+            switch(nodeType){
+                case NodeType.Root:
+                    return "Root";
+                case NodeType.SequenceSelector:
+                    return "Sequence Selector";
+                case NodeType.PrioritySelector:
+                    return "Priority Selector";
+                case NodeType.ProbabilitySelector:
+                    return "Probability Selector";
+                case NodeType.Decorator:
+                    return "Decorator";
+                case NodeType.ProbabilityWeight:
+                    return "Constant weight (1)";
+                default:
+                    return "Action";
+            }
         }
     }
-
-    }
+}

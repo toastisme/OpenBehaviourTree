@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System;
-namespace BehaviourBase{
+namespace Behaviour{
     public class BehaviourTreeAsset
     {
         [MenuItem("Assets/Create/BehaviourTree")]

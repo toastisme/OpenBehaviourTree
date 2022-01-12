@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BehaviourBase{
+namespace Behaviour{
     public abstract class BehaviourTreeTask  
     {
         BehaviourTreeBlackboard blackboard;
@@ -19,7 +19,7 @@ namespace BehaviourBase{
             this.monoBehaviour = monoBehaviour;
         }
         
-        public abstract IEnumerator ExecuteTask(System.Action<NodeState> nodeState);
+        public abstract IEnumerator ExecuteTask(System.Action<NodeState> currentState);
 
 
 

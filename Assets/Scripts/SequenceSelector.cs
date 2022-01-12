@@ -1,69 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using UnityEditor;
+namespace Behaviour{
+public class SequenceSelector : Node
+{    
+    /**
+    * \class SequenceSelector
+    * Represents a sequence node in the BehaviourTree class.
+    * Child nodes are evaluated in order, and if any fail this node evaluates as failed.
+    */
 
-namespace BehaviourBase{
-    public class SequenceSelector : AggregateNode
-    {    
-        /**
-        * \class SequenceSelector
-        * Represents a sequence node in the BehaviourTree class.
-        * Child nodes are evaluated in order, and if any fail this node evaluates as failed.
-        */
-
-        public SequenceSelector(
-            string displayTask,
-            string displayName,
-            Rect rect,
-            Node parentNode,
-            Action<AggregateNode> UpdatePanelDetails,
-            NodeStyles nodeStyles,
-            NodeColors nodeColors,
-            Action<ConnectionPoint> OnClickChildPoint,
-            Action<ConnectionPoint> OnClickParentPoint,
-            Action<AggregateNode> OnRemoveNode,
-            ref BehaviourTreeBlackboard blackboard
-        ) :base(
-            nodeType:NodeType.SequenceSelector,
-            displayTask:displayTask,
-            displayName:displayName,
-            rect:rect,
-            parentNode:parentNode,
-            UpdatePanelDetails:UpdatePanelDetails,
-            nodeStyles:nodeStyles,
-            nodeColors:nodeColors,
-            OnClickChildPoint:OnClickChildPoint,
-            OnClickParentPoint:OnClickParentPoint,
-            OnRemoveNode:OnRemoveNode,
-            blackboard:ref blackboard
-        ){}
-        public override NodeState Evaluate() { 
-            bool anyChildRunning = false; 
-            
-            foreach(Node node in childNodes) { 
-                switch (node.Evaluate()) { 
-                    case NodeState.Idle:
-                        nodeState = NodeState.Idle;
-                        return nodeState;
-                    case NodeState.Failed: 
-                        nodeState = NodeState.Failed; 
-                        return nodeState;                     
-                    case NodeState.Succeeded: 
-                        continue; 
-                    case NodeState.Running: 
-                        ResetOtherStates(node);
-                        anyChildRunning = true; 
-                        break; 
-                    default: 
-                        nodeState = NodeState.Succeeded; 
-                        return nodeState; 
-                } 
+    public SequenceSelector(
+        string taskName,
+        Node parentNode=null
+    ) :base(
+        taskName:taskName,
+        parentNode:parentNode
+    ){}
+    public override NodeState Evaluate() { 
+        bool anyChildRunning = false; 
+        
+        foreach(Node node in ChildNodes) { 
+            switch (node.Evaluate()) { 
+                case NodeState.Idle:
+                    CurrentState = NodeState.Idle;
+                    return CurrentState;
+                case NodeState.Failed: 
+                    CurrentState = NodeState.Failed; 
+                    return CurrentState;                     
+                case NodeState.Succeeded: 
+                    continue; 
+                case NodeState.Running: 
+                    ResetOtherStates(node);
+                    anyChildRunning = true; 
+                    break; 
+                default: 
+                    CurrentState = NodeState.Succeeded; 
+                    return CurrentState; 
             } 
-            nodeState = anyChildRunning ? NodeState.Running : NodeState.Succeeded; 
-            return nodeState; 
-        }
+        } 
+        CurrentState = anyChildRunning ? NodeState.Running : NodeState.Succeeded; 
+        return CurrentState; 
     }
-
+    public override NodeType GetNodeType(){return NodeType.SequenceSelector;}
+}
 }

@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using System;
 
-namespace BehaviourBase{
+namespace Behaviour{
+    [Serializable]
     public class BehaviourTreeBlackboard : ScriptableObject
     {
         public List<string> keyTypes = new List<string>{"int", 
@@ -16,13 +17,21 @@ namespace BehaviourBase{
                                                         "Vector3",
                                                         "Vector2"
                                                         };
+        [SerializeField]
         public OrderedDictionary allKeyNames;
+        [SerializeField]
         public Dictionary<string, int> intKeys;
+        [SerializeField]
         public Dictionary<string, float> floatKeys;
+        [SerializeField]
         public Dictionary<string, bool> boolKeys;
+        [SerializeField]
         public Dictionary<string, Vector3> vector3Keys;
+        [SerializeField]
         public Dictionary<string, Vector2> vector2Keys;
+        [SerializeField]
         public Dictionary<string, GameObject> gameObjectKeys;
+        [SerializeField]
         public Dictionary<string, string> stringKeys;
 
         public Dictionary<string, int> GetIntKeys(){return intKeys;}
