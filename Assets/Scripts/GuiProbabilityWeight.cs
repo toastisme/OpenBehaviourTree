@@ -8,6 +8,7 @@ namespace Behaviour{
 public class GuiProbabilityWeight : GuiNode
 {
     Connection parentConnection;
+    ProbabilityWeight probabilityWeight;
 
     public GuiProbabilityWeight(
         ProbabilityWeight node,
@@ -27,6 +28,7 @@ public class GuiProbabilityWeight : GuiNode
     )
     {
         this.parentConnection = parentConnection;
+        this.probabilityWeight = node;
         ApplyDerivedSettings();
     }
 
@@ -102,12 +104,12 @@ public class GuiProbabilityWeight : GuiNode
             genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight (1)"));
             if (intKeys != null){
                 foreach(KeyValuePair<string, int> kvp in blackboard.GetIntKeys()){
-                            genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
+                            genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key, (float)kvp.Value));
                 }
             }
             if (floatKeys != null){
                 foreach(KeyValuePair<string, float> kvp in floatKeys){
-                        genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key + ": " + kvp.Value.ToString()));
+                        genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key, kvp.Value));
                 }
             }
         }
@@ -119,12 +121,18 @@ public class GuiProbabilityWeight : GuiNode
     {
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(rect, "\n" + DisplayName + "\n" + DisplayTask, activeStyle);
+        GUI.Box(rect, "\n" + DisplayName + "\n" + DisplayTask + " : " + probabilityWeight.GetWeight().ToString(), activeStyle);
         GUI.backgroundColor = currentColor;
     }
     public void SetTask(string newTask){
         DisplayTask = newTask;
     }
+
+    public void SetTask(string newTask, float val){
+        DisplayTask = newTask;
+        probabilityWeight.SetWeight(val);
+    }
+
 
 
 }

@@ -1,6 +1,7 @@
 namespace Behaviour{
 public class ProbabilityWeight : Node
 {
+    float weight=1f;
     public ProbabilityWeight(
         string taskName,
         Node parentNode=null,
@@ -18,10 +19,16 @@ public class ProbabilityWeight : Node
         return CurrentState;
     }
 
-        public override NodeType GetNodeType()
-        {
-            return NodeType.ProbabilityWeight;
-        }
+    public override NodeType GetNodeType()
+    {
+        return NodeType.ProbabilityWeight;
+    }
+
+    public void SetWeight(float weight){
+        this.weight = weight;
+    }
+
+    public float GetWeight(){return weight;}
     
 }
 }

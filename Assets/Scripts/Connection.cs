@@ -111,5 +111,11 @@ namespace Behaviour{
             }
             return "";
         }
+
+        public void RefreshProbabilityWeightTask(string oldKeyName, string newKeyName){
+            if (GetProbabilityWeightKey() == oldKeyName){
+                probabilityWeight.SetTask(newKeyName);
+            }
+        }
     }
 }

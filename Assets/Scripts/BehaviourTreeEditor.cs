@@ -167,6 +167,9 @@ namespace Behaviour{
                         if (keyType == "bool"){
                             RefreshDecoratorTasks(keyName, newName);
                         }
+                        else if (keyType == "float" || keyType == "int"){
+                            RefreshProbabilityWeightTasks(keyName, newName);
+                        }
                     }
                     else{
                         newName = activeBlackboardKey[0];
@@ -715,6 +718,20 @@ namespace Behaviour{
             if (guiNodes!=null){
                 foreach(CompositeGuiNode node in guiNodes){
                     node.RefreshDecoratorTasks(oldKeyName, newKeyName);
+                }
+            }
+        }
+
+        private void RefreshProbabilityWeightTasks(string oldKeyName, string newKeyName){
+            if (guiNodes!=null){
+                foreach(CompositeGuiNode node in guiNodes){
+                    if (node is GuiProbabilitySelector probabilitySelectorNode){
+                        if (probabilitySelectorNode.ChildConnections != null){
+                            foreach(Connection connection in probabilitySelectorNode.ChildConnections){
+                                connection.RefreshProbabilityWeightTask(oldKeyName, newKeyName);
+                            }
+                        }
+                    }
                 }
             }
         }
