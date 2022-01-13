@@ -92,6 +92,7 @@ public abstract class GuiNode : IGuiNode
     }
 
     public virtual void DrawDetails(){
+        GUILayout.Label(NodeProperties.GetDefaultStringFromNodeType(GetNodeType()));
         GUILayout.Label("Task: " + DisplayTask);
         GUILayout.Label("Name");
         DisplayName = GUILayout.TextField(DisplayName, 50);
