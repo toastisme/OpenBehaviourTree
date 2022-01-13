@@ -85,6 +85,10 @@ public abstract class Node
         }
     }
 
+    public void ReplaceChildNodes(List<Node> newChildNodes){
+        ChildNodes = newChildNodes;
+    }
+
     public void SetParentNode(Node parentNode){
         ParentNode = parentNode;
         if (ParentNode != null){

@@ -362,6 +362,11 @@ public class CompositeGuiNode : CallableGuiNode
         if (ChildConnections != null){
             ChildConnections.Sort((x,y) => x.GetChildNode().GetXPos().CompareTo(y.GetChildNode().GetXPos()));
         }
+        List<Node> reorderedChildNodes = new List<Node>();
+        foreach(Connection connection in ChildConnections){
+            reorderedChildNodes.Add(connection.GetChildNode().BtNode);
+        }
+        BtNode.ReplaceChildNodes(reorderedChildNodes);
     }
 
     private bool DecoratorKeyActive(string boolName){

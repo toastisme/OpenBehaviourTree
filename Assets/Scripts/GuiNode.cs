@@ -4,6 +4,15 @@ using UnityEditor;
 using System.Collections.Generic;
 
 namespace Behaviour{
+
+[Serializable]
+public struct GuiNodeData 
+{
+    public string displayName;
+    public float xPos;
+    public float yPos;
+
+}
 public abstract class GuiNode : IGuiNode
 {
     protected BehaviourTreeBlackboard blackboard;

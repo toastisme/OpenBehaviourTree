@@ -15,6 +15,8 @@ namespace Behaviour{
         public BehaviourTree bt;
         public List<CompositeGuiNode> guiNodes;
         public List<Connection> connections;
+        [SerializeField]
+        public List<GuiNodeData> guiNodeData;
         private GuiNode selectedNode;
         private ConnectionPoint selectedChildPoint;
         private ConnectionPoint selectedParentPoint;
@@ -809,25 +811,36 @@ namespace Behaviour{
             return taskNames;
         }
 
-        /*
-        void LoadFromRoot(CompositeGuiNode rootNode){
+        void LoadFromRoot(){
             guiNodes = new List<CompositeGuiNode>();
             connections = new List<Connection>();
             AddNodeAndConnections(bt.rootNode);
             
         }
-        */
 
-        /*
-        void AddNodeAndConnections(CompositeGuiNode node){
-            guiNodes.Add(node);
-            foreach(CompositeGuiNode childNode in node.GetChildNodes()){
-                CreateConnection(node.ChildPoint, childNode.ParentPoint);
-                AddNodeAndConnections(childNode);
+        void AddNodeAndConnections(Node node, List<Decorator> decorators=null){
+            if (node is Decorator decorator){
+                if (decorators == null){
+                    decorators = new List<Decorator>();
+                }
+                decorators.Add(decorator);
+                AddNodeAndConnections(node, decorators);
             }
+            else if (node is PrioritySelector prioritySelector){
+                //guiNodes.Add(prioritySelector);
+                foreach(Node childNode in node.ChildNodes){
+                    AddNodeAndConnections(childNode);
+                }
+            }
+        }
+
+        void SaveState(){
+            // Save depth first to mimic underlying structure
+            guiNodeData = new List<GuiNodeData>();
 
         }
-        */
+
+        void SaveMetaData(Node node){}
 
     }
 }
