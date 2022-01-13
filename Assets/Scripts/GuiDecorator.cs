@@ -57,6 +57,11 @@ public class GuiDecorator : CallableGuiNode
         callNumber.Drag(delta);
     }
 
+    public void DragWithoutParent(Vector2 delta){
+        rect.position += delta;
+        callNumber.Drag(delta);
+    }
+
     protected void ProcessContextMenu(){
         GenericMenu genericMenu = new GenericMenu();
         genericMenu.AddItem(new GUIContent("Remove decorator"), false, Remove);

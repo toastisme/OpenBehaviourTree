@@ -241,11 +241,13 @@ public class CompositeGuiNode : CallableGuiNode
             rect.height -= taskRectSize[1];
             taskRect.y -= taskRectSize[1];
             callNumber.Drag(new Vector2(0, -taskRectSize[1]));
+            SetCallNumber(callNumber.CallNumber-1);
 
             // Move all decorators below the removed one up
             Vector2 moveVec = new Vector2(0, -taskRectSize[1]);
             for (int i = idx; i < Decorators.Count; i++){
                 Decorators[i].Drag(moveVec);
+                Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber-1);
             }
             GUI.changed = true;
         }
@@ -263,8 +265,14 @@ public class CompositeGuiNode : CallableGuiNode
             blackboard:ref blackboard
         );
 
+         if (Decorators != null && Decorators.Count >0){
+            Decorators[0].BtNode.InsertBeforeSelf(decorator);
+        }
+        else{
+            this.BtNode.InsertBeforeSelf(decorator);
+        }
         // Insert before this node in list
-        BtNode.InsertBeforeSelf(decorator);
+
 
         // Add gui decorator
         GuiDecorator guiDecorator = new GuiDecorator( 
@@ -273,21 +281,37 @@ public class CompositeGuiNode : CallableGuiNode
             displayName:"",
             pos:new Vector2(
                 rect.x + initDecoratorPos[0],
-                rect.y + initDecoratorPos[1]+(taskRectSize[1]*Decorators.Count+1)),
+                rect.y + initDecoratorPos[1]),
             UpdatePanelDetails:UpdatePanelDetails,
             OnRemoveDecorator:OnClickRemoveDecorator,
             blackboard:ref blackboard,
             parentNode:this
             );
-        guiDecorator.SetCallNumber(callNumber.CallNumber);
+         if (Decorators != null && Decorators.Count >0){
+            guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+        }
+        else{
+            guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+        }
         callNumber.CallNumber++;
-        Decorators.Add(guiDecorator);
+        // Maker room for new decorator
+        ShiftDecoratorsDown();
+        Decorators.Insert(0, guiDecorator);
                 
         // Update params to make space for gui decorator
         rect.height += taskRectSize[1];
         taskRect.y += taskRectSize[1];
         callNumber.Drag(new Vector2(0, taskRectSize[1]));
         GUI.changed = true;
+    }
+
+    void ShiftDecoratorsDown(){
+        if (Decorators != null){
+            for (int i=0; i<Decorators.Count; i++){
+                Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber + 1);
+                Decorators[i].DragWithoutParent(new Vector2(0,taskRectSize[1]*(i+1)));       
+            }
+        }
     }
 
     protected virtual void ProcessContextMenu()
