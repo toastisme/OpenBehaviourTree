@@ -838,9 +838,10 @@ namespace Behaviour{
             // Save depth first to mimic underlying structure
             guiNodeData = new List<GuiNodeData>();
 
+
         }
 
-        void SaveMetaData(Node node){}
+
 
     }
 }

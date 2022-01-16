@@ -6,11 +6,11 @@ namespace Behaviour{
     public class Connection
     {
         public ConnectionPoint childPoint;
-        private CompositeGuiNode childNode;
+        public CompositeGuiNode childNode;
         public ConnectionPoint parentPoint;
         private CompositeGuiNode parentNode;
         public Action<Connection> OnClickRemoveConnection;
-        private GuiProbabilityWeight probabilityWeight;
+        public GuiProbabilityWeight probabilityWeight;
 
         private Vector2 probabilityWeightOffset;
 

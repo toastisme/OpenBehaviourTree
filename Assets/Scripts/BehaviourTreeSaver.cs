@@ -21,6 +21,38 @@ public class BehaviourTreeSaver
             BehaviourTreeSaver.AddNodeToSerializedNodes (child, ref serializedNodes);
         }
     }
+    public static GuiNodeData GetMetaData(GuiNode node){
+        return new GuiNodeData(){
+            displayName = node.DisplayName,
+            xPos = node.GetPos().x,
+            yPos = node.GetPos().y
+        };
+    }
+
+    public static void AddNodeMetaData(CompositeGuiNode node, ref List<GuiNodeData> guiNodeData){
+        /**
+         *Recursive function to write all GuiNode meta data first into guiNodeData
+         */
+
+        
+        // Add decorators
+        if (node.Decorators != null){
+            foreach(var decorator in node.Decorators){
+                guiNodeData.Add(BehaviourTreeSaver.GetMetaData(decorator));
+            }
+        }
+
+        // Add self
+        guiNodeData.Add(BehaviourTreeSaver.GetMetaData(node));
+
+        // Add children
+        foreach (var child in node.ChildConnections){
+            if (child.HasProbabilityWeight()){
+                guiNodeData.Add(BehaviourTreeSaver.GetMetaData(child.probabilityWeight));
+            }
+            AddNodeMetaData(child.childNode, ref guiNodeData);
+        }
+    }
 
 }
 }

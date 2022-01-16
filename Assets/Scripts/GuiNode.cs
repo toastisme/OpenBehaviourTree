@@ -92,7 +92,11 @@ public abstract class GuiNode : IGuiNode
     protected virtual bool IsRootNode(){return false;}
 
     public float GetXPos(){
-        return rect.x;
+        return GetPos().x;
+    }
+
+    public Vector2 GetPos(){
+        return rect.position;
     }
 
     public void SetPosition(Vector2 pos){
