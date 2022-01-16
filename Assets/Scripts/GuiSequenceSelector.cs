@@ -8,7 +8,7 @@ public class GuiSequenceSelector : CompositeGuiNode
 {
     SequenceSelector sequenceSelector;
     public GuiSequenceSelector(
-        SequenceSelector node,
+        Node node,
         string displayTask,
         string displayName,
         Vector2 pos,
@@ -31,7 +31,7 @@ public class GuiSequenceSelector : CompositeGuiNode
         blackboard:ref blackboard
     )
     {
-        this.sequenceSelector = node;
+        this.sequenceSelector = (SequenceSelector)node;
         ApplyDerivedSettings();
     }
     protected override void ApplyDerivedSettings()

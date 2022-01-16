@@ -12,7 +12,7 @@ public class GuiDecorator : CallableGuiNode
     Decorator decorator;
 
     public GuiDecorator(
-        Decorator decorator,
+        Node decorator,
         string displayTask,
         string displayName,
         Vector2 pos,
@@ -29,7 +29,7 @@ public class GuiDecorator : CallableGuiNode
         blackboard: ref blackboard
     )
     {
-        this.decorator = decorator;
+        this.decorator = (Decorator)decorator;
         this.parentNode = parentNode;
         this.OnRemoveDecorator = OnRemoveDecorator;
         ApplyDerivedSettings();

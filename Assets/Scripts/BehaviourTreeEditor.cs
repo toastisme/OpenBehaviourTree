@@ -677,6 +677,30 @@ namespace Behaviour{
             );
         }
 
+        void AddProbabilityWeight(Connection connection, 
+                                  GuiProbabilityWeight guiProbabilityWeight
+                                  ){
+            // Update behaviour tree
+            Node childNode = connection.GetChildNode().BtNode;
+            Node parentNode = connection.GetParentNode().BtNode;
+            ProbabilityWeight probabilityWeight = new ProbabilityWeight(
+                taskName:guiProbabilityWeight.BtNode.TaskName,
+                parentNode:parentNode,
+                childNode:childNode
+            );              
+            parentNode.RemoveChildNode(childNode);
+            parentNode.AddChildNode(probabilityWeight);
+            childNode.SetParentNode(probabilityWeight);
+
+            //Update Gui
+            connection.AddProbabilityWeight(
+                node:probabilityWeight,
+                displayTask:guiProbabilityWeight.DisplayTask,
+                displayName:guiProbabilityWeight.DisplayName,
+                UpdatePanelDetails:UpdatePanelDetails,
+                blackboard:ref bt.blackboard
+            );
+        }
         private void CreateConnection(ConnectionPoint childPoint, ConnectionPoint parentPoint){
             if (connections == null)
             {
@@ -693,6 +717,31 @@ namespace Behaviour{
             } 
             connections.Add(newConnection);
             GUI.changed = true;
+        }
+
+        private void CreateConnection(
+            ConnectionPoint childPoint, 
+            ConnectionPoint parentPoint, 
+            GuiProbabilityWeight probabilityWeight){
+            if (probabilityWeight == null){
+                CreateConnection(childPoint:childPoint, parentPoint:parentPoint);
+            }
+            else{
+                if (connections == null)
+                {
+                    connections = new List<Connection>();
+                }
+
+                Connection newConnection = new Connection(childPoint, parentPoint, OnClickRemoveConnection);
+                CompositeGuiNode parentNode = childPoint.GetNode();
+                CompositeGuiNode childNode = parentPoint.GetNode();
+                parentNode.AddChildConnection(newConnection);
+                childNode.SetParentConnection(newConnection);
+                AddProbabilityWeight(newConnection, probabilityWeight);
+                connections.Add(newConnection);
+                GUI.changed = true;
+            }
+
         }
 
         private void ClearConnectionSelection()
@@ -811,36 +860,92 @@ namespace Behaviour{
             return taskNames;
         }
 
-        void LoadFromRoot(){
+        void LoadFromRoot(Node rootNode, List<GuiNodeData> nodeMetaData){
             guiNodes = new List<CompositeGuiNode>();
             connections = new List<Connection>();
-            AddNodeAndConnections(bt.rootNode);
-            
+            int idx = 0;
+            AddNodeAndConnections(
+                node:bt.rootNode, 
+                idx:ref idx, 
+                nodeMetaData:nodeMetaData
+                );
         }
 
-        void AddNodeAndConnections(Node node, List<Decorator> decorators=null){
+        void AddNodeAndConnections(
+            Node node, 
+            ref int idx,
+            List<GuiNodeData> nodeMetaData,
+            CompositeGuiNode lastCompositeGuiNode=null,
+            List<GuiDecorator> decorators=null,
+            GuiProbabilityWeight probabilityWeight=null){
+
+            GuiNodeData metaData = nodeMetaData[idx];
+            var guiNode = BehaviourTreeLoader.GuiNodeFactory(
+                node:node,
+                displayTask:node.TaskName,
+                displayName:metaData.displayName,
+                pos:new Vector2(metaData.xPos, metaData.yPos),
+                blackboard:ref bt.blackboard
+            );
+
             if (node is Decorator decorator){
                 if (decorators == null){
-                    decorators = new List<Decorator>();
+                    decorators = new List<GuiDecorator>();
                 }
-                decorators.Add(decorator);
-                AddNodeAndConnections(node, decorators);
+                decorators.Add((GuiDecorator)guiNode);
+                idx++;
+                AddNodeAndConnections(
+                    node:node.ChildNodes[0],
+                    idx:ref idx, 
+                    nodeMetaData:nodeMetaData,
+                    lastCompositeGuiNode:lastCompositeGuiNode,
+                    decorators:decorators
+                    );
             }
-            else if (node is PrioritySelector prioritySelector){
-                //guiNodes.Add(prioritySelector);
-                foreach(Node childNode in node.ChildNodes){
-                    AddNodeAndConnections(childNode);
+
+            else if (node is ProbabilityWeight weightNode){
+                probabilityWeight = (GuiProbabilityWeight)guiNode;
+                idx++;
+                AddNodeAndConnections(
+                    node:node.ChildNodes[0],
+                    idx:ref idx, 
+                    nodeMetaData:nodeMetaData,
+                    lastCompositeGuiNode:lastCompositeGuiNode,
+                    decorators:decorators
+                    );
+            }
+            else {
+                // Assumed to be CompositeNode -> now need to make connections
+                CompositeGuiNode cgn = (CompositeGuiNode)guiNode;
+                if (lastCompositeGuiNode != null){
+                    CreateConnection(
+                        childPoint:cgn.ParentPoint, 
+                        parentPoint:lastCompositeGuiNode.ChildPoint,
+                        probabilityWeight:probabilityWeight
+                        );
                 }
+                if (decorators != null){
+                    cgn.Decorators = decorators;
+                }
+                guiNodes.Add(cgn);
+                idx++;
+                decorators = null;
+                lastCompositeGuiNode = cgn;
+                probabilityWeight = null;
+                foreach(Node child in node.ChildNodes){
+                    AddNodeAndConnections(
+                        node:child,
+                        idx:ref idx, 
+                        nodeMetaData:nodeMetaData,
+                        lastCompositeGuiNode:lastCompositeGuiNode,
+                        decorators:decorators,
+                        probabilityWeight:probabilityWeight
+                        );
+                    
+                }
+
             }
         }
-
-        void SaveState(){
-            // Save depth first to mimic underlying structure
-            guiNodeData = new List<GuiNodeData>();
-
-
-        }
-
 
 
     }

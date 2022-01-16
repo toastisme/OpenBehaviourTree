@@ -54,5 +54,26 @@ public class BehaviourTreeSaver
         }
     }
 
+    public static void SaveTree(
+        CompositeGuiNode guiRootNode,
+        ref List<SerializableNode> serializedNodes,
+        ref List<GuiNodeData> nodeMetaData
+        ) {
+            serializedNodes.Clear();
+            nodeMetaData.Clear();
+            Node rootNode = guiRootNode.BtNode;
+            BehaviourTreeSaver.AddNodeToSerializedNodes(rootNode, ref serializedNodes);
+            BehaviourTreeSaver.AddNodeMetaData(guiRootNode, ref nodeMetaData);
+    }
+
+    public static void SaveTree(
+        PrioritySelector rootNode,
+        ref List<SerializableNode> serializedNodes
+        ) {
+            serializedNodes.Clear();
+            BehaviourTreeSaver.AddNodeToSerializedNodes(rootNode, ref serializedNodes);
+    }
+
+
 }
 }

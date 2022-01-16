@@ -9,7 +9,7 @@ public class GuiActionNode : CompositeGuiNode
 {
     ActionNode actionNode;
     public GuiActionNode(
-        ActionNode node,
+        Node node,
         string displayTask,
         string displayName,
         Vector2 pos,
@@ -32,7 +32,7 @@ public class GuiActionNode : CompositeGuiNode
         blackboard:ref blackboard
     )
     {
-        this.actionNode = node;
+        this.actionNode = (ActionNode)node;
         ApplyDerivedSettings();
         ApplyNodeTypeSettings(OnClickChildPoint,OnClickParentPoint);
     }

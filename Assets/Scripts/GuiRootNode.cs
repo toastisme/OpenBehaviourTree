@@ -8,7 +8,7 @@ namespace Behaviour{
 public class GuiRootNode : GuiPrioritySelector
 {
     public GuiRootNode(
-        PrioritySelector node,
+        Node node,
         string displayTask,
         string displayName,
         Vector2 pos,

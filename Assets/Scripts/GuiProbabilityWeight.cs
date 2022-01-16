@@ -11,7 +11,7 @@ public class GuiProbabilityWeight : GuiNode
     ProbabilityWeight probabilityWeight;
 
     public GuiProbabilityWeight(
-        ProbabilityWeight node,
+        Node node,
         string displayTask,
         string displayName,
         Vector2 pos,
@@ -28,7 +28,7 @@ public class GuiProbabilityWeight : GuiNode
     )
     {
         this.parentConnection = parentConnection;
-        this.probabilityWeight = node;
+        this.probabilityWeight = (ProbabilityWeight)node;
         ApplyDerivedSettings();
     }
 

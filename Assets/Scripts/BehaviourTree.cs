@@ -13,9 +13,9 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
     [SerializeField]
     public float evaluationDelay = 0.0001f;
     [SerializeField]
-    List<SerializableNode> serializedNodes;
-
-
+    public List<SerializableNode> serializedNodes;
+    public List<GuiNodeData> nodeMetaData;
+    
     public void LoadTree(MonoBehaviour monoBehaviour){
         /**
         * Loads all actionNode tasks and runs their setup (getting required gameobject components etc.)
@@ -81,12 +81,19 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
     public void OnBeforeSerialize() {
         // Unity is about to read the serializedNodes field's contents.
         // The correct data must now be written into that field "just in time".
-        serializedNodes = new List<SerializableNode>();
-        serializedNodes.Clear();
+        /*
         if (rootNode != null){
-            BehaviourTreeSaver.AddNodeToSerializedNodes(rootNode, 
-                                                        ref serializedNodes);
+            serializedNodes = new List<SerializableNode>();
+            nodeMetaData = new List<GuiNodeData>();
+            serializedNodes.Clear();
+            nodeMetaData.Clear();
+            BehaviourTreeSaver.SaveTree(
+                rootNode, 
+                ref serializedNodes,
+                ref nodeMetaData
+                );
         }
+        */
         // Now Unity is free to serialize this field, and we should get back the expected 
         // data when it is deserialized later.
     }

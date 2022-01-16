@@ -8,7 +8,7 @@ public class GuiProbabilitySelector : CompositeGuiNode
 {
     ProbabilitySelector probabilitySelector;
     public GuiProbabilitySelector(
-        ProbabilitySelector node,
+        Node node,
         string displayTask,
         string displayName,
         Vector2 pos,
@@ -31,7 +31,7 @@ public class GuiProbabilitySelector : CompositeGuiNode
         blackboard:ref blackboard
     )
     {
-        this.probabilitySelector = node;
+        this.probabilitySelector = (ProbabilitySelector)node;
         ApplyDerivedSettings();
     }
     protected override void ApplyDerivedSettings()

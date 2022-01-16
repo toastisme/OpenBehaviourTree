@@ -8,7 +8,7 @@ public class GuiPrioritySelector : CompositeGuiNode
 {
     PrioritySelector prioritySelector;
     public GuiPrioritySelector(
-        PrioritySelector node,
+        Node node,
         string displayTask,
         string displayName,
         Vector2 pos,
@@ -31,7 +31,7 @@ public class GuiPrioritySelector : CompositeGuiNode
         blackboard:ref blackboard
     )
     {
-        this.prioritySelector = node;
+        this.prioritySelector = (PrioritySelector)node;
         ApplyDerivedSettings();
     }
     protected override void ApplyDerivedSettings()
