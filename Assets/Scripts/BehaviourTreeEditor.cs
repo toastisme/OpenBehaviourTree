@@ -11,12 +11,9 @@ namespace Behaviour{
         List<NodeType> decisionNodeTypes;
 
         // Bookkeeping
-        [SerializeField]
         public BehaviourTree bt;
         public List<CompositeGuiNode> guiNodes;
         public List<Connection> connections;
-        [SerializeField]
-        public List<GuiNodeData> guiNodeData;
         private GuiNode selectedNode;
         private ConnectionPoint selectedChildPoint;
         private ConnectionPoint selectedParentPoint;
@@ -44,8 +41,14 @@ namespace Behaviour{
 
         public void SetScriptableObject(BehaviourTree behaviourTree){
             bt = behaviourTree;
-            if (bt.rootNode == null || guiNodes.Count == 0){
+            if (bt.rootNode == null){
                 AddRootNode();
+            }
+            else{
+                LoadFromRoot(
+                    rootNode:bt.rootNode,
+                    nodeMetaData:bt.nodeMetaData
+                );
             }
         }
 
@@ -129,6 +132,9 @@ namespace Behaviour{
 
         void DrawDetailInfo(int unusedWindowID)
         {
+            if (GUILayout.Button("Save")){
+                SaveTree();
+            }
             toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
             ToolbarTab activeToolbarTab = (ToolbarTab)toolbarInt;
             switch(activeToolbarTab){
@@ -547,7 +553,6 @@ namespace Behaviour{
             ClearConnectionSelection();
             guiNodes[guiNodes.Count-1].SetParentConnection(connections[connections.Count-1]);
             int numNodes = UpdateCallNumbers(guiNodes[0], 1);
-            //AssetDatabase.SaveAssets();
         }
 
         
@@ -869,6 +874,10 @@ namespace Behaviour{
                 idx:ref idx, 
                 nodeMetaData:nodeMetaData
                 );
+        }
+
+        void SaveTree(){
+            AssetDatabase.SaveAssets();
         }
 
         void AddNodeAndConnections(
