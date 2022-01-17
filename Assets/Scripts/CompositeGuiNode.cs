@@ -60,14 +60,31 @@ public class CompositeGuiNode : CallableGuiNode
             taskRectSize.y
         );
         callNumber.SetPosition(taskRect.position);
-
-
         ApplyDerivedSettings();
         ApplyNodeTypeSettings(
             OnClickChildPoint:OnClickChildPoint,
             OnClickParentPoint:OnClickParentPoint
             );
+    }
 
+    public void SetEditorActions(
+        Action<GuiNode> UpdatePanelDetails,
+        Action<CompositeGuiNode> OnRemoveNode,
+        Action<ConnectionPoint> OnClickChildPoint,
+        Action<ConnectionPoint> OnClickParentPoint
+    ){
+        this.UpdatePanelDetails = UpdatePanelDetails;
+        this.OnRemoveNode = OnRemoveNode;
+        ApplyNodeTypeSettings(
+            OnClickChildPoint:OnClickChildPoint,
+            OnClickParentPoint:OnClickParentPoint
+        );
+        foreach(GuiDecorator decorator in Decorators){
+            decorator.SetEditorActions(
+                UpdatePanelDetails:UpdatePanelDetails,
+                OnRemoveDecorator:OnClickRemoveDecorator
+            );
+        }
     }
 
     protected override void ApplyDerivedSettings(){

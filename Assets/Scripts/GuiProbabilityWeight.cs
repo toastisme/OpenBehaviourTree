@@ -32,6 +32,12 @@ public class GuiProbabilityWeight : GuiNode
         ApplyDerivedSettings();
     }
 
+    public void SetEditorActions(
+        Action<GuiNode> UpdatePanelDetails
+    ){
+        this.UpdatePanelDetails = UpdatePanelDetails;
+    }
+
     protected override void ApplyDerivedSettings()
     {
         color = NodeProperties.ProbabilityWeightColor();

@@ -34,6 +34,14 @@ public class GuiDecorator : CallableGuiNode
         this.OnRemoveDecorator = OnRemoveDecorator;
         ApplyDerivedSettings();
     }
+
+    public void SetEditorActions(
+        Action<GuiNode> UpdatePanelDetails,
+        Action<GuiDecorator> OnRemoveDecorator){
+            this.UpdatePanelDetails = UpdatePanelDetails;
+            this.OnRemoveDecorator = OnRemoveDecorator;
+    }
+
     protected override void ApplyDerivedSettings(){
         defaultStyle = NodeProperties.GUINodeStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();

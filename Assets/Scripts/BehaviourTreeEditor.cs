@@ -905,6 +905,9 @@ namespace Behaviour{
 
             else if (node is ProbabilityWeight weightNode){
                 probabilityWeight = (GuiProbabilityWeight)guiNode;
+                probabilityWeight.SetEditorActions(
+                    UpdatePanelDetails:UpdatePanelDetails
+                );
                 idx++;
                 AddNodeAndConnections(
                     node:node.ChildNodes[0],
@@ -927,6 +930,12 @@ namespace Behaviour{
                 if (decorators != null){
                     cgn.Decorators = decorators;
                 }
+                cgn.SetEditorActions(
+                    UpdatePanelDetails:UpdatePanelDetails,
+                    OnRemoveNode:OnClickRemoveNode,
+                    OnClickChildPoint:OnClickChildPoint,
+                    OnClickParentPoint:OnClickParentPoint
+                );
                 guiNodes.Add(cgn);
                 idx++;
                 decorators = null;
