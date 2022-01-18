@@ -876,6 +876,7 @@ namespace Behaviour{
                 idx:ref idx, 
                 nodeMetaData:nodeMetaData
                 );
+            UpdateCallNumbers(guiNodes[0], 1);
         }
 
         void SaveTree(){
