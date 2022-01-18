@@ -78,6 +78,7 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
                                                             serializedNodes:serializedNodes
                                                             );
         }
+        
     }
 
     bool CanSaveGuiData(){
@@ -94,11 +95,10 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
 
         if (CanSaveTree()){
             serializedNodes = new List<SerializableNode>();
-            nodeMetaData = new List<GuiNodeData>();
-
             serializedNodes.Clear();
-            nodeMetaData.Clear();
             if (CanSaveGuiData()){
+                nodeMetaData = new List<GuiNodeData>();
+                nodeMetaData.Clear();
                 BehaviourTreeSaver.SaveTree(
                     guiRootNode:guiRootNode,
                     serializedNodes:ref serializedNodes,
