@@ -18,34 +18,34 @@ namespace Behaviour{
                                                         "Vector2"
                                                         };
         [SerializeField]
-        public OrderedDictionary allKeyNames;
+        public SerializableOrderedDictionary allKeyNames;
         [SerializeField]
-        public Dictionary<string, int> intKeys;
+        public SerializableDictionary<string, int> intKeys;
         [SerializeField]
-        public Dictionary<string, float> floatKeys;
+        public SerializableDictionary<string, float> floatKeys;
         [SerializeField]
-        public Dictionary<string, bool> boolKeys;
+        public SerializableDictionary<string, bool> boolKeys;
         [SerializeField]
-        public Dictionary<string, Vector3> vector3Keys;
+        public SerializableDictionary<string, Vector3> vector3Keys;
         [SerializeField]
-        public Dictionary<string, Vector2> vector2Keys;
+        public SerializableDictionary<string, Vector2> vector2Keys;
         [SerializeField]
-        public Dictionary<string, GameObject> gameObjectKeys;
+        public SerializableDictionary<string, GameObject> gameObjectKeys;
         [SerializeField]
-        public Dictionary<string, string> stringKeys;
+        public SerializableDictionary<string, string> stringKeys;
 
-        public Dictionary<string, int> GetIntKeys(){return intKeys;}
-        public Dictionary<string, float> GetFloatKeys(){return floatKeys;}
-        public Dictionary<string, bool> GetBoolKeys(){return boolKeys;}
-        public Dictionary<string, Vector3> GetVector3Keys(){return vector3Keys;}
-        public Dictionary<string, Vector2> GetVector2Keys(){return vector2Keys;}
-        public Dictionary<string, GameObject> GetGameObjectKeys(){return gameObjectKeys;}
-        public Dictionary<string, string> GetStringKeys(){return stringKeys;}
+        public SerializableDictionary<string, int> GetIntKeys(){return intKeys;}
+        public SerializableDictionary<string, float> GetFloatKeys(){return floatKeys;}
+        public SerializableDictionary<string, bool> GetBoolKeys(){return boolKeys;}
+        public SerializableDictionary<string, Vector3> GetVector3Keys(){return vector3Keys;}
+        public SerializableDictionary<string, Vector2> GetVector2Keys(){return vector2Keys;}
+        public SerializableDictionary<string, GameObject> GetGameObjectKeys(){return gameObjectKeys;}
+        public SerializableDictionary<string, string> GetStringKeys(){return stringKeys;}
 
         public List<string> GetKeyTypes(){return keyTypes;}
-        public OrderedDictionary GetAllKeyNames(){
+        public SerializableOrderedDictionary GetAllKeyNames(){
             if (allKeyNames == null){
-                allKeyNames = new OrderedDictionary();
+                allKeyNames = new SerializableOrderedDictionary();
             }
             return allKeyNames;
         }
@@ -53,7 +53,7 @@ namespace Behaviour{
 
         private void AddKeyName(string keyName, string keyType){
             if (allKeyNames == null){
-                allKeyNames = new OrderedDictionary();
+                allKeyNames = new SerializableOrderedDictionary();
             }
             allKeyNames.Add(keyName, keyType);
         }
@@ -190,49 +190,49 @@ namespace Behaviour{
                 switch(keyType){
                     case "int":
                         if (intKeys == null){
-                            intKeys = new Dictionary<string, int>();
+                            intKeys = new SerializableDictionary<string, int>();
                         }
                         intKeys.Add(keyName, 0);
                         allKeyNames.Add(keyName, "int");
                         break;
                     case "bool":
                         if (boolKeys == null){
-                            boolKeys = new Dictionary<string, bool>();
+                            boolKeys = new SerializableDictionary<string, bool>();
                         }
                         boolKeys.Add(keyName, false);
                         allKeyNames.Add(keyName, "bool");
                         break;
                     case "float":
                         if (floatKeys == null){
-                            floatKeys = new Dictionary<string, float>();
+                            floatKeys = new SerializableDictionary<string, float>();
                         }
                         floatKeys.Add(keyName, 0);
                         allKeyNames.Add(keyName, "float");
                         break;
                     case "GameObject":
                         if (gameObjectKeys == null){
-                            gameObjectKeys = new Dictionary<string, GameObject>();
+                            gameObjectKeys = new SerializableDictionary<string, GameObject>();
                         }
                         gameObjectKeys.Add(keyName, null);
                         allKeyNames.Add(keyName, "GameObject");
                         break;
                     case "string":
                         if (stringKeys == null){
-                            stringKeys = new Dictionary<string, string>();
+                            stringKeys = new SerializableDictionary<string, string>();
                         }
                         stringKeys.Add(keyName, "");
                         allKeyNames.Add(keyName, "string");
                         break;
                     case "Vector3":
                         if (vector3Keys == null){
-                            vector3Keys = new Dictionary<string, Vector3>();
+                            vector3Keys = new SerializableDictionary<string, Vector3>();
                         }
                         vector3Keys.Add(keyName, new Vector3(0,0,0));
                         allKeyNames.Add(keyName, "Vector3");
                         break;
                     case "Vector2":
                         if (vector2Keys == null){
-                            vector2Keys = new Dictionary<string, Vector2>();
+                            vector2Keys = new SerializableDictionary<string, Vector2>();
                         }
                         vector2Keys.Add(keyName, new Vector2(0,0));
                         allKeyNames.Add(keyName, "Vector2");
