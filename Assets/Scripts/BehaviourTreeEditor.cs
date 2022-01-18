@@ -41,6 +41,8 @@ namespace Behaviour{
 
         public void SetScriptableObject(BehaviourTree behaviourTree){
             bt = behaviourTree;
+            guiNodes = new List<CompositeGuiNode>();
+            connections = new List<Connection>();
             if (bt.rootNode == null){
                 AddRootNode();
             }
@@ -68,7 +70,6 @@ namespace Behaviour{
                     taskName:"Root"
                 );
             }
-            guiNodes = new List<CompositeGuiNode>();
             guiNodes.Add(new GuiRootNode(
                                 node:bt.rootNode,
                                 displayTask:"Root",
@@ -885,7 +886,7 @@ namespace Behaviour{
             Node node, 
             ref int idx,
             List<GuiNodeData> nodeMetaData,
-            CompositeGuiNode lastCompositeGuiNode=null,
+            int parentGuiNodeIdx=-1,
             List<GuiDecorator> decorators=null,
             GuiProbabilityWeight probabilityWeight=null){
 
@@ -908,7 +909,7 @@ namespace Behaviour{
                     node:node.ChildNodes[0],
                     idx:ref idx, 
                     nodeMetaData:nodeMetaData,
-                    lastCompositeGuiNode:lastCompositeGuiNode,
+                    parentGuiNodeIdx:parentGuiNodeIdx,
                     decorators:decorators
                     );
             }
@@ -923,40 +924,40 @@ namespace Behaviour{
                     node:node.ChildNodes[0],
                     idx:ref idx, 
                     nodeMetaData:nodeMetaData,
-                    lastCompositeGuiNode:lastCompositeGuiNode,
+                    parentGuiNodeIdx:parentGuiNodeIdx,
                     decorators:decorators
                     );
             }
             else {
                 // Assumed to be CompositeNode -> now need to make connections
                 CompositeGuiNode cgn = (CompositeGuiNode)guiNode;
-                if (lastCompositeGuiNode != null){
-                    CreateConnection(
-                        childPoint:cgn.ParentPoint, 
-                        parentPoint:lastCompositeGuiNode.ChildPoint,
-                        probabilityWeight:probabilityWeight
-                        );
-                }
-                if (decorators != null){
-                    cgn.Decorators = decorators;
-                }
                 cgn.SetEditorActions(
                     UpdatePanelDetails:UpdatePanelDetails,
                     OnRemoveNode:OnClickRemoveNode,
                     OnClickChildPoint:OnClickChildPoint,
                     OnClickParentPoint:OnClickParentPoint
                 );
+                if (parentGuiNodeIdx != -1){
+                    CreateConnection(
+                        parentPoint:cgn.ParentPoint, 
+                        childPoint:guiNodes[parentGuiNodeIdx].ChildPoint,
+                        probabilityWeight:probabilityWeight
+                        );
+                }
+                if (decorators != null){
+                    cgn.Decorators = decorators;
+                }
                 guiNodes.Add(cgn);
+                parentGuiNodeIdx=guiNodes.Count-1;
                 idx++;
                 decorators = null;
-                lastCompositeGuiNode = cgn;
                 probabilityWeight = null;
                 foreach(Node child in node.ChildNodes){
                     AddNodeAndConnections(
                         node:child,
                         idx:ref idx, 
                         nodeMetaData:nodeMetaData,
-                        lastCompositeGuiNode:lastCompositeGuiNode,
+                        parentGuiNodeIdx:parentGuiNodeIdx,
                         decorators:decorators,
                         probabilityWeight:probabilityWeight
                         );
