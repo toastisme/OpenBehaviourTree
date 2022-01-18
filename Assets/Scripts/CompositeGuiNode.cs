@@ -131,7 +131,7 @@ public class CompositeGuiNode : CallableGuiNode
         Drag(delta);
         if (ChildConnections != null){
             foreach(Connection connection in ChildConnections){
-                connection.GetChildNode().Drag(delta);
+                connection.GetChildNode().DragWithChildren(delta);
             }
         }
     }
