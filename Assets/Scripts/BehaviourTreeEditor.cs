@@ -50,6 +50,7 @@ namespace Behaviour{
                     nodeMetaData:bt.nodeMetaData
                 );
             }
+            bt.guiRootNode = guiNodes[0];
         }
 
         private void OnEnable()

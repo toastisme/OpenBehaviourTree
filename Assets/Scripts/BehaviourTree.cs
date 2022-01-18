@@ -84,26 +84,33 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         return (guiRootNode != null);
     }
 
+    bool CanSaveTree(){
+        return (rootNode != null);
+    }
+
     public void OnBeforeSerialize() {
         // Unity is about to read the serializedNodes field's contents.
         // The correct data must now be written into that field "just in time".
-        serializedNodes = new List<SerializableNode>();
-        nodeMetaData = new List<GuiNodeData>();
 
-        serializedNodes.Clear();
-        nodeMetaData.Clear();
-        if (CanSaveGuiData()){
-            BehaviourTreeSaver.SaveTree(
-                guiRootNode:guiRootNode,
-                serializedNodes:ref serializedNodes,
-                nodeMetaData:ref nodeMetaData
-            );
-        }
-        else{
-            BehaviourTreeSaver.SaveTree(
-                rootNode:rootNode,
-                serializedNodes:ref serializedNodes
-            );
+        if (CanSaveTree()){
+            serializedNodes = new List<SerializableNode>();
+            nodeMetaData = new List<GuiNodeData>();
+
+            serializedNodes.Clear();
+            nodeMetaData.Clear();
+            if (CanSaveGuiData()){
+                BehaviourTreeSaver.SaveTree(
+                    guiRootNode:guiRootNode,
+                    serializedNodes:ref serializedNodes,
+                    nodeMetaData:ref nodeMetaData
+                );
+            }
+            else{
+                BehaviourTreeSaver.SaveTree(
+                    rootNode:rootNode,
+                    serializedNodes:ref serializedNodes
+                );
+            }
         }
         // Now Unity is free to serialize this field, and we should get back the expected 
         // data when it is deserialized later.
