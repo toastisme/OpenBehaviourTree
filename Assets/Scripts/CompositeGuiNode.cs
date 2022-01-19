@@ -116,7 +116,9 @@ public class CompositeGuiNode : CallableGuiNode
     public override void Drag(Vector2 delta){
         base.Drag(delta);
         taskRect.position += delta;
-        DragDecorators(delta);
+        if (IsSelected){
+            DragDecorators(delta);
+        }
     }
 
     void DragDecorators(Vector2 delta){
@@ -271,6 +273,33 @@ public class CompositeGuiNode : CallableGuiNode
         else{
             throw new Exception("Decorator not found in decorators list.");
         }
+
+    }
+
+    public void AddDecorator(GuiDecorator guiDecorator){
+        guiDecorator.SetParentNode(this);
+         if (Decorators != null && Decorators.Count >0){
+            Decorators[0].BtNode.InsertBeforeSelf(guiDecorator.BtNode);
+        }
+        else{
+            this.BtNode.InsertBeforeSelf(guiDecorator.BtNode);
+        }
+         if (Decorators != null && Decorators.Count >0){
+            guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+        }
+        else{
+            guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+        }
+        callNumber.CallNumber++;
+        // Maker room for new decorator
+        ShiftDecoratorsDown();
+        Decorators.Insert(0, guiDecorator);
+                
+        // Update params to make space for gui decorator
+        rect.height += taskRectSize[1];
+        taskRect.y += taskRectSize[1];
+        callNumber.Drag(new Vector2(0, taskRectSize[1]));
+        GUI.changed = true;
 
     }
 
