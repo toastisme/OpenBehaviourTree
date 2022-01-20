@@ -277,13 +277,7 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     public void AddDecorator(GuiDecorator guiDecorator){
-        guiDecorator.SetParentNode(this);
-         if (Decorators != null && Decorators.Count >0){
-            Decorators[0].BtNode.InsertBeforeSelf(guiDecorator.BtNode);
-        }
-        else{
-            this.BtNode.InsertBeforeSelf(guiDecorator.BtNode);
-        }
+        guiDecorator.SetParentGuiNode(this);
          if (Decorators != null && Decorators.Count >0){
             guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
         }
@@ -331,7 +325,7 @@ public class CompositeGuiNode : CallableGuiNode
             UpdatePanelDetails:UpdatePanelDetails,
             OnRemoveDecorator:OnClickRemoveDecorator,
             blackboard:ref blackboard,
-            parentNode:this
+            parentGuiNode:this
             );
          if (Decorators != null && Decorators.Count >0){
             guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
@@ -410,7 +404,17 @@ public class CompositeGuiNode : CallableGuiNode
         }
         List<Node> reorderedChildNodes = new List<Node>();
         foreach(Connection connection in ChildConnections){
-            reorderedChildNodes.Add(connection.GetChildNode().BtNode);
+            CompositeGuiNode childNode = connection.GetChildNode();
+            if (connection.HasProbabilityWeight()){
+                reorderedChildNodes.Add(connection.probabilityWeight.BtNode);
+            }
+            else if (childNode.Decorators != null && childNode.Decorators.Count > 0){
+                // Add the top decorator of that node
+                reorderedChildNodes.Add(childNode.Decorators[0].BtNode);
+            }
+            else{
+                reorderedChildNodes.Add(childNode.BtNode);
+            }
         }
         BtNode.ReplaceChildNodes(reorderedChildNodes);
     }

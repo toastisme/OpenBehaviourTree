@@ -872,7 +872,7 @@ namespace Behaviour{
             connections = new List<Connection>();
             int idx = 0;
             AddNodeAndConnections(
-                node:bt.rootNode, 
+                node:rootNode, 
                 idx:ref idx, 
                 nodeMetaData:nodeMetaData
                 );
@@ -932,6 +932,11 @@ namespace Behaviour{
             else {
                 // Assumed to be CompositeNode -> now need to make connections
                 CompositeGuiNode cgn = (CompositeGuiNode)guiNode;
+                if (decorators != null){
+                    for(int i=decorators.Count-1; i>=0; i--){
+                        cgn.AddDecorator(decorators[i]);
+                    }
+                }
                 cgn.SetEditorActions(
                     UpdatePanelDetails:UpdatePanelDetails,
                     OnRemoveNode:OnClickRemoveNode,
@@ -944,9 +949,6 @@ namespace Behaviour{
                         childPoint:guiNodes[parentGuiNodeIdx].ChildPoint,
                         probabilityWeight:probabilityWeight
                         );
-                }
-                if (decorators != null){
-                    cgn.Decorators = decorators;
                 }
                 guiNodes.Add(cgn);
                 parentGuiNodeIdx=guiNodes.Count-1;

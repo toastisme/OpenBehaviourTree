@@ -7,7 +7,7 @@ using System;
 namespace Behaviour{
 public class GuiDecorator : CallableGuiNode
 {
-    GuiNode parentNode;
+    GuiNode parentGuiNode;
     Action<GuiDecorator> OnRemoveDecorator;
     Decorator decorator;
 
@@ -19,7 +19,7 @@ public class GuiDecorator : CallableGuiNode
         Action<GuiNode> UpdatePanelDetails,
         Action<GuiDecorator> OnRemoveDecorator,
         ref BehaviourTreeBlackboard blackboard,
-        GuiNode parentNode
+        GuiNode parentGuiNode
     ) :base(
         node:decorator,
         displayTask:displayTask,
@@ -30,9 +30,13 @@ public class GuiDecorator : CallableGuiNode
     )
     {
         this.decorator = (Decorator)decorator;
-        this.parentNode = parentNode;
+        this.parentGuiNode = parentGuiNode;
         this.OnRemoveDecorator = OnRemoveDecorator;
         ApplyDerivedSettings();
+    }
+
+    public void SetParentGuiNode(GuiNode node){
+        this.parentGuiNode = node;
     }
 
     public void SetEditorActions(
@@ -59,7 +63,7 @@ public class GuiDecorator : CallableGuiNode
     public override void Drag(Vector2 delta)
     {
         if (IsSelected){
-            parentNode.Drag(delta);
+            parentGuiNode.Drag(delta);
         }
         rect.position += delta;
         callNumber.Drag(delta);

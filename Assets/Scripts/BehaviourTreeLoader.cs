@@ -139,7 +139,7 @@ public class BehaviourTreeLoader
                     UpdatePanelDetails:null,
                     OnRemoveDecorator:null,
                     blackboard:ref blackboard,
-                    parentNode:null
+                    parentGuiNode:null
                 );
             default:
                 throw new System.Exception("Unknown node type");

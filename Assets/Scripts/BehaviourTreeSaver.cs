@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 namespace Behaviour{
 public class BehaviourTreeSaver
@@ -9,6 +10,10 @@ public class BehaviourTreeSaver
         /**
          *Recursive function to write all nodes depth first into serializedNodes
          */
+
+        if (node.ParentNode == node){
+            throw new Exception("Node is its own parent.");
+        }
 
         var serializedNode = new SerializableNode () {
             type = (int)node.GetNodeType(),
@@ -59,6 +64,7 @@ public class BehaviourTreeSaver
         ref List<SerializableNode> serializedNodes,
         ref List<GuiNodeData> nodeMetaData
         ) {
+
             serializedNodes.Clear();
             nodeMetaData.Clear();
             Node rootNode = guiRootNode.BtNode;
