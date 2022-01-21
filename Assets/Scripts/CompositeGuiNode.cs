@@ -116,15 +116,15 @@ public class CompositeGuiNode : CallableGuiNode
     public override void Drag(Vector2 delta){
         base.Drag(delta);
         taskRect.position += delta;
-        if (IsSelected){
-            DragDecorators(delta);
-        }
+        DragUnselectedDecorators(delta);
     }
 
-    void DragDecorators(Vector2 delta){
+    void DragUnselectedDecorators(Vector2 delta){
         if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
-                decorator.Drag(delta);
+                if (!decorator.IsSelected){
+                    decorator.Drag(delta);
+                }
             }
         }
     }
