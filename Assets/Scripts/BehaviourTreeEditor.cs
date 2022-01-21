@@ -685,27 +685,21 @@ namespace Behaviour{
         }
 
         void AddProbabilityWeight(Connection connection, 
-                                  GuiProbabilityWeight guiProbabilityWeight
+                                  GuiProbabilityWeight guiProbabilityWeight,
+                                  bool updateRelationships=true
                                   ){
             // Update behaviour tree
             Node childNode = connection.GetChildNode().BtNode;
             Node parentNode = connection.GetParentNode().BtNode;
-            ProbabilityWeight probabilityWeight = new ProbabilityWeight(
-                taskName:guiProbabilityWeight.BtNode.TaskName,
-                parentNode:parentNode,
-                childNode:childNode
-            );              
-            parentNode.RemoveChildNode(childNode);
-            parentNode.AddChildNode(probabilityWeight);
-            childNode.SetParentNode(probabilityWeight);
+            if (updateRelationships){
+                parentNode.RemoveChildNode(childNode);
+                parentNode.AddChildNode(guiProbabilityWeight.BtNode);
+                childNode.SetParentNode(guiProbabilityWeight.BtNode);
+            }
 
             //Update Gui
             connection.AddProbabilityWeight(
-                node:probabilityWeight,
-                displayTask:guiProbabilityWeight.DisplayTask,
-                displayName:guiProbabilityWeight.DisplayName,
-                UpdatePanelDetails:UpdatePanelDetails,
-                blackboard:ref bt.blackboard
+                guiNode:guiProbabilityWeight
             );
         }
         private void CreateConnection(ConnectionPoint childPoint, ConnectionPoint parentPoint){
@@ -729,7 +723,8 @@ namespace Behaviour{
         private void CreateConnection(
             ConnectionPoint childPoint, 
             ConnectionPoint parentPoint, 
-            GuiProbabilityWeight probabilityWeight){
+            GuiProbabilityWeight probabilityWeight,
+            bool updateRelationships=true){
             if (probabilityWeight == null){
                 CreateConnection(childPoint:childPoint, parentPoint:parentPoint);
             }
@@ -744,7 +739,7 @@ namespace Behaviour{
                 CompositeGuiNode childNode = parentPoint.GetNode();
                 parentNode.AddChildConnection(newConnection);
                 childNode.SetParentConnection(newConnection);
-                AddProbabilityWeight(newConnection, probabilityWeight);
+                AddProbabilityWeight(newConnection, probabilityWeight, updateRelationships);
                 connections.Add(newConnection);
                 GUI.changed = true;
             }
@@ -926,7 +921,8 @@ namespace Behaviour{
                     idx:ref idx, 
                     nodeMetaData:nodeMetaData,
                     parentGuiNodeIdx:parentGuiNodeIdx,
-                    decorators:decorators
+                    decorators:decorators,
+                    probabilityWeight:probabilityWeight
                     );
             }
             else {
@@ -947,7 +943,8 @@ namespace Behaviour{
                     CreateConnection(
                         parentPoint:cgn.ParentPoint, 
                         childPoint:guiNodes[parentGuiNodeIdx].ChildPoint,
-                        probabilityWeight:probabilityWeight
+                        probabilityWeight:probabilityWeight,
+                        updateRelationships:false
                         );
                 }
                 guiNodes.Add(cgn);

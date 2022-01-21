@@ -27,6 +27,13 @@ namespace Behaviour{
             this.OnClickRemoveConnection = OnClickRemoveConnection;
         }   
 
+        public void AddProbabilityWeight(GuiProbabilityWeight guiNode){
+            probabilityWeight = guiNode;
+            guiNode.SetParentConnection(this);
+            Vector2 size = NodeProperties.SubNodeSize();
+            probabilityWeightOffset = new Vector2(size.x*.5f, 0);
+        }
+
         public void AddProbabilityWeight(ProbabilityWeight node,
                                          string displayTask,
                                          string displayName,

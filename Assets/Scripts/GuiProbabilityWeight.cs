@@ -139,6 +139,10 @@ public class GuiProbabilityWeight : GuiNode
         probabilityWeight.SetWeight(val);
     }
 
+    public void SetParentConnection(Connection connection){
+        parentConnection = connection;
+    }
+
 
 
 }
