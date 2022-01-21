@@ -286,7 +286,6 @@ public class CompositeGuiNode : CallableGuiNode
         }
         callNumber.CallNumber++;
         // Maker room for new decorator
-        ShiftDecoratorsDown();
         Decorators.Insert(0, guiDecorator);
                 
         // Update params to make space for gui decorator
