@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 namespace Behaviour{
 public class BehaviourTreeController : MonoBehaviour
@@ -8,6 +9,8 @@ public class BehaviourTreeController : MonoBehaviour
     public BehaviourTree behaviourTree;
     private BehaviourTree treeInstance;
     private BehaviourTreeBlackboard blackboardInstance;
+    private bool showingTree;
+    public bool showTree;
 
     IEnumerator runTree;
 
@@ -22,7 +25,32 @@ public class BehaviourTreeController : MonoBehaviour
         blackboardInstance = Object.Instantiate(behaviourTree.blackboard);
         treeInstance.LoadTree(monoBehaviour:this, blackboard:ref blackboardInstance);
         runTree = treeInstance.RunTree();
+        showingTree = false;
+        Selection.selectionChanged += ShowWindowIfSelected;
     }
+
+    void Start(){
+        ShowWindowIfSelected();
+    }
+
+    void ShowWindowIfSelected(){
+        if (Selection.activeObject == this.gameObject && !showingTree && showTree){
+            showingTree = true;
+            ShowTree();
+        }
+        else if (Selection.activeObject != this.gameObject && showingTree){
+            showingTree = false;
+            StopShowingTree();
+        }
+
+    }
+
+    void ShowTree(){
+        BehaviourTreeEditor window = EditorWindow.GetWindow(typeof(BehaviourTreeEditor)) as BehaviourTreeEditor;
+        window.SetScriptableObject(treeInstance);
+    }
+
+    void StopShowingTree(){}
 
     public void RunTree(){
         StartCoroutine(runTree);
@@ -31,6 +59,10 @@ public class BehaviourTreeController : MonoBehaviour
     public void StopTree(){
         treeInstance.ResetTree();
         StopCoroutine(runTree);
+    }
+
+    void OnDestroy(){
+        Selection.selectionChanged -= ShowWindowIfSelected;
     }
 
 }
