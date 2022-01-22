@@ -33,6 +33,23 @@ public class Decorator : Node
         this.blackboard = blackboard;
     }
 
+    public Decorator(
+        string taskName,
+        ref BehaviourTreeBlackboard blackboard,
+        bool invertCondition,
+        Node parentNode = null,
+        Node childNode = null
+    ) : base(
+        taskName:taskName,
+        parentNode:parentNode
+    ){
+        if (childNode != null){
+            ChildNodes.Add(childNode);
+        }
+        this.invertCondition = invertCondition;
+        this.blackboard = blackboard;
+    }
+
     public override NodeState Evaluate(){
         if (!invertCondition){
             CurrentState = blackboard.GetBoolKeys()[TaskName] ? ChildNodes[0].Evaluate() : NodeState.Failed;

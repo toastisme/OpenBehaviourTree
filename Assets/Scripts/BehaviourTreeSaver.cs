@@ -15,10 +15,16 @@ public class BehaviourTreeSaver
             throw new Exception("Node is its own parent.");
         }
 
+        bool invertCondition = false;
+        if (node is Decorator decorator){
+            invertCondition = decorator.invertCondition;
+        }
+
         var serializedNode = new SerializableNode () {
             type = (int)node.GetNodeType(),
             taskName = node.TaskName,
             childCount = node.ChildNodes.Count,
+            invertCondition = invertCondition
         }
         ;
         serializedNodes.Add (serializedNode);

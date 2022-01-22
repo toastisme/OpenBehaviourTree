@@ -24,6 +24,7 @@ public struct SerializableNode{
     public string taskName;
     public int childCount;
     public int parentIdx;
+    public bool invertCondition;
 }
 public abstract class Node
 {

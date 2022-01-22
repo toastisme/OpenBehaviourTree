@@ -6,7 +6,8 @@ public class BehaviourTreeLoader
 {
     public static Node NodeFactory(NodeType nodeType, 
                             string taskName,
-                            ref BehaviourTreeBlackboard blackboard
+                            ref BehaviourTreeBlackboard blackboard,
+                            bool invertCondition
                             ){
         switch(nodeType){
             case NodeType.Root:
@@ -33,7 +34,8 @@ public class BehaviourTreeLoader
             case NodeType.Decorator:
                 return new Decorator(
                         taskName:taskName,
-                        blackboard:ref blackboard
+                        blackboard:ref blackboard,
+                        invertCondition:invertCondition
                 );
             case NodeType.Action:
                 return new ActionNode(
@@ -161,7 +163,8 @@ public class BehaviourTreeLoader
         var node = BehaviourTreeLoader.NodeFactory(
             nodeType:(NodeType)serializedNode.type,
             taskName:serializedNode.taskName,
-            blackboard:ref blackboard
+            blackboard:ref blackboard,
+            invertCondition: serializedNode.invertCondition
         );
 
         // The tree needs to be read in depth-first, since that's how we wrote it out.
