@@ -26,6 +26,43 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         LoadActionNodes(monoBehaviour, rootNode);
     }
 
+    public void LoadTree(
+        MonoBehaviour monoBehaviour,
+        ref BehaviourTreeBlackboard blackboard
+        ){
+        /**
+        * Loads all actionNode tasks and runs their setup (getting required gameobject components etc.),
+        * and updates any nodes that use a blackboard to use blackboard
+        */
+
+        LoadActionNodesAndUpdateBlackboard(
+            monoBehaviour:monoBehaviour,
+            node:rootNode,
+            blackboard:ref blackboard
+        );
+        
+    }
+    public void LoadActionNodesAndUpdateBlackboard(
+        MonoBehaviour monoBehaviour,
+        Node node,
+        ref BehaviourTreeBlackboard blackboard
+    ){
+        if (Node.RequiresBlackboard(node)){
+            node.UpdateBlackboard(ref blackboard);
+        }
+        if (node is ActionNode actionNode){
+            actionNode.LoadTask(monoBehaviour);
+        }
+        else{
+            if (node.ChildNodes != null){
+                foreach(Node childNode in node.ChildNodes){
+                    LoadActionNodesAndUpdateBlackboard(monoBehaviour, childNode, ref blackboard);
+                }
+            }
+        }
+
+    }
+
     public void LoadActionNodes(
         MonoBehaviour monoBehaviour,
         Node node

@@ -86,5 +86,8 @@ public class ActionNode : Node
     }
 
     public override NodeType GetNodeType(){return NodeType.Action;}
+    public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
+        this.blackboard = blackboard;
+    }
 }
 }

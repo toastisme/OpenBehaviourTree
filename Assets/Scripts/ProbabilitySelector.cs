@@ -75,5 +75,8 @@ public class ProbabilitySelector : Node
         return weights;
     }
     public override NodeType GetNodeType(){return NodeType.ProbabilitySelector;}
+    public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
+        this.blackboard = blackboard;
+    }
 }
 }

@@ -123,5 +123,20 @@ public abstract class Node
         node.AddChildNode(this);
     }
 
+    static public bool RequiresBlackboard(Node node){
+        if (node is ActionNode){
+            return true;
+        }
+        if (node is ProbabilitySelector){
+            return true;
+        }
+        if (node is Decorator){
+            return true;
+        }
+        return false;
+    }
+
+    public virtual void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){}
+
 }
 }

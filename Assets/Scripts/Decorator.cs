@@ -61,5 +61,9 @@ public class Decorator : Node
         return CurrentState;
     } 
     public override NodeType GetNodeType(){return NodeType.Decorator;}
+
+    public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
+        this.blackboard = blackboard;
+    }
 }
 }
