@@ -28,13 +28,15 @@ public class SequenceSelector : Node
                 case NodeState.Succeeded: 
                     continue; 
                 case NodeState.Running: 
-                    ResetOtherStates(node);
                     anyChildRunning = true; 
                     break; 
                 default: 
                     CurrentState = NodeState.Succeeded; 
                     return CurrentState; 
             } 
+            if (anyChildRunning){
+                break;
+            }
         } 
         CurrentState = anyChildRunning ? NodeState.Running : NodeState.Succeeded; 
         return CurrentState; 
