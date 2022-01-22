@@ -875,6 +875,7 @@ namespace Behaviour{
         }
 
         void SaveTree(){
+            EditorUtility.SetDirty(bt.blackboard);
             AssetDatabase.SaveAssets();
         }
 
