@@ -6,9 +6,15 @@ using System.Linq;
 using System;
 
 namespace Behaviour{
+    public enum BehaviourTreeEditorMode{
+        Editor,
+        Runtime,
+    }
     public class BehaviourTreeEditor : EditorWindow
     {
         List<NodeType> decisionNodeTypes;
+
+        BehaviourTreeEditorMode mode;
 
         // Bookkeeping
         public BehaviourTree bt;
@@ -39,7 +45,9 @@ namespace Behaviour{
         string[] activeBlackboardKey = {"","",""};
         bool renamingBlackboardKey = false;
 
-        public void SetScriptableObject(BehaviourTree behaviourTree){
+        public void SetScriptableObject(
+            BehaviourTree behaviourTree,
+            BehaviourTreeEditorMode mode=BehaviourTreeEditorMode.Editor){
             bt = behaviourTree;
             guiNodes = new List<CompositeGuiNode>();
             connections = new List<Connection>();
@@ -53,6 +61,7 @@ namespace Behaviour{
                 );
             }
             bt.guiRootNode = guiNodes[0];
+            this.mode = mode;
         }
 
         private void OnEnable()
@@ -97,22 +106,26 @@ namespace Behaviour{
 
             if (bt != null && guiNodes != null ){
                 DrawConnections();
-                DrawConnectionLine(Event.current);
-                DrawNodes();
 
-                DrawDetailsPanel();
-
-                if (MousePosOnGrid(Event.current.mousePosition)){
-                    ProcessNodeEvents(Event.current);
+                if (mode == BehaviourTreeEditorMode.Editor){
+                    DrawConnectionLine(Event.current);
+                    DrawDetailsPanel();
+                    if (MousePosOnGrid(Event.current.mousePosition)){
+                        ProcessNodeEvents(Event.current);
+                    }
+                    ProcessEvents(Event.current);
                 }
-                ProcessEvents(Event.current);
 
+                else if (mode == BehaviourTreeEditorMode.Runtime){
+                    ProcessEventsRuntime(Event.current);
+                }
+
+                DrawNodes();
                 if (GUI.changed) {
                     Repaint();
                     UpdateCallNumbers(guiNodes[0], 1);
                 }
             }
-
         }
 
         private void DrawDetailsPanel(){
@@ -314,8 +327,6 @@ namespace Behaviour{
 
         private void ProcessEvents(Event e)
         {
-            //drag = Vector2.zero;
-
             switch (e.type)
             {
                 case EventType.MouseDown:
@@ -351,6 +362,23 @@ namespace Behaviour{
                 case EventType.KeyDown:
                     if (renamingBlackboardKey){
                         renamingBlackboardKey = false;
+                    }
+                break;
+            }
+        }
+
+        private void ProcessEventsRuntime(Event e)
+        {
+            switch (e.type)
+            {
+                case EventType.MouseDrag:
+                    if (e.button == 0)
+                    {
+
+                        if (MousePosOnGrid(e.mousePosition)){
+                            OnDrag(e.delta);
+                            e.Use();
+                        }
                     }
                 break;
             }

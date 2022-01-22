@@ -47,7 +47,7 @@ public class BehaviourTreeController : MonoBehaviour
 
     void ShowTree(){
         BehaviourTreeEditor window = EditorWindow.GetWindow(typeof(BehaviourTreeEditor)) as BehaviourTreeEditor;
-        window.SetScriptableObject(treeInstance);
+        window.SetScriptableObject(treeInstance, BehaviourTreeEditorMode.Runtime);
     }
 
     void StopShowingTree(){}
