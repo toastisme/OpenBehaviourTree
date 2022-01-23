@@ -25,6 +25,8 @@ public struct SerializableNode{
     public int childCount;
     public int parentIdx;
     public bool invertCondition;
+    public float timeout;
+    public float cooldown;
 }
 public abstract class Node
 {
@@ -40,6 +42,9 @@ public abstract class Node
     public string TaskName {get; set;}
     public List<Node> ChildNodes{get; protected set;}
     public Node ParentNode{get; protected set;}
+
+    public NodeTimer nodeTimeout;
+    public NodeTimer nodeCooldown;
 
     protected Node(
         string taskName,
@@ -137,6 +142,22 @@ public abstract class Node
     }
 
     public virtual void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){}
+
+    public void AddNodeTimeout(NodeTimer nodeTimeout){
+        this.nodeTimeout = nodeTimeout;
+    }
+
+    public void AddNodeCooldown(NodeTimer nodeCooldown){
+        this.nodeCooldown = nodeCooldown;
+    }
+
+    public void RemoveNodeTimeout(){
+        this.nodeTimeout = null;
+    }
+
+    public void RemoveNodeCooldown(){
+        this.nodeCooldown = null;
+    }
 
 }
 }
