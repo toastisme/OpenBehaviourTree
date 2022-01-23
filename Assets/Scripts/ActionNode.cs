@@ -65,8 +65,24 @@ public class ActionNode : Node
         * Returns the state of the node.
         */
 
+        if (CooldownActive()){
+            if (CurrentState != NodeState.Idle || executeTask.Running){
+                ResetTask();
+            }
+            CurrentState = NodeState.Failed;
+            return CurrentState;
+        }
+
         if (CurrentState == NodeState.Idle && !executeTask.Running){
             executeTask.Start();
+        }
+        if (TimeoutExceeded()){
+            ResetTask();
+            CurrentState = NodeState.Failed;            
+            ResetTimeout();
+        }
+        if (CurrentState == NodeState.Succeeded){
+            StartCooldown();
         }
         return CurrentState;        
     }

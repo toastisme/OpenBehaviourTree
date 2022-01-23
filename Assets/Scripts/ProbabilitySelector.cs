@@ -56,14 +56,32 @@ public class ProbabilitySelector : Node
         * If selectedNode.Evaluate is FAILURE or SUCCESS, 
         * selectedNode is set to null.
         */
+        if (CooldownActive()){
+            CurrentState = NodeState.Failed;
+            return CurrentState;
+        }
+
+        if (!TimeoutActive() && !TimeoutExceeded()){
+            StartTimeout();
+        }
 
         if (selectedNode == null){
             selectedNode = SelectNode();
         }
         CurrentState = selectedNode.Evaluate();
-        if (selectedNode.Evaluate() == NodeState.Failed || selectedNode.Evaluate() == NodeState.Succeeded){
+        if (CurrentState == NodeState.Failed || CurrentState == NodeState.Succeeded){
             selectedNode = null;
         }
+        if (TimeoutExceeded()){
+            ResetChildStates();
+            CurrentState = NodeState.Failed;
+            ResetTimeout();
+        }
+
+        if (CurrentState == NodeState.Succeeded){
+            StartCooldown();
+        }
+
         return CurrentState;
     }
 

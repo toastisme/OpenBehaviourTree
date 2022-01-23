@@ -58,10 +58,19 @@ public abstract class Node
     public virtual NodeState Evaluate(){return CurrentState;}
     public virtual void ResetState(){
         CurrentState = NodeState.Idle;
+        ResetCooldown();
+        ResetTimeout();
         foreach(Node childNode in ChildNodes){
             childNode.ResetState();
         }
     }
+
+    public virtual void ResetChildStates(){
+        foreach(Node childNode in ChildNodes){
+            childNode.ResetState();
+        }
+    }
+
     public virtual void ResetOtherStates(Node exceptionNode){
         foreach(Node childNode in ChildNodes){
             if (childNode != exceptionNode){
@@ -143,21 +152,67 @@ public abstract class Node
 
     public virtual void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){}
 
-    public void AddNodeTimeout(NodeTimer nodeTimeout){
+    public void AddTimeout(NodeTimer nodeTimeout){
         this.nodeTimeout = nodeTimeout;
     }
 
-    public void AddNodeCooldown(NodeTimer nodeCooldown){
+    public void AddCooldown(NodeTimer nodeCooldown){
         this.nodeCooldown = nodeCooldown;
     }
 
-    public void RemoveNodeTimeout(){
+    public void RemoveTimeout(){
         this.nodeTimeout = null;
     }
 
-    public void RemoveNodeCooldown(){
+    public void ResetTimeout(){
+        nodeTimeout?.ResetTimer();
+    }
+
+    public void ResetCooldown(){
+        nodeCooldown?.ResetTimer();
+    }
+
+    public void StartTimeout(){
+        nodeTimeout?.StartTimer();
+    }
+
+    public void StopTimeout(){
+        nodeTimeout?.StopTimer();
+    }
+
+    public void StartCooldown(){
+        nodeCooldown?.StartTimer();
+    }
+
+    public void StopCooldown(){
+        nodeCooldown?.StopTimer();
+    }
+
+    public void RemoveCooldown(){
         this.nodeCooldown = null;
     }
+
+    public bool TimeoutExceeded(){
+        if (nodeTimeout != null){
+            return nodeTimeout.TimerExceeded();
+        }   
+        return false;
+    }
+
+    public bool CooldownActive(){
+        if (nodeCooldown != null){
+            return nodeCooldown.IsActive();
+        }
+        return false;
+    }
+
+    public bool TimeoutActive(){
+        if (nodeTimeout != null){
+            return nodeTimeout.IsActive();
+        }
+        return false;
+    }
+
 
 }
 }
