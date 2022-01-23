@@ -48,5 +48,9 @@ public class NodeTimer
     public bool IsActive(){return isActive;}
 
     public bool TimerExceeded(){return timerExceeded;}
+
+    public void SetTimerVal(float timerVal){
+        this.timerVal = timerVal;
+    }
 }
 }
