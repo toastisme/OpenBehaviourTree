@@ -52,5 +52,7 @@ public class NodeTimer
     public void SetTimerVal(float timerVal){
         this.timerVal = timerVal;
     }
+
+    public float GetTimerVal(){return this.timerVal;}
 }
 }

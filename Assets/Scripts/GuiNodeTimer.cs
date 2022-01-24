@@ -5,11 +5,28 @@ using System;
 using UnityEditor;
 
 namespace Behaviour{
+public enum TimerType{
+    Timeout,
+    Cooldown
+}
 public class GuiNodeTimer : GuiNode
 {
     GuiNode parentGuiNode;
-    Action OnRemoveTimer;
+    Action<GuiNodeTimer> OnRemoveTimer;
     NodeTimer nodeTimer;
+
+    string displayTask;
+
+    float defaultTimerVal;
+    public override string DisplayTask{
+        // What the node actually does
+        get{
+            return displayTask;
+        }
+        set{
+            displayTask = value;
+        }
+    }
 
     public GuiNodeTimer(
         NodeTimer nodeTimer,
@@ -17,7 +34,7 @@ public class GuiNodeTimer : GuiNode
         string displayName,
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
-        Action OnRemoveTimer,
+        Action<GuiNodeTimer> OnRemoveTimer,
         ref BehaviourTreeBlackboard blackboard,
         GuiNode parentGuiNode
     ) :base(
@@ -32,6 +49,7 @@ public class GuiNodeTimer : GuiNode
         this.parentGuiNode = parentGuiNode;
         this.OnRemoveTimer = OnRemoveTimer;
         ApplyDerivedSettings();
+        this.defaultTimerVal = NodeProperties.DefaultTimerVal();
     }
 
     protected override void ApplyDerivedSettings(){
@@ -44,7 +62,7 @@ public class GuiNodeTimer : GuiNode
 
     private void Remove(){
         if (OnRemoveTimer != null){
-            OnRemoveTimer();
+            OnRemoveTimer(this);
         }
     }
 
@@ -53,6 +71,10 @@ public class GuiNodeTimer : GuiNode
         if (IsSelected){
             parentGuiNode.Drag(delta);
         }
+        rect.position += delta;
+    }
+
+    public void DragWithoutParent(Vector2 delta){
         rect.position += delta;
     }
 
@@ -111,14 +133,17 @@ public class GuiNodeTimer : GuiNode
     {
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(rect, "\n" + DisplayName + "\n" + DisplayTask, activeStyle);
+        GUI.Box(rect, "\n" + DisplayName + "\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)", activeStyle);
         GUI.backgroundColor = currentColor;
     }
 
     public override void DrawDetails()
     {
         base.DrawDetails();
-        
+        GUILayout.Label("Value (sec)");
+        float timerVal = defaultTimerVal;
+        float.TryParse(GUILayout.TextField(nodeTimer.GetTimerVal().ToString(), 50), out timerVal);
+        nodeTimer.SetTimerVal(timerVal);
     }
 
 }

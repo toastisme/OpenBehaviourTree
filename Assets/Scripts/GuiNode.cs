@@ -22,7 +22,7 @@ public abstract class GuiNode : IGuiNode
     protected Action<GuiNode> UpdatePanelDetails;
 
     // Appearance 
-    public string DisplayTask{
+    public virtual string DisplayTask{
         // What the node actually does
         get{
             return BtNode.TaskName;

@@ -9,6 +9,9 @@ namespace Behaviour{
 
     public class NodeProperties
     {
+
+        public static float DefaultTimerVal(){return 5f;}
+
         // Size
         public static Vector2 GuiNodeSize(){return new Vector2(200, 100);}
         public static Vector2 SubNodeSize(){return new Vector2(200, 60);}
