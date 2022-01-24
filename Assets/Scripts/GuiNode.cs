@@ -111,7 +111,7 @@ public abstract class GuiNode : IGuiNode
         DisplayName = GUILayout.TextField(DisplayName, 50);
     }
 
-    public NodeType GetNodeType(){return BtNode.GetNodeType();}
+    public virtual NodeType GetNodeType(){return BtNode.GetNodeType();}
     public Rect GetRect(){return rect;}
 }
 }

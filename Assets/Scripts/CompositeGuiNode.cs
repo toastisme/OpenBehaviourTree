@@ -181,10 +181,11 @@ public class CompositeGuiNode : CallableGuiNode
     public override bool ProcessEvents(Event e){
         bool guiChanged = false;
         bool decoratorSelected = false;
+        bool timerSelected = false;
 
-        guiChanged = ProcessDecoratorEvents(e, out decoratorSelected);
+        guiChanged = ProcessDecoratorEvents(e, out decoratorSelected, out timerSelected);
         // Only bother processing taskRect events if no decorator was selected
-        if (!decoratorSelected){
+        if (!decoratorSelected && !timerSelected){
             bool guiChangedFromNode =  ProcessTaskRectEvents(e);
             if (guiChangedFromNode){
                 guiChanged = true;
@@ -196,9 +197,10 @@ public class CompositeGuiNode : CallableGuiNode
         return guiChanged;
     }
 
-    bool ProcessDecoratorEvents(Event e, out bool decoratorSelected){
+    bool ProcessDecoratorEvents(Event e, out bool decoratorSelected, out bool timerSelected){
         bool guiChanged = false;
         decoratorSelected = false;
+        timerSelected = false;
         if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
                 bool guiChangedFromDecorator = decorator.ProcessEvents(e);
@@ -214,9 +216,15 @@ public class CompositeGuiNode : CallableGuiNode
             bool changedFromTimers = false;
             if (guiTimeout != null){
                 changedFromTimers = guiTimeout.ProcessEvents(e);
+                if (!timerSelected && guiTimeout.IsSelected){
+                    timerSelected = true;
+                }
             }
-            if (!changedFromTimers && guiCooldown != null){
+            if (!timerSelected && guiCooldown != null){
                 changedFromTimers = guiCooldown.ProcessEvents(e);
+                if (!timerSelected && guiCooldown.IsSelected){
+                    timerSelected = true;
+                }
             }
             if (!guiChanged && changedFromTimers){
                 guiChanged = true;

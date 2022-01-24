@@ -139,12 +139,15 @@ public class GuiNodeTimer : GuiNode
 
     public override void DrawDetails()
     {
-        base.DrawDetails();
+        GUILayout.Label("Task: " + DisplayTask);
+        GUILayout.Label("Name");
+        DisplayName = GUILayout.TextField(DisplayName, 50);
         GUILayout.Label("Value (sec)");
         float timerVal = defaultTimerVal;
         float.TryParse(GUILayout.TextField(nodeTimer.GetTimerVal().ToString(), 50), out timerVal);
         nodeTimer.SetTimerVal(timerVal);
     }
+
 
 }
 }
