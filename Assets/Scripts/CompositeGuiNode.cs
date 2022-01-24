@@ -336,14 +336,22 @@ public class CompositeGuiNode : CallableGuiNode
         // Insert before this node in list
 
 
+        Vector2 pos = new Vector2(
+            rect.x + initDecoratorPos[0],
+            rect.y + initDecoratorPos[1]
+        );
+        if (guiTimeout != null){
+            pos += new Vector2(0, taskRectSize[1]); 
+        }
+        if (guiCooldown != null){
+            pos += new Vector2(0, taskRectSize[1]); 
+        }
         // Add gui decorator
         GuiDecorator guiDecorator = new GuiDecorator( 
             decorator:decorator,
             displayTask:displayTask,
             displayName:"",
-            pos:new Vector2(
-                rect.x + initDecoratorPos[0],
-                rect.y + initDecoratorPos[1]),
+            pos:pos,
             UpdatePanelDetails:UpdatePanelDetails,
             OnRemoveDecorator:OnClickRemoveDecorator,
             blackboard:ref blackboard,
