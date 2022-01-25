@@ -68,10 +68,7 @@ public class GuiNodeTimer : GuiNode
 
     public override void Drag(Vector2 delta)
     {
-        if (IsSelected){
-            parentGuiNode.Drag(delta);
-        }
-        rect.position += delta;
+        parentGuiNode.Drag(delta);
     }
 
     public void DragWithoutParent(Vector2 delta){
@@ -144,6 +141,12 @@ public class GuiNodeTimer : GuiNode
         float timerVal = defaultTimerVal;
         float.TryParse(GUILayout.TextField(nodeTimer.GetTimerVal().ToString(), 50), out timerVal);
         nodeTimer.SetTimerVal(timerVal);
+    }
+    public void SetEditorActions(
+        Action<GuiNode> UpdatePanelDetails,
+        Action<GuiNodeTimer> OnRemoveTimer){
+            this.UpdatePanelDetails = UpdatePanelDetails;
+            this.OnRemoveTimer = OnRemoveTimer;
     }
 
 

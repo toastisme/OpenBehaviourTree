@@ -62,11 +62,7 @@ public class GuiDecorator : CallableGuiNode
 
     public override void Drag(Vector2 delta)
     {
-        if (IsSelected){
-            parentGuiNode.Drag(delta);
-        }
-        rect.position += delta;
-        callNumber.Drag(delta);
+        parentGuiNode.Drag(delta);
     }
 
     public void DragWithoutParent(Vector2 delta){

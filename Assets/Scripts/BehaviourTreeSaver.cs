@@ -24,7 +24,9 @@ public class BehaviourTreeSaver
             type = (int)node.GetNodeType(),
             taskName = node.TaskName,
             childCount = node.ChildNodes.Count,
-            invertCondition = invertCondition
+            invertCondition = invertCondition,
+            cooldown = node.HasCooldown() ? node.GetCooldown().GetTimerVal() : -1,
+            timeout = node.HasTimeout() ? node.GetTimeout().GetTimerVal() : -1,
         }
         ;
         serializedNodes.Add (serializedNode);

@@ -142,6 +142,9 @@ namespace Behaviour{
         }
 
         public void UpdatePanelDetails(GuiNode node){
+            if (selectedNode != null && selectedNode != node){
+                selectedNode.SetSelected(false);
+            }
             selectedNode = node;
         }
 
@@ -957,17 +960,31 @@ namespace Behaviour{
             else {
                 // Assumed to be CompositeNode -> now need to make connections
                 CompositeGuiNode cgn = (CompositeGuiNode)guiNode;
+
+                // Timers
+                if (node.HasCooldown()){
+                    cgn.AddTimer(TimerType.Cooldown, node.GetCooldown().GetTimerVal());
+                }
+                if (node.HasTimeout()){
+                    cgn.AddTimer(TimerType.Timeout, node.GetTimeout().GetTimerVal());
+                }
+
+                // Decorators
                 if (decorators != null){
                     for(int i=decorators.Count-1; i>=0; i--){
                         cgn.AddDecorator(decorators[i]);
                     }
                 }
+
+                // Editor specific functions
                 cgn.SetEditorActions(
                     UpdatePanelDetails:UpdatePanelDetails,
                     OnRemoveNode:OnClickRemoveNode,
                     OnClickChildPoint:OnClickChildPoint,
                     OnClickParentPoint:OnClickParentPoint
                 );
+
+                // Connections
                 if (parentGuiNodeIdx != -1){
                     CreateConnection(
                         parentPoint:cgn.ParentPoint, 
@@ -976,6 +993,8 @@ namespace Behaviour{
                         updateRelationships:false
                         );
                 }
+
+
                 guiNodes.Add(cgn);
                 parentGuiNodeIdx=guiNodes.Count-1;
                 idx++;

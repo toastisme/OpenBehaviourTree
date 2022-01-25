@@ -156,8 +156,16 @@ public abstract class Node
         this.nodeTimeout = nodeTimeout;
     }
 
+    public void AddTimeout(float timerVal){
+        this.nodeTimeout = new NodeTimer(timerVal:timerVal);
+    }
+
     public void AddCooldown(NodeTimer nodeCooldown){
         this.nodeCooldown = nodeCooldown;
+    }
+
+    public void AddCooldown(float timerVal){
+        this.nodeCooldown = new NodeTimer(timerVal:timerVal);
     }
 
     public void RemoveTimeout(){
@@ -211,6 +219,22 @@ public abstract class Node
             return nodeTimeout.IsActive();
         }
         return false;
+    }
+
+    public bool HasTimeout(){
+        return (nodeTimeout != null);
+    }
+
+    public bool HasCooldown(){
+        return (nodeCooldown != null);
+    }
+
+    public NodeTimer GetTimeout(){
+        return nodeTimeout;
+    }
+
+    public NodeTimer GetCooldown(){
+        return nodeCooldown;
     }
 
 

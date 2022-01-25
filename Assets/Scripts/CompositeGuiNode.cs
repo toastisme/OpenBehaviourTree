@@ -88,6 +88,17 @@ public class CompositeGuiNode : CallableGuiNode
                 OnRemoveDecorator:OnClickRemoveDecorator
             );
         }
+
+        guiCooldown?.SetEditorActions(
+            UpdatePanelDetails:UpdatePanelDetails,
+            OnRemoveTimer:OnRemoveTimer
+        );
+
+        guiTimeout?.SetEditorActions(
+            UpdatePanelDetails:UpdatePanelDetails,
+            OnRemoveTimer:OnRemoveTimer
+        );
+
     }
 
     protected override void ApplyDerivedSettings(){
@@ -119,23 +130,17 @@ public class CompositeGuiNode : CallableGuiNode
     public override void Drag(Vector2 delta){
         base.Drag(delta);
         taskRect.position += delta;
-        DragUnselectedDecorators(delta);
+        DragDecorators(delta);
     }
 
-    void DragUnselectedDecorators(Vector2 delta){
+    void DragDecorators(Vector2 delta){
         if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
-                if (!decorator.IsSelected){
-                    decorator.Drag(delta);
-                }
+                decorator.DragWithoutParent(delta);
             }
         }
-        if (guiTimeout != null && !guiTimeout.IsSelected){
-            guiTimeout.Drag(delta);
-        }
-        if (guiCooldown != null && !guiCooldown.IsSelected){
-            guiCooldown.Drag(delta);
-        }
+        guiTimeout?.DragWithoutParent(delta);
+        guiCooldown?.DragWithoutParent(delta);
     }
 
     public virtual void DragWithChildren(Vector2 delta){
@@ -514,8 +519,11 @@ public class CompositeGuiNode : CallableGuiNode
         this.ParentConnection = connection;       
     }
 
-    public void AddTimer(TimerType timerType){
+    public void AddTimer(TimerType timerType, float timerVal=-1){
+
         Vector2 pos;
+        if (timerVal == -1){timerVal = NodeProperties.DefaultTimerVal();}
+
         switch(timerType){
             case TimerType.Timeout:
                 if (guiCooldown != null){
@@ -529,7 +537,7 @@ public class CompositeGuiNode : CallableGuiNode
                     );
                 }
                 NodeTimer timeout = new NodeTimer(
-                    timerVal:NodeProperties.DefaultTimerVal());
+                    timerVal:timerVal);
                 this.guiTimeout = new GuiNodeTimer(
                     nodeTimer:timeout,
                     displayTask:"Timeout",
@@ -548,10 +556,13 @@ public class CompositeGuiNode : CallableGuiNode
                     guiTimeout.DragWithoutParent(new Vector2(0, taskRectSize[1]));
                 }                   
                 else{
-                    pos = NodeProperties.InitDecoratorPos();
+                    pos = new Vector2(
+                        rect.x + initDecoratorPos[0],
+                        rect.y + initDecoratorPos[1]
+                    );
                 }
                 NodeTimer cooldown = new NodeTimer(
-                    timerVal:NodeProperties.DefaultTimerVal());
+                    timerVal:timerVal);
                 this.guiCooldown = new GuiNodeTimer(
                     nodeTimer:cooldown,
                     displayTask:"Cooldown",
