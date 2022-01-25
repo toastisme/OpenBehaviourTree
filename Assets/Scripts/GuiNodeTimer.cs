@@ -133,15 +133,13 @@ public class GuiNodeTimer : GuiNode
     {
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(rect, "\n" + DisplayName + "\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)", activeStyle);
+        GUI.Box(rect, "\n\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)", activeStyle);
         GUI.backgroundColor = currentColor;
     }
 
     public override void DrawDetails()
     {
         GUILayout.Label("Task: " + DisplayTask);
-        GUILayout.Label("Name");
-        DisplayName = GUILayout.TextField(DisplayName, 50);
         GUILayout.Label("Value (sec)");
         float timerVal = defaultTimerVal;
         float.TryParse(GUILayout.TextField(nodeTimer.GetTimerVal().ToString(), 50), out timerVal);
