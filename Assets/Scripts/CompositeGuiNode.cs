@@ -540,6 +540,7 @@ public class CompositeGuiNode : CallableGuiNode
                     blackboard:ref blackboard,
                     parentGuiNode:this
                 );
+                BtNode.AddTimeout(nodeTimeout:timeout);
                 break;
             case TimerType.Cooldown:
                 if (guiTimeout != null){
@@ -561,6 +562,7 @@ public class CompositeGuiNode : CallableGuiNode
                     blackboard:ref blackboard,
                     parentGuiNode:this
                 );
+                BtNode.AddCooldown(nodeCooldown:cooldown);
                 break;
         }
                 
@@ -584,6 +586,7 @@ public class CompositeGuiNode : CallableGuiNode
             taskRect.y -= taskRectSize[1];
             callNumber.Drag(new Vector2(0, -taskRectSize[1]));
             this.guiTimeout = null;
+            BtNode.RemoveTimeout();
             
         }
         else if (guiNodeTimer == this.guiCooldown){
@@ -597,6 +600,7 @@ public class CompositeGuiNode : CallableGuiNode
             taskRect.y -= taskRectSize[1];
             callNumber.Drag(new Vector2(0, -taskRectSize[1]));
             this.guiCooldown = null;
+            BtNode.RemoveCooldown();
         }
     }
 }
