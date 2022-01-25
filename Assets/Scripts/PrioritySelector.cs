@@ -1,3 +1,4 @@
+using UnityEngine;
 namespace Behaviour{
 public class PrioritySelector : Node
 {    
@@ -39,12 +40,16 @@ public class PrioritySelector : Node
                     StartCooldown();
                     return CurrentState;
                 case NodeState.Running:
-                    if (!TimeoutExceeded()){
+                    if (!HasTimeout() || (TimeoutActive() && !TimeoutExceeded())){
                         CurrentState = NodeState.Running;
                         ResetOtherStates(node);
                     }
                     else{
                         CurrentState = NodeState.Failed;
+                        ResetChildStates();
+                        if (!TimeoutActive() && TimeoutExceeded()){
+                            ResetTimeout();
+                        }
                     }
                     return CurrentState;
                 default:

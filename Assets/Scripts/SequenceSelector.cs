@@ -48,14 +48,17 @@ public class SequenceSelector : Node
             }
         } 
         if (anyChildRunning){
-            if (!TimeoutExceeded()){
-                CurrentState = NodeState.Running;                
-            }
-            else{
-                ResetChildStates();
+            if (TimeoutExceeded()){
                 CurrentState = NodeState.Failed;
+                ResetChildStates();
                 ResetTimeout();
             }
+            else{
+                CurrentState = NodeState.Running;                
+            }
+        }
+        else{
+            CurrentState = NodeState.Succeeded;
         }
 
         if (!TimeoutActive() && TimeoutExceeded()){
