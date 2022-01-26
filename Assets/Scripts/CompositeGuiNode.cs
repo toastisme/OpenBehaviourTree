@@ -519,6 +519,10 @@ public class CompositeGuiNode : CallableGuiNode
         this.ParentConnection = connection;       
     }
 
+    public bool HasParentConnection(){
+        return this.ParentConnection != null;
+    }
+
     public void AddTimer(TimerType timerType, float timerVal=-1){
 
         Vector2 pos;

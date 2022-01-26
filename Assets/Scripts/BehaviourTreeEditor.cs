@@ -617,6 +617,10 @@ namespace Behaviour{
             {
                 if (selectedParentPoint.node != selectedChildPoint.node)
                 {
+                    if (selectedParentPoint.node.HasParentConnection()){
+                        connections.Remove(selectedParentPoint.node.ParentConnection);
+                        selectedParentPoint.node.RemoveParentConnection();
+                    }
                     CreateConnection();
                     ClearConnectionSelection();
                 }
