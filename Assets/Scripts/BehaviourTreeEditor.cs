@@ -113,16 +113,16 @@ namespace Behaviour{
                     if (MousePosOnGrid(Event.current.mousePosition)){
                         ProcessNodeEvents(Event.current);
                     }
+                    DrawNodes();
                     ProcessEvents(Event.current);
                 }
 
                 else if (mode == BehaviourTreeEditorMode.Runtime){
+                    DrawNodes();
                     ProcessEventsRuntime(Event.current);
                 }
 
-                DrawNodes();
                 if (GUI.changed) {
-                    Debug.Log("Gui changed");
                     Repaint();
                     UpdateCallNumbers(guiNodes[0], 1);
                 }
