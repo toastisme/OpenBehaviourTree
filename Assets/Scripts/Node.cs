@@ -30,7 +30,20 @@ public struct SerializableNode{
 }
 public abstract class Node
 {
-    public NodeState CurrentState {get; protected set;}
+
+    public delegate void OnStateChangeDelegate();
+    public event OnStateChangeDelegate OnStateChange;
+
+    NodeState _currentState;
+    public NodeState CurrentState {
+        get{return _currentState;}
+        protected set{
+            if (_currentState != value && OnStateChange != null){
+                OnStateChange();
+            }
+            _currentState = value;
+        }
+    }
     /**
         * If a decision node (SequenceSelector, ProbabilitySelector, PrioritySelector), 
         * TaskName is the node type.
@@ -238,7 +251,6 @@ public abstract class Node
     public NodeTimer GetCooldown(){
         return nodeCooldown;
     }
-
 
 }
 }

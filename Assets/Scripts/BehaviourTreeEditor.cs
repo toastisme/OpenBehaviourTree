@@ -122,6 +122,7 @@ namespace Behaviour{
 
                 DrawNodes();
                 if (GUI.changed) {
+                    Debug.Log("Gui changed");
                     Repaint();
                     UpdateCallNumbers(guiNodes[0], 1);
                 }
@@ -654,6 +655,7 @@ namespace Behaviour{
             }
             // Remove corresponding node on the BehaviourTree
             node.BtNode.Unlink();
+            node.BtNode.OnStateChange -= NodeStateChangeHandler;
 
             // Remove the GuiNode
             guiNodes.Remove(node);
@@ -910,6 +912,10 @@ namespace Behaviour{
             AssetDatabase.SaveAssets();
         }
 
+        void NodeStateChangeHandler(){
+            Repaint();
+        }
+
         void AddNodeAndConnections(
             Node node, 
             ref int idx,
@@ -994,7 +1000,7 @@ namespace Behaviour{
                         );
                 }
 
-
+                cgn.BtNode.OnStateChange += NodeStateChangeHandler;
                 guiNodes.Add(cgn);
                 parentGuiNodeIdx=guiNodes.Count-1;
                 idx++;
