@@ -24,9 +24,6 @@ public class PrioritySelector : Node
             return CurrentState;
         }
 
-        if (!TimeoutActive() && !TimeoutExceeded()){
-            StartTimeout();
-        }
 
         foreach (Node node in ChildNodes){
             switch(node.Evaluate()){
@@ -40,13 +37,14 @@ public class PrioritySelector : Node
                     StartCooldown();
                     return CurrentState;
                 case NodeState.Running:
+                    if (HasTimeout() && !TimeoutActive() && !TimeoutExceeded()){
+                        StartTimeout();
+                    }
                     if (!HasTimeout() || (TimeoutActive() && !TimeoutExceeded())){
                         CurrentState = NodeState.Running;
-                        ResetOtherStates(node);
                     }
                     else{
                         CurrentState = NodeState.Failed;
-                        ResetChildStates();
                         if (!TimeoutActive() && TimeoutExceeded()){
                             ResetTimeout();
                         }

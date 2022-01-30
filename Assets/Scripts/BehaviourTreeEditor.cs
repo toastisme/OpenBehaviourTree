@@ -973,10 +973,10 @@ namespace Behaviour{
 
                 // Timers
                 if (node.HasCooldown()){
-                    cgn.AddTimer(TimerType.Cooldown, node.GetCooldown().GetTimerVal());
+                    cgn.AddExistingTimer(TimerType.Cooldown);
                 }
                 if (node.HasTimeout()){
-                    cgn.AddTimer(TimerType.Timeout, node.GetTimeout().GetTimerVal());
+                    cgn.AddExistingTimer(TimerType.Timeout);
                 }
 
                 // Decorators

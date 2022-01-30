@@ -13,8 +13,8 @@ public class CompositeGuiNode : CallableGuiNode
      */
      
     public List<GuiDecorator> Decorators{get; set;}
-    GuiNodeTimer guiTimeout;
-    GuiNodeTimer guiCooldown;
+    public GuiNodeTimer GuiTimeout{get; set;}
+    public GuiNodeTimer GuiCooldown{get; set;}
 
     Action<CompositeGuiNode> OnRemoveNode;
 
@@ -89,12 +89,12 @@ public class CompositeGuiNode : CallableGuiNode
             );
         }
 
-        guiCooldown?.SetEditorActions(
+        GuiCooldown?.SetEditorActions(
             UpdatePanelDetails:UpdatePanelDetails,
             OnRemoveTimer:OnRemoveTimer
         );
 
-        guiTimeout?.SetEditorActions(
+        GuiTimeout?.SetEditorActions(
             UpdatePanelDetails:UpdatePanelDetails,
             OnRemoveTimer:OnRemoveTimer
         );
@@ -139,8 +139,8 @@ public class CompositeGuiNode : CallableGuiNode
                 decorator.DragWithoutParent(delta);
             }
         }
-        guiTimeout?.DragWithoutParent(delta);
-        guiCooldown?.DragWithoutParent(delta);
+        GuiTimeout?.DragWithoutParent(delta);
+        GuiCooldown?.DragWithoutParent(delta);
     }
 
     public virtual void DragWithChildren(Vector2 delta){
@@ -156,14 +156,18 @@ public class CompositeGuiNode : CallableGuiNode
         Color currentColor = GUI.backgroundColor;
         ChildPoint?.Draw();
         ParentPoint?.Draw();
+        GUI.color = NodeProperties.DefaultTint();
         if (IsRunning()){
             GUI.color = NodeProperties.RunningTint();
+        }
+        else if(HasFailed()){
+            GUI.color = NodeProperties.FailedTint();
         }
         DrawSelf();
         callNumber.Draw();
         DrawDecorators();
-        guiTimeout?.Draw();
-        guiCooldown?.Draw();
+        GuiTimeout?.Draw();
+        GuiCooldown?.Draw();
         GUI.backgroundColor = currentColor;
         GUI.color = NodeProperties.DefaultTint();
     }
@@ -219,15 +223,15 @@ public class CompositeGuiNode : CallableGuiNode
         }
         if (!decoratorSelected){
             bool changedFromTimers = false;
-            if (guiTimeout != null){
-                changedFromTimers = guiTimeout.ProcessEvents(e);
-                if (!timerSelected && guiTimeout.IsSelected){
+            if (GuiTimeout != null){
+                changedFromTimers = GuiTimeout.ProcessEvents(e);
+                if (!timerSelected && GuiTimeout.IsSelected){
                     timerSelected = true;
                 }
             }
-            if (!timerSelected && guiCooldown != null){
-                changedFromTimers = guiCooldown.ProcessEvents(e);
-                if (!timerSelected && guiCooldown.IsSelected){
+            if (!timerSelected && GuiCooldown != null){
+                changedFromTimers = GuiCooldown.ProcessEvents(e);
+                if (!timerSelected && GuiCooldown.IsSelected){
                     timerSelected = true;
                 }
             }
@@ -353,10 +357,10 @@ public class CompositeGuiNode : CallableGuiNode
             rect.x + initDecoratorPos[0],
             rect.y + initDecoratorPos[1]
         );
-        if (guiTimeout != null){
+        if (GuiTimeout != null){
             pos += new Vector2(0, taskRectSize[1]); 
         }
-        if (guiCooldown != null){
+        if (GuiCooldown != null){
             pos += new Vector2(0, taskRectSize[1]); 
         }
         // Add gui decorator
@@ -428,13 +432,13 @@ public class CompositeGuiNode : CallableGuiNode
                     }
                 }
             }
-            if (guiTimeout == null){
+            if (GuiTimeout == null){
                 genericMenu.AddItem(new GUIContent("Add timeout"), false, () => AddTimer(TimerType.Timeout));
             }
             else{
                 genericMenu.AddDisabledItem(new GUIContent("Add timeout"));
             }
-            if (guiCooldown == null){
+            if (GuiCooldown == null){
                 genericMenu.AddItem(new GUIContent("Add cooldown"), false, () => AddTimer(TimerType.Cooldown));
             }
             else{
@@ -523,6 +527,64 @@ public class CompositeGuiNode : CallableGuiNode
         return this.ParentConnection != null;
     }
 
+    public void AddExistingTimer(TimerType timerType){
+        Vector2 pos;
+
+        switch(timerType){
+            case TimerType.Timeout:
+                if (!BtNode.HasTimeout()){
+                    throw new Exception("Trying to add timeout that does not exist.");
+                }
+                if (GuiCooldown != null){
+                    pos = GuiCooldown.GetPos();
+                    GuiCooldown.DragWithoutParent(new Vector2(0, taskRectSize[1]));
+                }                   
+                else{
+                    pos = new Vector2(
+                        rect.x + initDecoratorPos[0],
+                        rect.y + initDecoratorPos[1]
+                    );
+                }
+                this.GuiTimeout = new GuiNodeTimer(
+                    nodeTimer:BtNode.GetTimeout(),
+                    displayTask:"Timeout",
+                    displayName:"",
+                    pos:pos,
+                    UpdatePanelDetails:UpdatePanelDetails,
+                    OnRemoveTimer:OnRemoveTimer,
+                    blackboard:ref blackboard,
+                    parentGuiNode:this
+                );
+                break;
+            case TimerType.Cooldown:
+                if (!BtNode.HasCooldown()){
+                    throw new Exception("Trying to add cooldown that does not exist.");
+                }
+                if (GuiTimeout != null){
+                    pos = GuiTimeout.GetPos();
+                    GuiTimeout.DragWithoutParent(new Vector2(0, taskRectSize[1]));
+                }                   
+                else{
+                    pos = new Vector2(
+                        rect.x + initDecoratorPos[0],
+                        rect.y + initDecoratorPos[1]
+                    );
+                }
+                this.GuiCooldown = new GuiNodeTimer(
+                    nodeTimer:BtNode.GetCooldown(),
+                    displayTask:"Cooldown",
+                    displayName:"",
+                    pos:pos,
+                    UpdatePanelDetails:UpdatePanelDetails,
+                    OnRemoveTimer:OnRemoveTimer,
+                    blackboard:ref blackboard,
+                    parentGuiNode:this
+                );
+                break;
+        }
+
+    }
+
     public void AddTimer(TimerType timerType, float timerVal=-1){
 
         Vector2 pos;
@@ -530,9 +592,9 @@ public class CompositeGuiNode : CallableGuiNode
 
         switch(timerType){
             case TimerType.Timeout:
-                if (guiCooldown != null){
-                    pos = guiCooldown.GetPos();
-                    guiCooldown.DragWithoutParent(new Vector2(0, taskRectSize[1]));
+                if (GuiCooldown != null){
+                    pos = GuiCooldown.GetPos();
+                    GuiCooldown.DragWithoutParent(new Vector2(0, taskRectSize[1]));
                 }                   
                 else{
                     pos = new Vector2(
@@ -542,7 +604,7 @@ public class CompositeGuiNode : CallableGuiNode
                 }
                 NodeTimer timeout = new NodeTimer(
                     timerVal:timerVal);
-                this.guiTimeout = new GuiNodeTimer(
+                this.GuiTimeout = new GuiNodeTimer(
                     nodeTimer:timeout,
                     displayTask:"Timeout",
                     displayName:"",
@@ -555,9 +617,9 @@ public class CompositeGuiNode : CallableGuiNode
                 BtNode.AddTimeout(nodeTimeout:timeout);
                 break;
             case TimerType.Cooldown:
-                if (guiTimeout != null){
-                    pos = guiTimeout.GetPos();
-                    guiTimeout.DragWithoutParent(new Vector2(0, taskRectSize[1]));
+                if (GuiTimeout != null){
+                    pos = GuiTimeout.GetPos();
+                    GuiTimeout.DragWithoutParent(new Vector2(0, taskRectSize[1]));
                 }                   
                 else{
                     pos = new Vector2(
@@ -567,7 +629,7 @@ public class CompositeGuiNode : CallableGuiNode
                 }
                 NodeTimer cooldown = new NodeTimer(
                     timerVal:timerVal);
-                this.guiCooldown = new GuiNodeTimer(
+                this.GuiCooldown = new GuiNodeTimer(
                     nodeTimer:cooldown,
                     displayTask:"Cooldown",
                     displayName:"",
@@ -590,31 +652,31 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     public void OnRemoveTimer(GuiNodeTimer guiNodeTimer){
-        if (guiNodeTimer == this.guiTimeout){
-            if (this.guiCooldown != null){
-                if (this.guiCooldown.GetPos().y > guiNodeTimer.GetPos().y){
-                    this.guiCooldown.DragWithoutParent(new Vector2(0, -taskRectSize[1]));                   
+        if (guiNodeTimer == this.GuiTimeout){
+            if (this.GuiCooldown != null){
+                if (this.GuiCooldown.GetPos().y > guiNodeTimer.GetPos().y){
+                    this.GuiCooldown.DragWithoutParent(new Vector2(0, -taskRectSize[1]));                   
                 }
             }
             ShiftDecoratorsUp(iterateCallNumbers:false);
             rect.height -= taskRectSize[1];
             taskRect.y -= taskRectSize[1];
             callNumber.Drag(new Vector2(0, -taskRectSize[1]));
-            this.guiTimeout = null;
+            this.GuiTimeout = null;
             BtNode.RemoveTimeout();
             
         }
-        else if (guiNodeTimer == this.guiCooldown){
-            if (this.guiTimeout != null){
-                if (this.guiTimeout.GetPos().y > guiNodeTimer.GetPos().y){
-                    this.guiTimeout.DragWithoutParent(new Vector2(0, -taskRectSize[1]));                   
+        else if (guiNodeTimer == this.GuiCooldown){
+            if (this.GuiTimeout != null){
+                if (this.GuiTimeout.GetPos().y > guiNodeTimer.GetPos().y){
+                    this.GuiTimeout.DragWithoutParent(new Vector2(0, -taskRectSize[1]));                   
                 }
             }
             ShiftDecoratorsUp(iterateCallNumbers:false);
             rect.height -= taskRectSize[1];
             taskRect.y -= taskRectSize[1];
             callNumber.Drag(new Vector2(0, -taskRectSize[1]));
-            this.guiCooldown = null;
+            this.GuiCooldown = null;
             BtNode.RemoveCooldown();
         }
     }

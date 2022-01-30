@@ -66,7 +66,7 @@ public class ActionNode : Node
         */
 
         if (CooldownActive()){
-            if (CurrentState != NodeState.Idle || executeTask.Running){
+            if (executeTask.Running){
                 ResetTask();
             }
             CurrentState = NodeState.Failed;
@@ -75,6 +75,8 @@ public class ActionNode : Node
 
         if (CurrentState == NodeState.Idle && !executeTask.Running){
             executeTask.Start();
+            ResetTimeout();
+            StartTimeout();
         }
         if (TimeoutExceeded()){
             ResetTask();

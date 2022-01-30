@@ -74,6 +74,10 @@ public abstract class GuiNode : IGuiNode
         return (BtNode.CurrentState == NodeState.Running);
     }
 
+    public bool HasFailed(){
+        return (BtNode.CurrentState == NodeState.Failed);
+    }
+
     public virtual void Draw(){}
 
     public virtual bool ProcessEvents(Event e){return false;}

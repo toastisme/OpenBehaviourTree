@@ -30,7 +30,9 @@ public class NodeTimer
     }
 
     public void StopTimer(){
-        this.monoBehaviour.StopCoroutine(timerFunc);
+        if (timerFunc != null){
+            this.monoBehaviour.StopCoroutine(timerFunc);
+        }
     }
 
     public void ResetTimer(){

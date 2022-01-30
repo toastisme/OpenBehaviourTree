@@ -23,7 +23,7 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         /**
         * Loads all actionNode tasks and runs their setup (getting required gameobject components etc.)
         */
-        LoadActionNodes(monoBehaviour, rootNode);
+        LoadRuntimeProperties(monoBehaviour, rootNode);
     }
 
     public void LoadTree(
@@ -35,14 +35,14 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         * and updates any nodes that use a blackboard to use blackboard
         */
 
-        LoadActionNodesAndUpdateBlackboard(
+        LoadRuntimeProperties(
             monoBehaviour:monoBehaviour,
             node:rootNode,
             blackboard:ref blackboard
         );
         
     }
-    public void LoadActionNodesAndUpdateBlackboard(
+    public void LoadRuntimeProperties(
         MonoBehaviour monoBehaviour,
         Node node,
         ref BehaviourTreeBlackboard blackboard
@@ -50,20 +50,24 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         if (Node.RequiresBlackboard(node)){
             node.UpdateBlackboard(ref blackboard);
         }
+
+        node.nodeTimeout?.LoadTask(monoBehaviour);
+        node.nodeCooldown?.LoadTask(monoBehaviour);
+
         if (node is ActionNode actionNode){
             actionNode.LoadTask(monoBehaviour);
         }
         else{
             if (node.ChildNodes != null){
                 foreach(Node childNode in node.ChildNodes){
-                    LoadActionNodesAndUpdateBlackboard(monoBehaviour, childNode, ref blackboard);
+                    LoadRuntimeProperties(monoBehaviour, childNode, ref blackboard);
                 }
             }
         }
 
     }
 
-    public void LoadActionNodes(
+    public void LoadRuntimeProperties(
         MonoBehaviour monoBehaviour,
         Node node
     )
@@ -74,7 +78,7 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         else{
             if (node.ChildNodes != null){
                 foreach(Node childNode in node.ChildNodes){
-                    LoadActionNodes(monoBehaviour, childNode);
+                    LoadRuntimeProperties(monoBehaviour, childNode);
                 }
             }
         }
