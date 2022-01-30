@@ -582,6 +582,12 @@ public class CompositeGuiNode : CallableGuiNode
                 );
                 break;
         }
+        // Update params to make space for timer
+        ShiftDecoratorsDown(iterateCallNumbers:false);
+        rect.height += taskRectSize[1];
+        taskRect.y += taskRectSize[1];
+        callNumber.Drag(new Vector2(0, taskRectSize[1]));
+        GUI.changed = true;
 
     }
 
