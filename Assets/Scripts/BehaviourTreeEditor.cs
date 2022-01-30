@@ -912,8 +912,10 @@ namespace Behaviour{
         }
 
         void SaveTree(){
+            EditorUtility.SetDirty(bt);
             EditorUtility.SetDirty(bt.blackboard);
             AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 
         void NodeStateChangeHandler(){

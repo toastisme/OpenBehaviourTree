@@ -20,6 +20,7 @@ namespace Behaviour{
                 BehaviourTreeEditor window = EditorWindow.GetWindow(typeof(BehaviourTreeEditor)) as BehaviourTreeEditor;
                 window.SetScriptableObject(scriptableObject);
                 window.Show();
+                AssetDatabase.Refresh();
                 return true;
             }
             return false; //let unity open it.
