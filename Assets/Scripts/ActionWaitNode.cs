@@ -15,7 +15,7 @@ public class ActionWaitNode : ActionNode
 
     public Wait btWaitTask{get;private set;} // The task class
     public float WaitTime{get; set;}
-    float defaultWaitTime;
+    public float RandomDeviation{get; set;}
     Task executeTask; // The actual execute coroutine, within a task wrapper
 
     public ActionWaitNode(
@@ -27,13 +27,11 @@ public class ActionWaitNode : ActionNode
         blackboard: ref blackboard,
         parentNode:parentNode
     ){
-        defaultWaitTime = NodeProperties.DefaultWaitTime();
     }
 
     public override void LoadTask(MonoBehaviour monoBehaviour){
 
-
-        btWaitTask = new Wait(WaitTime);
+        btWaitTask = new Wait(WaitTime, RandomDeviation);
         btWaitTask.SetBlackboard(blackboard:ref blackboard);
         btWaitTask.Setup(monoBehaviour);
         ResetTask();

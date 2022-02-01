@@ -38,20 +38,29 @@ public class GuiActionWaitNode : GuiActionNode
     {
         base.DrawDetails();
         float waitTime = actionWaitNode.WaitTime;
-        bool success = float.TryParse(GUILayout.TextField(actionWaitNode.WaitTime.ToString(), 50), out waitTime);
+
+        GUILayout.Label("Wait time");
+        bool success = float.TryParse(GUILayout.TextField(actionWaitNode.WaitTime.ToString(), 5), out waitTime);
         if (success){
             actionWaitNode.WaitTime = waitTime;
         }
         
+        float randomDeviation = actionWaitNode.RandomDeviation;
+        GUILayout.Label("Random deviation");
+        success = float.TryParse(GUILayout.TextField(actionWaitNode.RandomDeviation.ToString(), 5), out randomDeviation);
+        if (success){
+            actionWaitNode.RandomDeviation = randomDeviation;
+        }
     }
     protected override void DrawSelf()
     {
         GUI.backgroundColor = color;
         GUI.Box(rect, "", activeStyle);
-        GUI.backgroundColor = taskRectColor; 
-        GUI.Box(taskRect, 
-        "\n" + DisplayName + "\n" + DisplayTask + " (" + actionWaitNode.WaitTime + " sec)", 
-        activeStyle);
+        GUI.backgroundColor = taskRectColor;
+        string s =  "\n" + DisplayName + "\n" + DisplayTask;
+        s += " (" + actionWaitNode.WaitTime.ToString() + " +/- ";
+        s += actionWaitNode.RandomDeviation.ToString() + " sec)";
+        GUI.Box(taskRect, s, activeStyle);
     }
 
 }
