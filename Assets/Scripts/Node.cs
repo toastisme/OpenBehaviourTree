@@ -16,7 +16,8 @@ public enum NodeType{
     ProbabilityWeight,
     PrioritySelector,
     Action,
-    Decorator
+    Decorator,
+    ActionWait
 }
 
 [Serializable]
@@ -172,7 +173,7 @@ public abstract class Node
         this.nodeTimeout = nodeTimeout;
     }
 
-    public void AddTimeout(float timerVal){
+    public virtual void AddTimeout(float timerVal){
         this.nodeTimeout = new NodeTimer(timerVal:timerVal);
     }
 
@@ -180,7 +181,7 @@ public abstract class Node
         this.nodeCooldown = nodeCooldown;
     }
 
-    public void AddCooldown(float timerVal){
+    public virtual void AddCooldown(float timerVal){
         this.nodeCooldown = new NodeTimer(timerVal:timerVal);
     }
 

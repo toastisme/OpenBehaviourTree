@@ -42,6 +42,11 @@ public class BehaviourTreeLoader
                         taskName:taskName,
                         blackboard:ref blackboard
                 );
+            case NodeType.ActionWait:
+                return new ActionWaitNode(
+                        taskName:taskName,
+                        blackboard:ref blackboard
+                );
             default:
                 throw new System.Exception("Unknown node type");
         }
@@ -121,6 +126,19 @@ public class BehaviourTreeLoader
                 );
             case NodeType.Action:
                 return new GuiActionNode(
+                    node:node,
+                    displayTask:displayTask,
+                    displayName:displayName,
+                    pos:pos,
+                    parentConnection:null,
+                    UpdatePanelDetails:null,
+                    OnRemoveNode:null,
+                    OnClickChildPoint:null,
+                    OnClickParentPoint:null,
+                    blackboard:ref blackboard
+                );
+            case NodeType.ActionWait:
+                return new GuiActionWaitNode(
                     node:node,
                     displayTask:displayTask,
                     displayName:displayName,

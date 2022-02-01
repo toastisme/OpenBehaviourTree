@@ -20,13 +20,25 @@ public class BehaviourTreeSaver
             invertCondition = decorator.invertCondition;
         }
 
+        float timeout = -1f;
+        float cooldown = -1;
+        if (node.GetNodeType() == NodeType.ActionWait){
+            ActionWaitNode awn = (ActionWaitNode)node;
+            timeout = awn.WaitTime; 
+            cooldown = awn.RandomDeviation;
+        }
+        else{
+            cooldown = node.HasCooldown() ? node.GetCooldown().GetTimerVal() : -1;
+            timeout = node.HasTimeout() ? node.GetTimeout().GetTimerVal() : -1;
+        }
+
         var serializedNode = new SerializableNode () {
             type = (int)node.GetNodeType(),
             taskName = node.TaskName,
             childCount = node.ChildNodes.Count,
             invertCondition = invertCondition,
-            cooldown = node.HasCooldown() ? node.GetCooldown().GetTimerVal() : -1,
-            timeout = node.HasTimeout() ? node.GetTimeout().GetTimerVal() : -1,
+            cooldown = cooldown,
+            timeout = timeout
         }
         ;
         serializedNodes.Add (serializedNode);

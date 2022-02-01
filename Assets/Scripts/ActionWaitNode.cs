@@ -86,9 +86,15 @@ public class ActionWaitNode : ActionNode
         CurrentState = NodeState.Idle;
     }
 
-    public override NodeType GetNodeType(){return NodeType.Action;}
+    public override NodeType GetNodeType(){return NodeType.ActionWait;}
     public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
         this.blackboard = blackboard;
+    }
+    public override void AddCooldown(float timerVal){
+        this.RandomDeviation = timerVal; 
+    }
+    public override void AddTimeout(float timerVal){
+        this.WaitTime = timerVal; 
     }
 }
 }
