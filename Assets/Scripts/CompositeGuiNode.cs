@@ -491,7 +491,7 @@ public class CompositeGuiNode : CallableGuiNode
         BtNode.ReplaceChildNodes(reorderedChildNodes);
     }
 
-    private bool DecoratorKeyActive(string boolName){
+    protected bool DecoratorKeyActive(string boolName){
         if (Decorators != null){
             for (int i=0; i < Decorators.Count; i++){
                 if (Decorators[i].DisplayTask == boolName){

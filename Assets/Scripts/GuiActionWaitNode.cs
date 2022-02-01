@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using System;
 
 namespace Behaviour{
@@ -61,6 +62,30 @@ public class GuiActionWaitNode : GuiActionNode
         s += " (" + actionWaitNode.WaitTime.ToString() + " +/- ";
         s += actionWaitNode.RandomDeviation.ToString() + " sec)";
         GUI.Box(taskRect, s, activeStyle);
+    }
+
+    protected override void ProcessContextMenu()
+    {
+        GenericMenu genericMenu = new GenericMenu();
+        Dictionary<string, bool> boolKeys = blackboard.GetBoolKeys();
+        if (boolKeys == null || boolKeys.Count == 0){
+            genericMenu.AddDisabledItem(new GUIContent("Add blackboard bool keys to use as decorators"));
+        }
+        else{            
+            foreach(string boolName in blackboard.GetBoolKeys().Keys){
+                if (!DecoratorKeyActive(boolName)){
+                    genericMenu.AddItem(
+                        new GUIContent("Add Decorator/" + boolName), 
+                        false, 
+                        () => OnClickAddDecorator(boolName));
+                }
+                else{
+                    genericMenu.AddDisabledItem(new GUIContent("Add Decorator/" + boolName));
+                }
+            }
+        }
+        genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
+        genericMenu.ShowAsContext();
     }
 
 }
