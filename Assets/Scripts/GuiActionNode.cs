@@ -7,7 +7,7 @@ using System;
 namespace Behaviour{
 public class GuiActionNode : CompositeGuiNode
 {
-    ActionNode actionNode;
+    public ActionNode actionNode{get; private set;}
     public GuiActionNode(
         Node node,
         string displayTask,

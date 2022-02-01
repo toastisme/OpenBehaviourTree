@@ -11,6 +11,7 @@ namespace Behaviour{
     {
 
         public static float DefaultTimerVal(){return 5f;}
+        public static float DefaultWaitTime(){return 5f;}
 
         // Size
         public static Vector2 GuiNodeSize(){return new Vector2(200, 100);}

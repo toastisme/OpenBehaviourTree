@@ -557,26 +557,50 @@ namespace Behaviour{
                     );
                     break;
                 case NodeType.Action:
-                    ActionNode actionNode = new ActionNode(
-                        taskName:displayTask,
-                        blackboard:ref bt.blackboard,
-                        parentNode:parentNode
-                    );
-                    parentNode.AddChildNode(actionNode);
-                    guiNodes.Add(
-                        new GuiActionNode(
-                            node:actionNode,
-                            displayTask:displayTask,
-                            displayName:displayName,
-                            pos:mousePosition,
-                            parentConnection:null,
-                            UpdatePanelDetails:UpdatePanelDetails,
-                            OnRemoveNode:OnClickRemoveNode,
-                            OnClickChildPoint:OnClickChildPoint,
-                            OnClickParentPoint:OnClickParentPoint,
-                            blackboard:ref bt.blackboard
-                        )
-                    );
+                    if (displayTask == "Wait"){
+                        ActionWaitNode actionNode = new ActionWaitNode(
+                            taskName:displayTask,
+                            blackboard:ref bt.blackboard,
+                            parentNode:parentNode
+                        );
+                        parentNode.AddChildNode(actionNode);
+                        guiNodes.Add(
+                            new GuiActionWaitNode(
+                                node:actionNode,
+                                displayTask:displayTask,
+                                displayName:displayName,
+                                pos:mousePosition,
+                                parentConnection:null,
+                                UpdatePanelDetails:UpdatePanelDetails,
+                                OnRemoveNode:OnClickRemoveNode,
+                                OnClickChildPoint:OnClickChildPoint,
+                                OnClickParentPoint:OnClickParentPoint,
+                                blackboard:ref bt.blackboard
+                            )
+                        );
+                    }
+                    else{
+                        ActionNode actionNode = new ActionNode(
+                            taskName:displayTask,
+                            blackboard:ref bt.blackboard,
+                            parentNode:parentNode
+                        );
+                        parentNode.AddChildNode(actionNode);
+                        guiNodes.Add(
+                            new GuiActionNode(
+                                node:actionNode,
+                                displayTask:displayTask,
+                                displayName:displayName,
+                                pos:mousePosition,
+                                parentConnection:null,
+                                UpdatePanelDetails:UpdatePanelDetails,
+                                OnRemoveNode:OnClickRemoveNode,
+                                OnClickChildPoint:OnClickChildPoint,
+                                OnClickParentPoint:OnClickParentPoint,
+                                blackboard:ref bt.blackboard
+                            )
+                        );
+                    }
                     break;
                 default:
                     throw new Exception($"Unexpected node type {nodeType}");

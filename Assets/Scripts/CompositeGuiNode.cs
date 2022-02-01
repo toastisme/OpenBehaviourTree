@@ -27,7 +27,7 @@ public class CompositeGuiNode : CallableGuiNode
     public List<Connection> ChildConnections{get; set;}
 
     // Appearance
-    Rect taskRect; // Rect containing the task and display name
+    protected Rect taskRect; // Rect containing the task and display name
     protected Color taskRectColor;
     protected Vector2 taskRectSize = NodeProperties.SubNodeSize();
     private Vector2 initDecoratorPos = NodeProperties.InitDecoratorPos();
@@ -172,7 +172,7 @@ public class CompositeGuiNode : CallableGuiNode
         GUI.color = NodeProperties.DefaultTint();
     }
 
-    void DrawSelf(){
+    protected virtual void DrawSelf(){
         GUI.backgroundColor = color;
         GUI.Box(rect, "", activeStyle);
         GUI.backgroundColor = taskRectColor; 

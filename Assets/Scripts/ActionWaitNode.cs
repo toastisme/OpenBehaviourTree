@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,55 +6,48 @@ using UnityEditor;
 using System.Reflection;
 
 namespace Behaviour{
-public class ActionNode : Node
+public class ActionWaitNode : ActionNode
 {    
     /**
-    * \class ActionNode
-    * Represents an action node in the BehaviourTree class.
+    * \class ActionWaitNode
+    * Represents an action node in the BehaviourTree class specifically for the Wait BehaviourTreeTask.
     */
 
-    public BehaviourTreeTask btTask{get;private set;} // The task class
+    public Wait btWaitTask{get;private set;} // The task class
+    public float WaitTime{get; set;}
+    float defaultWaitTime;
     Task executeTask; // The actual execute coroutine, within a task wrapper
-    protected BehaviourTreeBlackboard blackboard; // Used find the task class at runtime
 
-    public ActionNode(
+    public ActionWaitNode(
         string taskName,
         ref BehaviourTreeBlackboard blackboard,
         Node parentNode=null
     ) :base(
         taskName:taskName,
+        blackboard: ref blackboard,
         parentNode:parentNode
     ){
-        this.blackboard = blackboard;
+        defaultWaitTime = NodeProperties.DefaultWaitTime();
     }
 
-    public virtual void LoadTask(MonoBehaviour monoBehaviour){
-        /**
-            * Uses task to obtain the corresponding BehaviourTreeTask class,
-            * calls its constructor and runs the BehaviourTreeTask Setup, using
-            * the GameObject's monoBehaviour
-            */
+    public override void LoadTask(MonoBehaviour monoBehaviour){
 
-        Type type = TypeUtils.GetType(TaskName); // Full class name (include the namespaces)
-        ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
-        object[] EMPTY_PARAMETERS = new object[0]; 
-        
-        // Invoke the constructor
-        btTask =  (BehaviourTreeTask)constructor.Invoke(EMPTY_PARAMETERS);
-        btTask.SetBlackboard(blackboard:ref blackboard);
-        btTask.Setup(monoBehaviour);
+
+        btWaitTask = new Wait(WaitTime);
+        btWaitTask.SetBlackboard(blackboard:ref blackboard);
+        btWaitTask.Setup(monoBehaviour);
         ResetTask();
         
     }
 
-    protected virtual void ResetTask(){
+    protected override void ResetTask(){
         // Stops the underlying coroutine and gets it ready to run again
         if(executeTask != null){
             if (executeTask.Running){
                 executeTask.Stop();
             }
         }
-        executeTask = new Task(btTask.ExecuteTask((x)=>CurrentState=x), false);
+        executeTask = new Task(btWaitTask.ExecuteTask((x)=>CurrentState=x), false);
     }
 
     public override NodeState Evaluate(){
@@ -75,13 +67,6 @@ public class ActionNode : Node
 
         if (CurrentState == NodeState.Idle && !executeTask.Running){
             executeTask.Start();
-            ResetTimeout();
-            StartTimeout();
-        }
-        if (TimeoutExceeded()){
-            ResetTask();
-            CurrentState = NodeState.Failed;            
-            ResetTimeout();
         }
         if (CurrentState == NodeState.Succeeded){
             StartCooldown();
