@@ -974,7 +974,8 @@ namespace Behaviour{
                     idx:ref idx, 
                     nodeMetaData:nodeMetaData,
                     parentGuiNodeIdx:parentGuiNodeIdx,
-                    decorators:decorators
+                    decorators:decorators,
+                    probabilityWeight:probabilityWeight
                     );
             }
 
@@ -1036,6 +1037,9 @@ namespace Behaviour{
                 idx++;
                 decorators = null;
                 probabilityWeight = null;
+                if (node.TaskName == "Probability Selector"){
+                    Debug.Log("ye");
+                }
                 foreach(Node child in node.ChildNodes){
                     AddNodeAndConnections(
                         node:child,
