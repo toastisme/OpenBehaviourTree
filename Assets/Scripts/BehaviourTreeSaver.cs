@@ -27,6 +27,10 @@ public class BehaviourTreeSaver
             misc1 = awn.WaitTime; 
             misc2 = awn.RandomDeviation;
         }
+        else if (node.GetNodeType() == NodeType.ProbabilityWeight){
+            ProbabilityWeight pw = (ProbabilityWeight)node;
+            misc1 = pw.GetWeight();
+        }
         else{
             misc1 = node.HasTimeout() ? node.GetTimeout().GetTimerVal() : -1;
             misc2 = node.HasCooldown() ? node.GetCooldown().GetTimerVal() : -1;

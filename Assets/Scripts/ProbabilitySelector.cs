@@ -88,7 +88,17 @@ public class ProbabilitySelector : Node
     List<float> GetWeights(){
         List<float> weights = new List<float>();
         foreach(Node childNode in ChildNodes){
-            weights.Add(blackboard.GetWeightValue(childNode.TaskName));
+            if (childNode is ProbabilityWeight probabilityWeight){
+                if (probabilityWeight.HasConstantWeight()){
+                    weights.Add(probabilityWeight.GetWeight());
+                }
+                else{
+                    weights.Add(blackboard.GetWeightValue(childNode.TaskName));
+                }
+            }
+            else{
+                throw new Exception("ProbabilitySelector child is not ProbabilityWeight.");
+            }
         }
         return weights;
     }

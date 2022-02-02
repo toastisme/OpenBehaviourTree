@@ -29,6 +29,21 @@ public class ProbabilityWeight : Node
     }
 
     public float GetWeight(){return weight;}
+
+    public bool HasConstantWeight(){
+        return (TaskName == "Constant Weight");        
+    }
+
+    public override void AddMisc1(float val)
+    {
+        SetWeight(val);
+    }
+
+    public override void AddMisc2(float val)
+    {
+    }
+
+    
     
 }
 }

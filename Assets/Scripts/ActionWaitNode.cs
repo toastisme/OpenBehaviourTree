@@ -90,10 +90,10 @@ public class ActionWaitNode : ActionNode
     public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
         this.blackboard = blackboard;
     }
-    public override void AddCooldown(float timerVal){
+    public override void AddMisc2(float timerVal){
         this.RandomDeviation = timerVal; 
     }
-    public override void AddTimeout(float timerVal){
+    public override void AddMisc1(float timerVal){
         this.WaitTime = timerVal; 
     }
 }

@@ -173,16 +173,16 @@ public abstract class Node
         this.nodeTimeout = nodeTimeout;
     }
 
-    public virtual void AddTimeout(float timerVal){
-        this.nodeTimeout = new NodeTimer(timerVal:timerVal);
+    public virtual void AddMisc1(float val){
+        this.nodeTimeout = new NodeTimer(timerVal:val);
+    }
+
+    public virtual void AddMisc2(float val){
+        this.nodeCooldown = new NodeTimer(timerVal:val);
     }
 
     public void AddCooldown(NodeTimer nodeCooldown){
         this.nodeCooldown = nodeCooldown;
-    }
-
-    public virtual void AddCooldown(float timerVal){
-        this.nodeCooldown = new NodeTimer(timerVal:timerVal);
     }
 
     public void RemoveTimeout(){

@@ -721,7 +721,7 @@ namespace Behaviour{
         }
 
         void AddProbabilityWeight(Connection connection, 
-                                  string taskName="Constant weight",
+                                  string taskName="Constant Weight",
                                   string displayName=""){
             // Update behaviour tree
             Node childNode = connection.GetChildNode().BtNode;
@@ -1045,9 +1045,7 @@ namespace Behaviour{
                         decorators:decorators,
                         probabilityWeight:probabilityWeight
                         );
-                    
                 }
-
             }
         }
 

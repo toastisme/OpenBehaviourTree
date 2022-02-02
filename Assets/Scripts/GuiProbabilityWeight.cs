@@ -103,19 +103,37 @@ public class GuiProbabilityWeight : GuiNode
         Dictionary<string, float> floatKeys = blackboard.GetFloatKeys();
         GenericMenu genericMenu = new GenericMenu();
         if(NoCustomKeys(intKeys, floatKeys)){
-            genericMenu.AddDisabledItem(new GUIContent("Add blackboard float or int keys to use as weights"));
-            genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight"));
+            genericMenu.AddDisabledItem(
+                new GUIContent("Add blackboard float or int keys to use as weights")
+                );
+            genericMenu.AddItem(
+                new GUIContent("Constant Weight"), 
+                false, 
+                () => SetTask("Constant Weight")
+                );
         }
         else{
-            genericMenu.AddItem(new GUIContent("Constant weight (1)"), false, () => SetTask("Constant weight"));
+            genericMenu.AddItem(
+                new GUIContent("Constant Weight"), 
+                false, 
+                () => SetTask("Constant Weight")
+                );
             if (intKeys != null){
                 foreach(KeyValuePair<string, int> kvp in blackboard.GetIntKeys()){
-                            genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key, (float)kvp.Value));
+                            genericMenu.AddItem(
+                                new GUIContent(kvp.Key), 
+                                false, 
+                                () => SetTask(kvp.Key, (float)kvp.Value)
+                                );
                 }
             }
             if (floatKeys != null){
                 foreach(KeyValuePair<string, float> kvp in floatKeys){
-                        genericMenu.AddItem(new GUIContent(kvp.Key), false, () => SetTask(kvp.Key, kvp.Value));
+                        genericMenu.AddItem(
+                            new GUIContent(kvp.Key), 
+                            false, 
+                            () => SetTask(kvp.Key, kvp.Value)
+                            );
                 }
             }
         }
@@ -143,7 +161,26 @@ public class GuiProbabilityWeight : GuiNode
         parentConnection = connection;
     }
 
+    bool HasConstantWeight(){
+        return (probabilityWeight.HasConstantWeight());
+    }
 
+
+    public override void DrawDetails(){
+        GUILayout.Label(NodeProperties.GetDefaultStringFromNodeType(GetNodeType()));
+        GUILayout.Label("Task: " + DisplayTask);
+        GUILayout.Label("Name");
+        DisplayName = GUILayout.TextField(DisplayName, 50);
+        if (HasConstantWeight()){
+            GUILayout.Label("Constant Weight");
+            float weight;
+            bool success = float.TryParse(
+                GUILayout.TextField(probabilityWeight.GetWeight().ToString(), 5), out weight);
+            if (success){
+                probabilityWeight.SetWeight(weight);
+            }
+        }
+    }
 
 }
 }
