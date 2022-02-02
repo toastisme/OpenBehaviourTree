@@ -20,16 +20,16 @@ public class BehaviourTreeSaver
             invertCondition = decorator.invertCondition;
         }
 
-        float timeout = -1f;
-        float cooldown = -1;
+        float misc1 = -1f;
+        float misc2 = -1f;
         if (node.GetNodeType() == NodeType.ActionWait){
             ActionWaitNode awn = (ActionWaitNode)node;
-            timeout = awn.WaitTime; 
-            cooldown = awn.RandomDeviation;
+            misc1 = awn.WaitTime; 
+            misc2 = awn.RandomDeviation;
         }
         else{
-            cooldown = node.HasCooldown() ? node.GetCooldown().GetTimerVal() : -1;
-            timeout = node.HasTimeout() ? node.GetTimeout().GetTimerVal() : -1;
+            misc1 = node.HasTimeout() ? node.GetTimeout().GetTimerVal() : -1;
+            misc2 = node.HasCooldown() ? node.GetCooldown().GetTimerVal() : -1;
         }
 
         var serializedNode = new SerializableNode () {
@@ -37,8 +37,8 @@ public class BehaviourTreeSaver
             taskName = node.TaskName,
             childCount = node.ChildNodes.Count,
             invertCondition = invertCondition,
-            cooldown = cooldown,
-            timeout = timeout
+            misc1 = misc1,
+            misc2 = misc2
         }
         ;
         serializedNodes.Add (serializedNode);

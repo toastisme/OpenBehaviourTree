@@ -27,8 +27,8 @@ public struct SerializableNode{
     public int childCount;
     public int parentIdx;
     public bool invertCondition;
-    public float timeout;
-    public float cooldown;
+    public float misc1;
+    public float misc2;
 }
 public abstract class Node
 {

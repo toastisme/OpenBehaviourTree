@@ -185,11 +185,11 @@ public class BehaviourTreeLoader
             invertCondition: serializedNode.invertCondition
         );
 
-        if (serializedNode.cooldown > 0){
-            node.AddCooldown(timerVal:serializedNode.cooldown);
+        if (serializedNode.misc1 > 0){
+            node.AddTimeout(timerVal:serializedNode.misc1);
         }
-        if (serializedNode.timeout > 0){
-            node.AddTimeout(timerVal:serializedNode.timeout);
+        if (serializedNode.misc2 > 0){
+            node.AddCooldown(timerVal:serializedNode.misc2);
         }
 
         // The tree needs to be read in depth-first, since that's how we wrote it out.
