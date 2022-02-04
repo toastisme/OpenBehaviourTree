@@ -7,6 +7,7 @@ namespace Behaviour{
     public class ConnectionPoint
     {
         private Rect rect;
+        private Rect apparentRect;
         private Rect nodeRect;
 
         public ConnectionPointType type;
@@ -25,11 +26,22 @@ namespace Behaviour{
             this.style = style;
             this.OnClickConnectionPoint = OnClickConnectionPoint;
             rect = new Rect(0, 0, nodeRect.width -12f, 20f);
+            apparentRect = new Rect(0, 0, nodeRect.width -12f, 20f);
+
         }
 
         public CompositeGuiNode GetNode(){return node;}
         public Rect GetRect(){
             return rect;
+        }
+
+        public Rect GetApparentRect(){
+            return apparentRect;
+        }
+
+        public void UpdateOrigin(Vector2 origin){
+            apparentRect = new Rect(rect.x, rect.y, rect.width, rect.height);
+            apparentRect.position -= origin;
         }
 
 
@@ -49,7 +61,7 @@ namespace Behaviour{
                 break;
             }
 
-            if (GUI.Button(rect, "", style))
+            if (GUI.Button(apparentRect, "", style))
             {
                 if (OnClickConnectionPoint != null)
                 {

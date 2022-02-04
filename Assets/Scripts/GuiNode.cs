@@ -33,6 +33,7 @@ public abstract class GuiNode : IGuiNode
     }
     
     protected Rect rect; // The base rect decorators and tasks are drawn on
+    protected Rect apparentRect;
     public string DisplayName{get; set;}
     protected GUIStyle activeStyle;
     protected GUIStyle defaultStyle;
@@ -79,7 +80,6 @@ public abstract class GuiNode : IGuiNode
     }
 
     public virtual void Draw(){}
-
     public virtual bool ProcessEvents(Event e){return false;}
 
     public virtual void SetSelected(bool selected){
@@ -105,6 +105,12 @@ public abstract class GuiNode : IGuiNode
 
     public void SetPosition(Vector2 pos){
         Drag(pos - rect.position);
+
+    }
+
+    public virtual void UpdateOrigin(Vector2 origin){
+        apparentRect = new Rect(rect.x, rect.y, rect.width, rect.height);
+        apparentRect.position -= origin;
 
     }
 

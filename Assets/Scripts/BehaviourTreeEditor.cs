@@ -31,6 +31,7 @@ namespace Behaviour{
 
         // Details panel
         private Rect detailsPanel;
+        private Rect mainWindow;
         private string[] toolbarStrings = {"Selected Node", "Blackboard"};
         private enum ToolbarTab{
             SelectedNode = 0,
@@ -40,6 +41,18 @@ namespace Behaviour{
 
         List<string> customTaskNames;
         Texture2D arrowTexture;
+
+        // zoom
+        private const float kZoomMin = 0.1f;
+        private const float kZoomMax = 10.0f;
+        private readonly Rect _zoomArea = new Rect(0.0f, 75.0f, 600.0f, 300.0f - 100.0f);
+        private float _zoom = 1.0f;
+        private Vector2 zoomCoordsOrigin = Vector2.zero;
+
+        private Vector2 ConvertScreenCoordsToZoomCoords(Vector2 screenCoords)
+        {
+            return (screenCoords - _zoomArea.TopLeft()) / _zoom + zoomCoordsOrigin;
+        }
 
         // Blackboard
         string[] activeBlackboardKey = {"","",""};
@@ -70,6 +83,17 @@ namespace Behaviour{
             decisionNodeTypes = new List<NodeType>{NodeType.PrioritySelector, 
                                                 NodeType.ProbabilitySelector,
                                                 NodeType.SequenceSelector};
+            detailsPanel = new Rect(position.width*.8f, 
+                                        0, 
+                                        position.width*.2f, 
+                                        position.height);
+
+            mainWindow = new Rect(
+                0,
+                0,
+                position.width*.8f,
+                position.height
+            );
         }
 
         private void AddRootNode(){
@@ -101,40 +125,76 @@ namespace Behaviour{
 
         private void OnGUI()
         {
-            DrawGrid(20, 0.2f, Color.gray);
-            DrawGrid(100, 0.4f, Color.gray);
+            if (mode == BehaviourTreeEditorMode.Editor){
+                if (MousePosOnGrid(Event.current.mousePosition)){
+                    ProcessNodeEvents(Event.current);
+                }
+                ProcessEvents(Event.current);
+            }
+
+            else if (mode == BehaviourTreeEditorMode.Runtime){
+                ProcessEventsRuntime(Event.current);
+            }
+
+            if (GUI.changed) {
+                Repaint();
+                UpdateCallNumbers(guiNodes[0], 1);
+            }
+
+
+            DrawStaticComponents();
+            DrawDynamicComponents();
+        }
+
+        private void DrawDynamicComponents(){
+
+
+            EditorZoomArea.Begin(_zoom, mainWindow);
+            UpdateOrigin(zoomCoordsOrigin);
+            Debug.Log($"zoomCoordsOrigin {zoomCoordsOrigin} rootNode {guiNodes[0].GetApparentRect().position}");
 
             if (bt != null && guiNodes != null ){
+
                 DrawConnections();
 
                 if (mode == BehaviourTreeEditorMode.Editor){
                     DrawConnectionLine(Event.current);
-                    DrawDetailsPanel();
-                    if (MousePosOnGrid(Event.current.mousePosition)){
-                        ProcessNodeEvents(Event.current);
-                    }
                     DrawNodes();
-                    ProcessEvents(Event.current);
                 }
 
                 else if (mode == BehaviourTreeEditorMode.Runtime){
                     DrawNodes();
-                    ProcessEventsRuntime(Event.current);
                 }
 
-                if (GUI.changed) {
-                    Repaint();
-                    UpdateCallNumbers(guiNodes[0], 1);
+            }
+            EditorZoomArea.End();
+
+        }
+
+        private void DrawStaticComponents(){
+            DrawGrid(20, 0.2f, Color.gray);
+            DrawGrid(100, 0.4f, Color.gray);
+            if (mode == BehaviourTreeEditorMode.Editor){
+                DrawDetailsPanel();
+            }
+
+        }
+
+        public void UpdateOrigin(Vector2 origin){
+            if (guiNodes != null){
+                foreach(CompositeGuiNode cgn in guiNodes){
+                    cgn.UpdateOrigin(origin);
+                }
+            }
+            if (connections != null){
+                foreach(Connection c in connections){
+                    c.UpdateOrigin(origin);
                 }
             }
         }
 
         private void DrawDetailsPanel(){
             BeginWindows();
-            detailsPanel = new Rect(position.width*.8f, 
-                                    0, 
-                                    position.width*.2f, 
-                                    position.height);
             detailsPanel = GUILayout.Window(1, 
                                             detailsPanel, 
                                             DrawDetailInfo, 
@@ -175,6 +235,7 @@ namespace Behaviour{
                     RemoveNode(guiNodes[i]);
                 }
                 ResetRootNode();
+                zoomCoordsOrigin = Vector2.zero;
             }
             if (selectedNode != null && selectedNode.IsSelected == false){
                 selectedNode = null;
@@ -329,10 +390,25 @@ namespace Behaviour{
             }
         }
 
+        private void ProcessZoomEvent(Event e){
+            Vector2 screenCoordsMousePos = e.mousePosition;
+            Vector2 delta = e.delta;
+            Vector2 zoomCoordsMousePos = ConvertScreenCoordsToZoomCoords(screenCoordsMousePos);
+            float zoomDelta = -delta.y / 150.0f;
+            float oldZoom = _zoom;
+            _zoom += zoomDelta;
+            _zoom = Mathf.Clamp(_zoom, kZoomMin, kZoomMax);
+            zoomCoordsOrigin += (zoomCoordsMousePos - zoomCoordsOrigin) - (oldZoom / _zoom) * (zoomCoordsMousePos - zoomCoordsOrigin);
+            e.Use();
+        }
+
         private void ProcessEvents(Event e)
         {
             switch (e.type)
             {
+                case EventType.ScrollWheel:
+                    ProcessZoomEvent(e);
+                    break;
                 case EventType.MouseDown:
                     if (e.button == 0)
                     {
@@ -434,7 +510,7 @@ namespace Behaviour{
         {
             if (selectedChildPoint != null && selectedParentPoint == null)
             {
-                Vector2 startPos = selectedChildPoint.GetRect().center;
+                Vector2 startPos = selectedChildPoint.GetApparentRect().center;
                 Handles.DrawBezier(
                     startPos,
                     e.mousePosition,
@@ -503,7 +579,7 @@ namespace Behaviour{
                             node:sequenceNode,
                             displayTask:displayTask,
                             displayName:displayName,
-                            pos:mousePosition,
+                            pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
                             OnRemoveNode:OnClickRemoveNode,
@@ -524,7 +600,7 @@ namespace Behaviour{
                             node:priorityNode,
                             displayTask:displayTask,
                             displayName:displayName,
-                            pos:mousePosition,
+                            pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
                             OnRemoveNode:OnClickRemoveNode,
@@ -546,7 +622,7 @@ namespace Behaviour{
                             node:probNode,
                             displayTask:displayTask,
                             displayName:displayName,
-                            pos:mousePosition,
+                            pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
                             OnRemoveNode:OnClickRemoveNode,
@@ -569,7 +645,7 @@ namespace Behaviour{
                                 node:actionNode,
                                 displayTask:displayTask,
                                 displayName:displayName,
-                                pos:mousePosition,
+                                pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                                 parentConnection:null,
                                 UpdatePanelDetails:UpdatePanelDetails,
                                 OnRemoveNode:OnClickRemoveNode,
@@ -591,7 +667,7 @@ namespace Behaviour{
                                 node:actionNode,
                                 displayTask:displayTask,
                                 displayName:displayName,
-                                pos:mousePosition,
+                                pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                                 parentConnection:null,
                                 UpdatePanelDetails:UpdatePanelDetails,
                                 OnRemoveNode:OnClickRemoveNode,
@@ -1037,9 +1113,7 @@ namespace Behaviour{
                 idx++;
                 decorators = null;
                 probabilityWeight = null;
-                if (node.TaskName == "Probability Selector"){
-                    Debug.Log("ye");
-                }
+
                 foreach(Node child in node.ChildNodes){
                     AddNodeAndConnections(
                         node:child,

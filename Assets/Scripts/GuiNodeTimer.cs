@@ -89,7 +89,7 @@ public class GuiNodeTimer : GuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (rect.Contains(e.mousePosition))
+                    if (apparentRect.Contains(e.mousePosition))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -103,7 +103,7 @@ public class GuiNodeTimer : GuiNode
                     }
                 }
 
-                if (e.button == 1 && rect.Contains(e.mousePosition))
+                if (e.button == 1 && apparentRect.Contains(e.mousePosition))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -130,7 +130,7 @@ public class GuiNodeTimer : GuiNode
     {
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(rect, "\n\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)", activeStyle);
+        GUI.Box(apparentRect, "\n\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)", activeStyle);
         GUI.backgroundColor = currentColor;
     }
 

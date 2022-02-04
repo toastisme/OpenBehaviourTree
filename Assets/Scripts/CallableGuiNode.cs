@@ -32,6 +32,11 @@ public class CallableGuiNode : GuiNode
         callNumber.Drag(delta);
     }
 
+    public override void UpdateOrigin(Vector2 origin){
+        base.UpdateOrigin(origin);
+        callNumber.UpdateOrigin(origin);
+    }
+
     public override void Draw(){}
     public void SetCallNumber(int num){
         callNumber.CallNumber = num;

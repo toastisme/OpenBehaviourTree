@@ -28,6 +28,7 @@ public class CompositeGuiNode : CallableGuiNode
 
     // Appearance
     protected Rect taskRect; // Rect containing the task and display name
+    protected Rect apparentTaskRect; // Rect containing the task and display name
     protected Color taskRectColor;
     protected Vector2 taskRectSize = NodeProperties.SubNodeSize();
     private Vector2 initDecoratorPos = NodeProperties.InitDecoratorPos();
@@ -57,6 +58,12 @@ public class CompositeGuiNode : CallableGuiNode
         Decorators = new List<GuiDecorator>();
         this.OnRemoveNode = OnRemoveNode;
         taskRect = new Rect(
+            rect.x,
+            rect.y+taskRectSize.y*.5f,
+            taskRectSize.x,
+            taskRectSize.y
+        );
+        apparentTaskRect = new Rect(
             rect.x,
             rect.y+taskRectSize.y*.5f,
             taskRectSize.x,
@@ -127,6 +134,20 @@ public class CompositeGuiNode : CallableGuiNode
 
     }
 
+    public override void UpdateOrigin(Vector2 origin)
+    {
+        base.UpdateOrigin(origin);
+        apparentTaskRect = new Rect(taskRect.x, taskRect.y, taskRect.width, taskRect.height);
+        apparentTaskRect.position -= origin;
+        ChildPoint?.UpdateOrigin(origin);
+        ParentPoint?.UpdateOrigin(origin);
+        if (Decorators != null){
+            foreach(GuiDecorator decorator in Decorators){
+                decorator.UpdateOrigin(origin);
+            }
+        }
+    }
+
     public override void Drag(Vector2 delta){
         base.Drag(delta);
         taskRect.position += delta;
@@ -174,9 +195,9 @@ public class CompositeGuiNode : CallableGuiNode
 
     protected virtual void DrawSelf(){
         GUI.backgroundColor = color;
-        GUI.Box(rect, "", activeStyle);
+        GUI.Box(apparentRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor; 
-        GUI.Box(taskRect, "\n" + DisplayName + "\n" + DisplayTask, activeStyle);
+        GUI.Box(apparentTaskRect, "\n" + DisplayName + "\n" + DisplayTask, activeStyle);
     }
 
     void DrawDecorators(){
@@ -249,7 +270,7 @@ public class CompositeGuiNode : CallableGuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (rect.Contains(e.mousePosition))
+                    if (apparentRect.Contains(e.mousePosition))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -263,7 +284,7 @@ public class CompositeGuiNode : CallableGuiNode
                     }
                 }
 
-                if (e.button == 1 && rect.Contains(e.mousePosition))
+                if (e.button == 1 && apparentRect.Contains(e.mousePosition))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -686,5 +707,8 @@ public class CompositeGuiNode : CallableGuiNode
             BtNode.RemoveCooldown();
         }
     }
+
+    public Rect GetApparentRect(){return apparentRect;}
+
 }
 }

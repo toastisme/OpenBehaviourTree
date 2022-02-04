@@ -86,7 +86,7 @@ public class GuiDecorator : CallableGuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (rect.Contains(e.mousePosition))
+                    if (apparentRect.Contains(e.mousePosition))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -100,7 +100,7 @@ public class GuiDecorator : CallableGuiNode
                     }
                 }
 
-                if (e.button == 1 && rect.Contains(e.mousePosition))
+                if (e.button == 1 && apparentRect.Contains(e.mousePosition))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -129,7 +129,7 @@ public class GuiDecorator : CallableGuiNode
         GUI.backgroundColor = color;
         string displayTaskAndCondition = DisplayTask;
         if (decorator.invertCondition){displayTaskAndCondition = "!" + displayTaskAndCondition;}
-        GUI.Box(rect, "\n" + DisplayName + "\n" + displayTaskAndCondition, activeStyle);
+        GUI.Box(apparentRect, "\n" + DisplayName + "\n" + displayTaskAndCondition, activeStyle);
         callNumber.Draw();
         GUI.backgroundColor = currentColor;
     }

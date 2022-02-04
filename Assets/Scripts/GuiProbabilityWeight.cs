@@ -62,7 +62,7 @@ public class GuiProbabilityWeight : GuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (rect.Contains(e.mousePosition))
+                    if (apparentRect.Contains(e.mousePosition))
                     {
                         guiChanged = true;
                         SetSelected(true);
@@ -74,7 +74,7 @@ public class GuiProbabilityWeight : GuiNode
                         SetSelected(false);
                     }
                 }
-                if (e.button == 1 && rect.Contains(e.mousePosition))
+                if (e.button == 1 && apparentRect.Contains(e.mousePosition))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -145,7 +145,7 @@ public class GuiProbabilityWeight : GuiNode
     {
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(rect, "\n" + DisplayName + "\n" + DisplayTask + " : " + probabilityWeight.GetWeight().ToString(), activeStyle);
+        GUI.Box(apparentRect, "\n" + DisplayName + "\n" + DisplayTask + " : " + probabilityWeight.GetWeight().ToString(), activeStyle);
         GUI.backgroundColor = currentColor;
     }
     public void SetTask(string newTask){

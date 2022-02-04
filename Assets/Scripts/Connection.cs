@@ -76,10 +76,10 @@ namespace Behaviour{
         public void Draw()
         {
             Handles.DrawBezier(
-                childPoint.GetRect().center,
-                parentPoint.GetRect().center,
-                childPoint.GetRect().center,
-                parentPoint.GetRect().center,
+                childPoint.GetApparentRect().center,
+                parentPoint.GetApparentRect().center,
+                childPoint.GetApparentRect().center,
+                parentPoint.GetApparentRect().center,
                 Color.white,
                 null,
                 4f
@@ -89,7 +89,7 @@ namespace Behaviour{
                 probabilityWeight.Draw();
             }
 
-            else if (Handles.Button((childPoint.GetRect().center + parentPoint.GetRect().center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
+            else if (Handles.Button((childPoint.GetApparentRect().center + parentPoint.GetApparentRect().center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
             {
                 ProcessContextMenu();
             }
@@ -102,8 +102,14 @@ namespace Behaviour{
             return childNode;
         }
 
+        public void UpdateOrigin(Vector2 origin){
+            if (HasProbabilityWeight()){
+                probabilityWeight.UpdateOrigin(origin);
+            }
+        }
+
         public Vector2 GetCentrePos(){
-            return (childPoint.GetRect().center + parentNode.GetRect().center)*.5f;        
+            return (childPoint.GetApparentRect().center + parentNode.GetApparentRect().center)*.5f;        
         }
         private void ProcessContextMenu(){
             GenericMenu genericMenu = new GenericMenu();
