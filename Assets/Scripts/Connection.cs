@@ -109,7 +109,7 @@ namespace Behaviour{
         }
 
         public Vector2 GetCentrePos(){
-            return (childPoint.GetApparentRect().center + parentNode.GetApparentRect().center)*.5f;        
+            return (childPoint.GetRect().center + parentNode.GetRect().center)*.5f;        
         }
         private void ProcessContextMenu(){
             GenericMenu genericMenu = new GenericMenu();
