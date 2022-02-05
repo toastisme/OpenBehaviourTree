@@ -76,17 +76,17 @@ public class GuiDecorator : CallableGuiNode
         genericMenu.ShowAsContext();
     }
 
-    public override bool ProcessEvents(Event e){
-        return ProcessTaskRectEvents(e);
+    public override bool ProcessEvents(Event e, Vector2 mousePos){
+        return ProcessTaskRectEvents(e, mousePos);
     }
-    public virtual bool ProcessTaskRectEvents(Event e){
+    public virtual bool ProcessTaskRectEvents(Event e, Vector2 mousePos){
         bool guiChanged = false;
         switch (e.type)
         {
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (apparentRect.Contains(e.mousePosition))
+                    if (apparentRect.Contains(mousePos))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -100,7 +100,7 @@ public class GuiDecorator : CallableGuiNode
                     }
                 }
 
-                if (e.button == 1 && apparentRect.Contains(e.mousePosition))
+                if (e.button == 1 && apparentRect.Contains(mousePos))
                 {
                     ProcessContextMenu();
                     e.Use();

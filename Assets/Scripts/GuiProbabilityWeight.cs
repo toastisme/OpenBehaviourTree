@@ -54,7 +54,7 @@ public class GuiProbabilityWeight : GuiNode
         rect.position = pos;
     }
 
-    public override bool ProcessEvents(Event e)
+    public override bool ProcessEvents(Event e, Vector2 mousePos)
     {
         bool guiChanged = false;
         switch (e.type)
@@ -62,7 +62,7 @@ public class GuiProbabilityWeight : GuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (apparentRect.Contains(e.mousePosition))
+                    if (apparentRect.Contains(mousePos))
                     {
                         guiChanged = true;
                         SetSelected(true);
@@ -74,7 +74,7 @@ public class GuiProbabilityWeight : GuiNode
                         SetSelected(false);
                     }
                 }
-                if (e.button == 1 && apparentRect.Contains(e.mousePosition))
+                if (e.button == 1 && apparentRect.Contains(mousePos))
                 {
                     ProcessContextMenu();
                     e.Use();

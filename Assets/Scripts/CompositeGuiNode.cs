@@ -208,15 +208,15 @@ public class CompositeGuiNode : CallableGuiNode
         }
     }
 
-    public override bool ProcessEvents(Event e){
+    public override bool ProcessEvents(Event e, Vector2 mousePos){
         bool guiChanged = false;
         bool decoratorSelected = false;
         bool timerSelected = false;
 
-        guiChanged = ProcessDecoratorEvents(e, out decoratorSelected, out timerSelected);
+        guiChanged = ProcessDecoratorEvents(e, mousePos, out decoratorSelected, out timerSelected);
         // Only bother processing taskRect events if no decorator was selected
         if (!decoratorSelected && !timerSelected){
-            bool guiChangedFromNode =  ProcessTaskRectEvents(e);
+            bool guiChangedFromNode =  ProcessTaskRectEvents(e, mousePos);
             if (guiChangedFromNode){
                 guiChanged = true;
             }
@@ -227,13 +227,13 @@ public class CompositeGuiNode : CallableGuiNode
         return guiChanged;
     }
 
-    bool ProcessDecoratorEvents(Event e, out bool decoratorSelected, out bool timerSelected){
+    bool ProcessDecoratorEvents(Event e, Vector2 mousePos, out bool decoratorSelected, out bool timerSelected){
         bool guiChanged = false;
         decoratorSelected = false;
         timerSelected = false;
         if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
-                bool guiChangedFromDecorator = decorator.ProcessEvents(e);
+                bool guiChangedFromDecorator = decorator.ProcessEvents(e, mousePos);
                 if (!guiChanged && guiChangedFromDecorator){
                     guiChanged = true;
                 }
@@ -245,13 +245,13 @@ public class CompositeGuiNode : CallableGuiNode
         if (!decoratorSelected){
             bool changedFromTimers = false;
             if (GuiTimeout != null){
-                changedFromTimers = GuiTimeout.ProcessEvents(e);
+                changedFromTimers = GuiTimeout.ProcessEvents(e, mousePos);
                 if (!timerSelected && GuiTimeout.IsSelected){
                     timerSelected = true;
                 }
             }
             if (!timerSelected && GuiCooldown != null){
-                changedFromTimers = GuiCooldown.ProcessEvents(e);
+                changedFromTimers = GuiCooldown.ProcessEvents(e, mousePos);
                 if (!timerSelected && GuiCooldown.IsSelected){
                     timerSelected = true;
                 }
@@ -263,14 +263,14 @@ public class CompositeGuiNode : CallableGuiNode
         return guiChanged;
     }
 
-    public virtual bool ProcessTaskRectEvents(Event e){
+    public virtual bool ProcessTaskRectEvents(Event e, Vector2 mousePos){
         bool guiChanged = false;
         switch (e.type)
         {
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (apparentRect.Contains(e.mousePosition))
+                    if (apparentRect.Contains(mousePos))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -284,7 +284,7 @@ public class CompositeGuiNode : CallableGuiNode
                     }
                 }
 
-                if (e.button == 1 && apparentRect.Contains(e.mousePosition))
+                if (e.button == 1 && apparentRect.Contains(mousePos))
                 {
                     ProcessContextMenu();
                     e.Use();

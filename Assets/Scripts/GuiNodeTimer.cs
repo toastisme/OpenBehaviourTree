@@ -82,14 +82,14 @@ public class GuiNodeTimer : GuiNode
         genericMenu.ShowAsContext();
     }
 
-    public override bool ProcessEvents(Event e){
+    public override bool ProcessEvents(Event e, Vector2 mousePos){
         bool guiChanged = false;
         switch (e.type)
         {
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (apparentRect.Contains(e.mousePosition))
+                    if (apparentRect.Contains(mousePos))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -103,7 +103,7 @@ public class GuiNodeTimer : GuiNode
                     }
                 }
 
-                if (e.button == 1 && apparentRect.Contains(e.mousePosition))
+                if (e.button == 1 && apparentRect.Contains(mousePos))
                 {
                     ProcessContextMenu();
                     e.Use();

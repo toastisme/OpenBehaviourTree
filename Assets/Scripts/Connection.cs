@@ -65,10 +65,10 @@ namespace Behaviour{
             return (probabilityWeight != null);
         }
 
-        public bool ProcessProbabilityWeightEvents(Event e){
+        public bool ProcessProbabilityWeightEvents(Event e, Vector2 mousePos){
             if (HasProbabilityWeight()){
                 UpdateWeightPosition();
-                return probabilityWeight.ProcessEvents(e);
+                return probabilityWeight.ProcessEvents(e, mousePos);
             }
             return false;
         }

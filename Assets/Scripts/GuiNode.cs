@@ -80,7 +80,7 @@ public abstract class GuiNode : IGuiNode
     }
 
     public virtual void Draw(){}
-    public virtual bool ProcessEvents(Event e){return false;}
+    public virtual bool ProcessEvents(Event e, Vector2 mousePos){return false;}
 
     public virtual void SetSelected(bool selected){
             if (selected){

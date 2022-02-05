@@ -51,7 +51,7 @@ namespace Behaviour{
 
         private Vector2 ConvertScreenCoordsToZoomCoords(Vector2 screenCoords)
         {
-            return (screenCoords - _zoomArea.TopLeft()) / _zoom + zoomCoordsOrigin;
+            return (screenCoords - mainWindow.TopLeft()) / _zoom + zoomCoordsOrigin;
         }
 
         // Blackboard
@@ -151,7 +151,6 @@ namespace Behaviour{
 
             EditorZoomArea.Begin(_zoom, mainWindow);
             UpdateOrigin(zoomCoordsOrigin);
-            Debug.Log($"zoomCoordsOrigin {zoomCoordsOrigin} rootNode {guiNodes[0].GetApparentRect().position}");
 
             if (bt != null && guiNodes != null ){
 
@@ -236,6 +235,7 @@ namespace Behaviour{
                 }
                 ResetRootNode();
                 zoomCoordsOrigin = Vector2.zero;
+                _zoom=1.0f;
             }
             if (selectedNode != null && selectedNode.IsSelected == false){
                 selectedNode = null;
@@ -475,11 +475,12 @@ namespace Behaviour{
         {
             bool guiChanged = false;
             GuiNode currentSeletedNode = selectedNode; 
+            Vector2 zoomMousePos = (e.mousePosition - mainWindow.TopLeft()) / _zoom;
             if (guiNodes != null)
             {
                 for (int i = guiNodes.Count - 1; i >= 0; i--)
                 {
-                    if (guiNodes[i].ProcessEvents(e)){
+                    if (guiNodes[i].ProcessEvents(e, zoomMousePos)){
                         guiChanged = true;
                     }
             }
@@ -496,7 +497,7 @@ namespace Behaviour{
 
             if (connections != null){
                 for (int i = connections.Count - 1; i>=0; i--){
-                    if (connections[i].ProcessProbabilityWeightEvents(e)){
+                    if (connections[i].ProcessProbabilityWeightEvents(e, zoomMousePos)){
                         guiChanged = true;
                     }
                 }
