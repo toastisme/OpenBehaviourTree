@@ -149,6 +149,8 @@ public class CompositeGuiNode : CallableGuiNode
         apparentTaskRect.position -= origin;
         ChildPoint?.UpdateOrigin(origin);
         ParentPoint?.UpdateOrigin(origin);
+        GuiTimeout?.UpdateOrigin(origin);
+        GuiCooldown?.UpdateOrigin(origin);
         if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
                 decorator.UpdateOrigin(origin);
@@ -349,7 +351,7 @@ public class CompositeGuiNode : CallableGuiNode
             // Move all decorators below the removed one up
             Vector2 moveVec = new Vector2(0, -subRectSize[1]);
             for (int i = idx; i < Decorators.Count; i++){
-                Decorators[i].Drag(moveVec);
+                Decorators[i].DragWithoutParent(moveVec);
                 Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber-1);
             }
             GUI.changed = true;
@@ -442,7 +444,7 @@ public class CompositeGuiNode : CallableGuiNode
                 if (iterateCallNumbers){
                     Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber + 1);
                 }
-                Decorators[i].DragWithoutParent(new Vector2(0,subRectSize[1]*(i+1)));       
+                Decorators[i].DragWithoutParent(new Vector2(0,subRectSize[1]));       
             }
         }
     }
@@ -453,7 +455,7 @@ public class CompositeGuiNode : CallableGuiNode
                 if (iterateCallNumbers){
                     Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber - 1);
                 }
-                Decorators[i].DragWithoutParent(new Vector2(0,-subRectSize[1]*(i+1)));       
+                Decorators[i].DragWithoutParent(new Vector2(0,-subRectSize[1]));       
             }
         }
     }
@@ -638,7 +640,7 @@ public class CompositeGuiNode : CallableGuiNode
     public void AddTimer(TimerType timerType, float timerVal=-1){
 
         Vector2 pos;
-        if (timerVal == -1){timerVal = NodeProperties.DefaultTimerVal();}
+        if (timerVal < 0){timerVal = NodeProperties.DefaultTimerVal();}
 
         switch(timerType){
             case TimerType.Timeout:

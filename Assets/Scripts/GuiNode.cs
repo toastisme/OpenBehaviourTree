@@ -103,6 +103,10 @@ public abstract class GuiNode : IGuiNode
         return rect.position;
     }
 
+    public Vector2 GetApparentPos(){
+        return apparentRect.position;
+    }
+
     public void SetPosition(Vector2 pos){
         Drag(pos - rect.position);
 
