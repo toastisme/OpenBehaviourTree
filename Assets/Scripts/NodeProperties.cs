@@ -129,5 +129,22 @@ namespace Behaviour{
                     return "Action";
             }
         }
+
+        public static Texture2D BlackboardIcon(){
+            return Resources.Load("Icons/blackboard_icon", typeof(Texture2D)) as Texture2D;
+        }
+        public static Texture2D AddKeyIcon(){
+            return Resources.Load("Icons/add_key_icon", typeof(Texture2D)) as Texture2D;
+        }
+        public static Texture2D DeleteIcon(){
+            return Resources.Load("Icons/delete_icon", typeof(Texture2D)) as Texture2D;
+        }
+        public static Texture2D SaveIcon(){
+            return Resources.Load("Icons/save_icon", typeof(Texture2D)) as Texture2D;
+        }
+        public static Texture2D SelectedNodeIcon(){
+            return Resources.Load("Icons/selected_node_icon", typeof(Texture2D)) as Texture2D;
+        }
+
     }
 }

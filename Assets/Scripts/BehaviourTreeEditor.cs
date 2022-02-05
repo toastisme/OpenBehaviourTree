@@ -33,6 +33,7 @@ namespace Behaviour{
         private Rect detailsPanel;
         private Rect mainWindow;
         private string[] toolbarStrings = {"Selected Node", "Blackboard"};
+        private GUIContent[] toolbarButtons;
         private enum ToolbarTab{
             SelectedNode = 0,
             Blackboard = 1
@@ -58,6 +59,14 @@ namespace Behaviour{
         string[] activeBlackboardKey = {"","",""};
         bool renamingBlackboardKey = false;
 
+        // Icons
+
+        GUIContent blackboardButton;
+        GUIContent addKeyButton; 
+        GUIContent clearTreeButton;
+        GUIContent saveButton;
+        GUIContent selectedNodeButton;
+
         public void SetScriptableObject(
             BehaviourTree behaviourTree,
             BehaviourTreeEditorMode mode=BehaviourTreeEditorMode.Editor){
@@ -80,6 +89,7 @@ namespace Behaviour{
         private void OnEnable()
         {
             customTaskNames = GetCustomTaskNames();
+            LoadIcons();
             decisionNodeTypes = new List<NodeType>{NodeType.PrioritySelector, 
                                                 NodeType.ProbabilitySelector,
                                                 NodeType.SequenceSelector};
@@ -94,6 +104,16 @@ namespace Behaviour{
                 position.width*.8f,
                 position.height
             );
+        }
+
+        private void LoadIcons(){
+
+            blackboardButton = new GUIContent("Blackboard", NodeProperties.BlackboardIcon());
+            addKeyButton = new GUIContent("Add Key", NodeProperties.AddKeyIcon());
+            clearTreeButton = new GUIContent("Clear Tree", NodeProperties.DeleteIcon());
+            saveButton = new GUIContent("Save", NodeProperties.SaveIcon());
+            selectedNodeButton = new GUIContent("Selected", NodeProperties.SelectedNodeIcon());
+            toolbarButtons = new GUIContent[]{selectedNodeButton, blackboardButton};
         }
 
         private void AddRootNode(){
@@ -212,10 +232,10 @@ namespace Behaviour{
 
         void DrawDetailInfo(int unusedWindowID)
         {
-            if (GUILayout.Button("Save")){
+            if (GUILayout.Button(saveButton)){
                 SaveTree();
             }
-            toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarStrings);
+            toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarButtons);
             ToolbarTab activeToolbarTab = (ToolbarTab)toolbarInt;
             switch(activeToolbarTab){
                 case ToolbarTab.SelectedNode:
@@ -228,7 +248,16 @@ namespace Behaviour{
         }
 
         void DrawNodeDetails(int unusedWindowID){
-            if (GUILayout.Button("Clear All")){
+            if (selectedNode != null && selectedNode.IsSelected == false){
+                selectedNode = null;
+            }
+            if (selectedNode != null){
+                selectedNode.DrawDetails();
+            }
+
+            // Draw clear tree button away from other buttons
+            GUILayout.FlexibleSpace(); 
+            if (GUILayout.Button(clearTreeButton)){
                 for (int i=guiNodes.Count-1; i>0;i--){
                     if (selectedNode == guiNodes[i]){
                         selectedNode = null;
@@ -238,12 +267,6 @@ namespace Behaviour{
                 ResetRootNode();
                 zoomCoordsOrigin = Vector2.zero;
                 _zoom=1.0f;
-            }
-            if (selectedNode != null && selectedNode.IsSelected == false){
-                selectedNode = null;
-            }
-            if (selectedNode != null){
-                selectedNode.DrawDetails();
             }
         }
 
@@ -308,7 +331,7 @@ namespace Behaviour{
 
 
         void DrawBlackboardDetails(int unusedWindowID){
-            if (GUILayout.Button("New Key")){
+            if (GUILayout.Button(addKeyButton)){
                 GenericMenu genericMenu = new GenericMenu();
                 foreach (string keyType in bt.blackboard.GetKeyTypes()){
                     genericMenu.AddItem(new GUIContent(keyType), false, () => OnClickAddBlackboardKey(keyType)); 
