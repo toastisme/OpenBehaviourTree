@@ -43,8 +43,8 @@ namespace Behaviour{
         Texture2D arrowTexture;
 
         // zoom
-        private const float kZoomMin = 0.1f;
-        private const float kZoomMax = 10.0f;
+        private const float kZoomMin = 0.5f;
+        private const float kZoomMax = 1.5f;
         private readonly Rect _zoomArea = new Rect(0.0f, 75.0f, 600.0f, 300.0f - 100.0f);
         private float _zoom = 1.0f;
         private Vector2 zoomCoordsOrigin = Vector2.zero;
