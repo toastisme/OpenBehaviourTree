@@ -125,6 +125,7 @@ namespace Behaviour{
 
         private void OnGUI()
         {
+            Event.current.delta /= _zoom;
             if (mode == BehaviourTreeEditorMode.Editor){
                 if (MousePosOnGrid(Event.current.mousePosition)){
                     ProcessNodeEvents(Event.current);
@@ -145,6 +146,7 @@ namespace Behaviour{
             DrawStaticComponents();
             DrawDynamicComponents();
         }
+
 
         private void DrawDynamicComponents(){
 
