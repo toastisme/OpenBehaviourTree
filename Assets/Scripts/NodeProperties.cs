@@ -14,8 +14,9 @@ namespace Behaviour{
         public static float DefaultWaitTime(){return 5f;}
 
         // Size
-        public static Vector2 GuiNodeSize(){return new Vector2(200, 100);}
+        public static Vector2 GuiNodeSize(){return new Vector2(200, 140);}
         public static Vector2 SubNodeSize(){return new Vector2(200, 60);}
+        public static Vector2 TaskNodeSize(){return new Vector2(200, 80);}
         public static Vector2 CallNumberSize(){
             Vector2 guiNodeSize = NodeProperties.GuiNodeSize();
             return new Vector2(
@@ -45,6 +46,7 @@ namespace Behaviour{
             nodeStyle.border = new RectOffset(12, 12, 12, 12);
             nodeStyle.normal.textColor = Color.white;
             nodeStyle.alignment = TextAnchor.UpperCenter;
+            nodeStyle.fontStyle = FontStyle.Bold;
             return nodeStyle;
         }
 
@@ -54,20 +56,20 @@ namespace Behaviour{
             return selectedNodeStyle;
         }
 
-        public static GUIStyle RootStyle(){
-            GUIStyle rootStyle = new GUIStyle();
-            rootStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
-            rootStyle.border = new RectOffset(12, 12, 12, 12);
-            rootStyle.normal.textColor = Color.white;
-            rootStyle.alignment = TextAnchor.UpperCenter;
-            return rootStyle;
+        public static GUIStyle TaskNodeStyle(){
+            GUIStyle taskNodeStyle = GUINodeStyle();
+            taskNodeStyle.fontSize = 16;
+            return taskNodeStyle;
+        }
+
+        public static GUIStyle SelectedTaskNodeStyle(){
+            GUIStyle selectedTaskNodeStyle = TaskNodeStyle();
+            selectedTaskNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0 on.png") as Texture2D;
+            return selectedTaskNodeStyle;
         }
 
         public static GUIStyle DecoratorStyle(){
-            GUIStyle decoratorStyle = new GUIStyle();
-            decoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
-            decoratorStyle.border = new RectOffset(12, 12, 12, 12);
-            decoratorStyle.normal.textColor = Color.white;
+            GUIStyle decoratorStyle = GUINodeStyle();
             decoratorStyle.alignment = TextAnchor.MiddleCenter;
             return decoratorStyle;
         }
@@ -76,57 +78,6 @@ namespace Behaviour{
             GUIStyle selectedDecoratorStyle =  DecoratorStyle();
             selectedDecoratorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0 on.png") as Texture2D;
             return selectedDecoratorStyle;
-        }
-
-        public static GUIStyle SequenceSelectorStyle(){
-            GUIStyle sequenceSelectorStyle = new GUIStyle();
-            sequenceSelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
-            sequenceSelectorStyle.border = new RectOffset(12, 12, 12, 12);
-            sequenceSelectorStyle.normal.textColor = Color.white;
-            sequenceSelectorStyle.alignment = TextAnchor.UpperCenter;
-            return sequenceSelectorStyle;
-        }
-
-        public static GUIStyle PrioritySelectorStyle(){
-            GUIStyle prioritySelectorStyle = new GUIStyle();
-            prioritySelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
-            prioritySelectorStyle.border = new RectOffset(12, 12, 12, 12);
-            prioritySelectorStyle.normal.textColor = Color.white;
-            prioritySelectorStyle.alignment = TextAnchor.UpperCenter;
-            return prioritySelectorStyle;
-        }
-
-        public static GUIStyle ProbabilitySelectorStyle(){
-            GUIStyle probabilitySelectorStyle = new GUIStyle();
-            probabilitySelectorStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
-            probabilitySelectorStyle.border = new RectOffset(12, 12, 12, 12);
-            probabilitySelectorStyle.normal.textColor = Color.white;
-            probabilitySelectorStyle.alignment = TextAnchor.UpperCenter;
-            return probabilitySelectorStyle;
-        }
-
-        public static GUIStyle ActionStyle(){
-            GUIStyle actionStyle = new GUIStyle();
-            actionStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
-            actionStyle.border = new RectOffset(12, 12, 12, 12);
-            actionStyle.normal.textColor = Color.white;
-            actionStyle.alignment = TextAnchor.UpperCenter;
-            return actionStyle;
-        }
-
-        public static GUIStyle ProbabilityWeightStyle(){
-            GUIStyle probabilityWeightStyle = new GUIStyle();
-            probabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
-            probabilityWeightStyle.border = new RectOffset(12, 12, 12, 12);
-            probabilityWeightStyle.normal.textColor = Color.white;
-            probabilityWeightStyle.alignment = TextAnchor.UpperCenter;
-            return probabilityWeightStyle;
-        }
-
-        public static GUIStyle SelectedProbabilityWeightStyle(){
-            GUIStyle selectedProbabilityWeightStyle = ProbabilityWeightStyle();
-            selectedProbabilityWeightStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0 on.png") as Texture2D;
-            return selectedProbabilityWeightStyle;
         }
 
         public static GUIStyle CallNumberStyle(){

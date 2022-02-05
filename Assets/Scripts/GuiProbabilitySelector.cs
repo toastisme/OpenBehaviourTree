@@ -37,9 +37,12 @@ public class GuiProbabilitySelector : CompositeGuiNode
     protected override void ApplyDerivedSettings()
     {
         taskRectColor = NodeProperties.ProbabilitySelectorColor();
-        defaultStyle = NodeProperties.ProbabilitySelectorStyle();
+        defaultStyle = NodeProperties.GUINodeStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
+        defaultTaskStyle = NodeProperties.TaskNodeStyle();
+        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        activeTaskStyle = defaultTaskStyle;
         color = NodeProperties.DefaultColor();
     }
 }

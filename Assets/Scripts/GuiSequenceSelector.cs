@@ -37,9 +37,12 @@ public class GuiSequenceSelector : CompositeGuiNode
     protected override void ApplyDerivedSettings()
     {
         taskRectColor = NodeProperties.SequenceSelectorColor();
-        defaultStyle = NodeProperties.SequenceSelectorStyle();
+        defaultStyle = NodeProperties.GUINodeStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
+        defaultTaskStyle = NodeProperties.TaskNodeStyle();
+        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        activeTaskStyle = defaultTaskStyle;
         color = NodeProperties.DefaultColor();
     }
 }

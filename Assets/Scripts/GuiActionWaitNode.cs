@@ -61,7 +61,7 @@ public class GuiActionWaitNode : GuiActionNode
         string s =  "\n" + DisplayName + "\n" + DisplayTask;
         s += " (" + actionWaitNode.WaitTime.ToString() + " +/- ";
         s += actionWaitNode.RandomDeviation.ToString() + " sec)";
-        GUI.Box(taskRect, s, activeStyle);
+        GUI.Box(taskRect, s, activeTaskStyle);
     }
 
     protected override void ProcessContextMenu()

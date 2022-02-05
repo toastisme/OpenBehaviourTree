@@ -41,7 +41,7 @@ public class GuiProbabilityWeight : GuiNode
     protected override void ApplyDerivedSettings()
     {
         color = NodeProperties.ProbabilityWeightColor();
-        defaultStyle = NodeProperties.ProbabilityWeightStyle();
+        defaultStyle = NodeProperties.GUINodeStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
         rect.size = NodeProperties.SubNodeSize();

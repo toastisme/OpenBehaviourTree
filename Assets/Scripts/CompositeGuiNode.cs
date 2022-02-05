@@ -27,10 +27,15 @@ public class CompositeGuiNode : CallableGuiNode
     public List<Connection> ChildConnections{get; set;}
 
     // Appearance
+    protected GUIStyle defaultTaskStyle;
+    protected GUIStyle selectedTaskStyle;
+    protected GUIStyle activeTaskStyle;
+
     protected Rect taskRect; // Rect containing the task and display name
     protected Rect apparentTaskRect; // Rect containing the task and display name
     protected Color taskRectColor;
-    protected Vector2 taskRectSize = NodeProperties.SubNodeSize();
+    protected Vector2 taskRectSize = NodeProperties.TaskNodeSize();
+    protected Vector2 subRectSize = NodeProperties.SubNodeSize();
     private Vector2 initDecoratorPos = NodeProperties.InitDecoratorPos();
 
     public CompositeGuiNode(
@@ -112,6 +117,9 @@ public class CompositeGuiNode : CallableGuiNode
         defaultStyle = NodeProperties.GUINodeStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
+        defaultTaskStyle = NodeProperties.TaskNodeStyle();
+        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        activeTaskStyle = defaultTaskStyle;
         color = NodeProperties.DefaultColor();
         taskRectColor = NodeProperties.DefaultColor();
 
@@ -197,7 +205,7 @@ public class CompositeGuiNode : CallableGuiNode
         GUI.backgroundColor = color;
         GUI.Box(apparentRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor; 
-        GUI.Box(apparentTaskRect, "\n" + DisplayName + "\n" + DisplayTask, activeStyle);
+        GUI.Box(apparentTaskRect, "\n" + DisplayName + "\n" + DisplayTask, activeTaskStyle);
     }
 
     void DrawDecorators(){
@@ -225,6 +233,21 @@ public class CompositeGuiNode : CallableGuiNode
             SetSelected(false);
         }
         return guiChanged;
+    }
+
+    public override void SetSelected(bool selected)
+    {
+        base.SetSelected(selected);
+        if (selected){
+            IsSelected = true;
+            activeStyle = selectedStyle;
+            activeTaskStyle = selectedTaskStyle;
+        }
+        else{
+            IsSelected = false;
+            activeStyle = defaultStyle;
+            activeTaskStyle = defaultTaskStyle;
+        }
     }
 
     bool ProcessDecoratorEvents(Event e, Vector2 mousePos, out bool decoratorSelected, out bool timerSelected){
@@ -318,13 +341,13 @@ public class CompositeGuiNode : CallableGuiNode
             Decorators.Remove(decorator);
 
             // Resize node 
-            rect.height -= taskRectSize[1];
-            taskRect.y -= taskRectSize[1];
-            callNumber.Drag(new Vector2(0, -taskRectSize[1]));
+            rect.height -= subRectSize[1];
+            taskRect.y -= subRectSize[1];
+            callNumber.Drag(new Vector2(0, -subRectSize[1]));
             SetCallNumber(callNumber.CallNumber-1);
 
             // Move all decorators below the removed one up
-            Vector2 moveVec = new Vector2(0, -taskRectSize[1]);
+            Vector2 moveVec = new Vector2(0, -subRectSize[1]);
             for (int i = idx; i < Decorators.Count; i++){
                 Decorators[i].Drag(moveVec);
                 Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber-1);
@@ -350,9 +373,9 @@ public class CompositeGuiNode : CallableGuiNode
         Decorators.Insert(0, guiDecorator);
                 
         // Update params to make space for gui decorator
-        rect.height += taskRectSize[1];
-        taskRect.y += taskRectSize[1];
-        callNumber.Drag(new Vector2(0, taskRectSize[1]));
+        rect.height += subRectSize[1];
+        taskRect.y += subRectSize[1];
+        callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
 
     }
@@ -379,10 +402,10 @@ public class CompositeGuiNode : CallableGuiNode
             rect.y + initDecoratorPos[1]
         );
         if (GuiTimeout != null){
-            pos += new Vector2(0, taskRectSize[1]); 
+            pos += new Vector2(0, subRectSize[1]); 
         }
         if (GuiCooldown != null){
-            pos += new Vector2(0, taskRectSize[1]); 
+            pos += new Vector2(0, subRectSize[1]); 
         }
         // Add gui decorator
         GuiDecorator guiDecorator = new GuiDecorator( 
@@ -407,9 +430,9 @@ public class CompositeGuiNode : CallableGuiNode
         Decorators.Insert(0, guiDecorator);
                 
         // Update params to make space for gui decorator
-        rect.height += taskRectSize[1];
-        taskRect.y += taskRectSize[1];
-        callNumber.Drag(new Vector2(0, taskRectSize[1]));
+        rect.height += subRectSize[1];
+        taskRect.y += subRectSize[1];
+        callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
     }
 
@@ -419,7 +442,7 @@ public class CompositeGuiNode : CallableGuiNode
                 if (iterateCallNumbers){
                     Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber + 1);
                 }
-                Decorators[i].DragWithoutParent(new Vector2(0,taskRectSize[1]*(i+1)));       
+                Decorators[i].DragWithoutParent(new Vector2(0,subRectSize[1]*(i+1)));       
             }
         }
     }
@@ -430,7 +453,7 @@ public class CompositeGuiNode : CallableGuiNode
                 if (iterateCallNumbers){
                     Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber - 1);
                 }
-                Decorators[i].DragWithoutParent(new Vector2(0,-taskRectSize[1]*(i+1)));       
+                Decorators[i].DragWithoutParent(new Vector2(0,-subRectSize[1]*(i+1)));       
             }
         }
     }
@@ -558,7 +581,7 @@ public class CompositeGuiNode : CallableGuiNode
                 }
                 if (GuiCooldown != null){
                     pos = GuiCooldown.GetPos();
-                    GuiCooldown.DragWithoutParent(new Vector2(0, taskRectSize[1]));
+                    GuiCooldown.DragWithoutParent(new Vector2(0, subRectSize[1]));
                 }                   
                 else{
                     pos = new Vector2(
@@ -583,7 +606,7 @@ public class CompositeGuiNode : CallableGuiNode
                 }
                 if (GuiTimeout != null){
                     pos = GuiTimeout.GetPos();
-                    GuiTimeout.DragWithoutParent(new Vector2(0, taskRectSize[1]));
+                    GuiTimeout.DragWithoutParent(new Vector2(0, subRectSize[1]));
                 }                   
                 else{
                     pos = new Vector2(
@@ -605,9 +628,9 @@ public class CompositeGuiNode : CallableGuiNode
         }
         // Update params to make space for timer
         ShiftDecoratorsDown(iterateCallNumbers:false);
-        rect.height += taskRectSize[1];
-        taskRect.y += taskRectSize[1];
-        callNumber.Drag(new Vector2(0, taskRectSize[1]));
+        rect.height += subRectSize[1];
+        taskRect.y += subRectSize[1];
+        callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
 
     }
@@ -621,7 +644,7 @@ public class CompositeGuiNode : CallableGuiNode
             case TimerType.Timeout:
                 if (GuiCooldown != null){
                     pos = GuiCooldown.GetPos();
-                    GuiCooldown.DragWithoutParent(new Vector2(0, taskRectSize[1]));
+                    GuiCooldown.DragWithoutParent(new Vector2(0, subRectSize[1]));
                 }                   
                 else{
                     pos = new Vector2(
@@ -646,7 +669,7 @@ public class CompositeGuiNode : CallableGuiNode
             case TimerType.Cooldown:
                 if (GuiTimeout != null){
                     pos = GuiTimeout.GetPos();
-                    GuiTimeout.DragWithoutParent(new Vector2(0, taskRectSize[1]));
+                    GuiTimeout.DragWithoutParent(new Vector2(0, subRectSize[1]));
                 }                   
                 else{
                     pos = new Vector2(
@@ -672,9 +695,9 @@ public class CompositeGuiNode : CallableGuiNode
                 
         // Update params to make space for timer
         ShiftDecoratorsDown(iterateCallNumbers:false);
-        rect.height += taskRectSize[1];
-        taskRect.y += taskRectSize[1];
-        callNumber.Drag(new Vector2(0, taskRectSize[1]));
+        rect.height += subRectSize[1];
+        taskRect.y += subRectSize[1];
+        callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
     }
 
@@ -682,13 +705,13 @@ public class CompositeGuiNode : CallableGuiNode
         if (guiNodeTimer == this.GuiTimeout){
             if (this.GuiCooldown != null){
                 if (this.GuiCooldown.GetPos().y > guiNodeTimer.GetPos().y){
-                    this.GuiCooldown.DragWithoutParent(new Vector2(0, -taskRectSize[1]));                   
+                    this.GuiCooldown.DragWithoutParent(new Vector2(0, -subRectSize[1]));                   
                 }
             }
             ShiftDecoratorsUp(iterateCallNumbers:false);
-            rect.height -= taskRectSize[1];
-            taskRect.y -= taskRectSize[1];
-            callNumber.Drag(new Vector2(0, -taskRectSize[1]));
+            rect.height -= subRectSize[1];
+            taskRect.y -= subRectSize[1];
+            callNumber.Drag(new Vector2(0, -subRectSize[1]));
             this.GuiTimeout = null;
             BtNode.RemoveTimeout();
             
@@ -696,13 +719,13 @@ public class CompositeGuiNode : CallableGuiNode
         else if (guiNodeTimer == this.GuiCooldown){
             if (this.GuiTimeout != null){
                 if (this.GuiTimeout.GetPos().y > guiNodeTimer.GetPos().y){
-                    this.GuiTimeout.DragWithoutParent(new Vector2(0, -taskRectSize[1]));                   
+                    this.GuiTimeout.DragWithoutParent(new Vector2(0, -subRectSize[1]));                   
                 }
             }
             ShiftDecoratorsUp(iterateCallNumbers:false);
-            rect.height -= taskRectSize[1];
-            taskRect.y -= taskRectSize[1];
-            callNumber.Drag(new Vector2(0, -taskRectSize[1]));
+            rect.height -= subRectSize[1];
+            taskRect.y -= subRectSize[1];
+            callNumber.Drag(new Vector2(0, -subRectSize[1]));
             this.GuiCooldown = null;
             BtNode.RemoveCooldown();
         }

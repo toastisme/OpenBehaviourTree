@@ -39,8 +39,11 @@ public class GuiActionNode : CompositeGuiNode
     protected override void ApplyDerivedSettings()
     {
         taskRectColor = NodeProperties.ActionColor();
-        defaultStyle = NodeProperties.ActionStyle();
+        defaultStyle = NodeProperties.GUINodeStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        defaultTaskStyle = NodeProperties.TaskNodeStyle();
+        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        activeTaskStyle = defaultTaskStyle;
         activeStyle = defaultStyle;
         color = NodeProperties.DefaultColor();
     }

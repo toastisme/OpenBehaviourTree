@@ -37,10 +37,13 @@ public class GuiRootNode : GuiPrioritySelector
     protected override void ApplyDerivedSettings()
     {
         taskRectColor = NodeProperties.PrioritySelectorColor();
-        defaultStyle = NodeProperties.PrioritySelectorStyle();
+        defaultStyle = NodeProperties.GUINodeStyle();
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
         color = NodeProperties.DefaultColor();
+        defaultTaskStyle = NodeProperties.TaskNodeStyle();
+        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        activeTaskStyle = defaultTaskStyle;
     }
 
     protected override void ApplyNodeTypeSettings(
