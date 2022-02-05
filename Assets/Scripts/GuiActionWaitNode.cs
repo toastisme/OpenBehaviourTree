@@ -56,12 +56,12 @@ public class GuiActionWaitNode : GuiActionNode
     protected override void DrawSelf()
     {
         GUI.backgroundColor = color;
-        GUI.Box(rect, "", activeStyle);
+        GUI.Box(apparentRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor;
         string s =  "\n" + DisplayName + "\n" + DisplayTask;
         s += " (" + actionWaitNode.WaitTime.ToString() + " +/- ";
         s += actionWaitNode.RandomDeviation.ToString() + " sec)";
-        GUI.Box(taskRect, s, activeTaskStyle);
+        GUI.Box(apparentTaskRect, s, activeTaskStyle);
     }
 
     protected override void ProcessContextMenu()
