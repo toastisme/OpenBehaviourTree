@@ -52,6 +52,7 @@ public class GuiDecorator : CallableGuiNode
         activeStyle = defaultStyle;
         color = NodeProperties.DecoratorColor();
         rect.size = NodeProperties.SubNodeSize();
+        iconAndText.image = NodeProperties.DecoratorIcon();
     }
 
     private void Remove(){
@@ -129,7 +130,8 @@ public class GuiDecorator : CallableGuiNode
         GUI.backgroundColor = color;
         string displayTaskAndCondition = DisplayTask;
         if (decorator.invertCondition){displayTaskAndCondition = "!" + displayTaskAndCondition;}
-        GUI.Box(apparentRect, "\n" + DisplayName + "\n" + displayTaskAndCondition, activeStyle);
+        iconAndText.text ="\n" + DisplayName + "\n" + displayTaskAndCondition;
+        GUI.Box(apparentRect, iconAndText, activeStyle);
         callNumber.Draw();
         GUI.backgroundColor = currentColor;
     }

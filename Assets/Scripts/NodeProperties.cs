@@ -47,6 +47,7 @@ namespace Behaviour{
             nodeStyle.normal.textColor = Color.white;
             nodeStyle.alignment = TextAnchor.UpperCenter;
             nodeStyle.fontStyle = FontStyle.Bold;
+            //nodeStyle.padding=new RectOffset(10,0,0,0);
             return nodeStyle;
         }
 
@@ -130,6 +131,8 @@ namespace Behaviour{
             }
         }
 
+        // icons
+
         public static Texture2D BlackboardIcon(){
             return Resources.Load("Icons/blackboard_icon", typeof(Texture2D)) as Texture2D;
         }
@@ -146,5 +149,40 @@ namespace Behaviour{
             return Resources.Load("Icons/selected_node_icon", typeof(Texture2D)) as Texture2D;
         }
 
+        public static Texture2D ActionIcon(){
+            return Resources.Load("Icons/action_icon", typeof(Texture2D)) as Texture2D;
+        }
+
+        public static Texture2D CooldownIcon(){
+            return Resources.Load("Icons/cooldown_icon", typeof(Texture2D)) as Texture2D;
+        }
+
+        public static Texture2D DecoratorIcon(){
+            return Resources.Load("Icons/decorator_icon", typeof(Texture2D)) as Texture2D;
+        }
+
+        public static Texture2D PrioritySelectorIcon(){
+            return Resources.Load("Icons/priority_selector_icon", typeof(Texture2D)) as Texture2D;
+        }
+
+        public static Texture2D ProbabilitySelectorIcon(){
+            return Resources.Load("Icons/probability_selector_icon", typeof(Texture2D)) as Texture2D;
+        }
+
+        public static Texture2D SequenceSelectorIcon(){
+            return Resources.Load("Icons/sequence_selector_icon", typeof(Texture2D)) as Texture2D;
+        }
+
+        public static Texture2D TimerIcon(){
+            return Resources.Load("Icons/timer_icon", typeof(Texture2D)) as Texture2D;
+        }
+
+        public static Texture2D WaitIcon(){
+            return Resources.Load("Icons/wait_icon", typeof(Texture2D)) as Texture2D;
+        }
+
+        public static Texture2D ProbabilityWeightIcon(){
+            return Resources.Load("Icons/probability_weight_icon", typeof(Texture2D)) as Texture2D;
+        }
     }
 }

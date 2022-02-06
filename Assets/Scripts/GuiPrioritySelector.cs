@@ -44,6 +44,7 @@ public class GuiPrioritySelector : CompositeGuiNode
         selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
         color = NodeProperties.DefaultColor();
+        iconAndText.image = NodeProperties.PrioritySelectorIcon();
     }
 }
 }

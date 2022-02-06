@@ -207,7 +207,8 @@ public class CompositeGuiNode : CallableGuiNode
         GUI.backgroundColor = color;
         GUI.Box(apparentRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor; 
-        GUI.Box(apparentTaskRect, "\n" + DisplayName + "\n" + DisplayTask, activeTaskStyle);
+        iconAndText.text ="\n" + DisplayName + "\n" + DisplayTask;
+        GUI.Box(apparentTaskRect, iconAndText, activeTaskStyle);
     }
 
     void DrawDecorators(){

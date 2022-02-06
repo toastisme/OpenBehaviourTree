@@ -32,6 +32,7 @@ public abstract class GuiNode : IGuiNode
         }
     }
     
+    protected GUIContent iconAndText;
     protected Rect rect; // The base rect decorators and tasks are drawn on
     protected Rect apparentRect;
     public string DisplayName{get; set;}
@@ -62,6 +63,7 @@ public abstract class GuiNode : IGuiNode
                              size.y);
         this.UpdatePanelDetails = UpdatePanelDetails;
         this.blackboard = blackboard;
+        iconAndText = new GUIContent();
 
     }
 

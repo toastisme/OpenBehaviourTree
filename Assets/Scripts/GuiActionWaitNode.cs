@@ -33,6 +33,7 @@ public class GuiActionWaitNode : GuiActionNode
         blackboard:ref blackboard
     ){
         actionWaitNode = (ActionWaitNode)node;
+        iconAndText.image = NodeProperties.WaitIcon();
     }
 
     public override void DrawDetails()
@@ -61,7 +62,8 @@ public class GuiActionWaitNode : GuiActionNode
         string s =  "\n" + DisplayName + "\n" + DisplayTask;
         s += " (" + actionWaitNode.WaitTime.ToString() + " +/- ";
         s += actionWaitNode.RandomDeviation.ToString() + " sec)";
-        GUI.Box(apparentTaskRect, s, activeTaskStyle);
+        iconAndText.text = s;
+        GUI.Box(apparentTaskRect, iconAndText, activeTaskStyle);
     }
 
     protected override void ProcessContextMenu()

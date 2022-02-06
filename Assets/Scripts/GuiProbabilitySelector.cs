@@ -44,6 +44,7 @@ public class GuiProbabilitySelector : CompositeGuiNode
         selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
         color = NodeProperties.DefaultColor();
+        iconAndText.image = NodeProperties.ProbabilitySelectorIcon();
     }
 }
 }

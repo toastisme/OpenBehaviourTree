@@ -58,6 +58,12 @@ public class GuiNodeTimer : GuiNode
         activeStyle = defaultStyle;
         color = NodeProperties.DecoratorColor();
         rect.size = NodeProperties.SubNodeSize();
+        if (displayTask == "Timeout"){
+            iconAndText.image = NodeProperties.TimerIcon();
+        }
+        else{
+            iconAndText.image = NodeProperties.CooldownIcon();
+        }
     }
 
     private void Remove(){
@@ -130,7 +136,8 @@ public class GuiNodeTimer : GuiNode
     {
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(apparentRect, "\n\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)", activeStyle);
+        iconAndText.text = "\n\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)";
+        GUI.Box(apparentRect, iconAndText, activeStyle);
         GUI.backgroundColor = currentColor;
     }
 

@@ -45,6 +45,7 @@ public class GuiProbabilityWeight : GuiNode
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
         rect.size = NodeProperties.SubNodeSize();
+        iconAndText.image = NodeProperties.ProbabilityWeightIcon();
     }
 
     
@@ -145,7 +146,8 @@ public class GuiProbabilityWeight : GuiNode
     {
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(apparentRect, "\n" + DisplayName + "\n" + DisplayTask + " : " + probabilityWeight.GetWeight().ToString(), activeStyle);
+        iconAndText.text = "\n" + DisplayName + "\n" + DisplayTask + " : " + probabilityWeight.GetWeight().ToString();
+        GUI.Box(apparentRect, iconAndText, activeStyle);
         GUI.backgroundColor = currentColor;
     }
     public void SetTask(string newTask){
