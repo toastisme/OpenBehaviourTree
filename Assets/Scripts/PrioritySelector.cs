@@ -62,6 +62,11 @@ public class PrioritySelector : Node
         CurrentState = NodeState.Failed;
         return CurrentState;
     }
-    public override NodeType GetNodeType(){return NodeType.PrioritySelector;}
+    public override NodeType GetNodeType(){
+        if (TaskName == "Root"){
+            return NodeType.Root;
+        }
+        return NodeType.PrioritySelector;
+        }
 }
 }

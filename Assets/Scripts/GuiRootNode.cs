@@ -44,6 +44,7 @@ public class GuiRootNode : GuiPrioritySelector
         defaultTaskStyle = NodeProperties.TaskNodeStyle();
         selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
+        iconAndText = NodeProperties.PrioritySelectorContent();
     }
 
     protected override void ApplyNodeTypeSettings(
