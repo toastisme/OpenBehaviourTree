@@ -131,58 +131,111 @@ namespace Behaviour{
             }
         }
 
-        // icons
+        // GUIContent
 
-        public static Texture2D BlackboardIcon(){
-            return Resources.Load("Icons/blackboard_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent BlackboardContent(){
+            Texture2D icon = Resources.Load("Icons/blackboard_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Blackboard";
+            string tooltip = "Variable dictionary shared between nodes.";
+            return new GUIContent(text, icon, tooltip);
         }
-        public static Texture2D AddKeyIcon(){
-            return Resources.Load("Icons/add_key_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent AddKeyContent(){
+            Texture2D icon = Resources.Load("Icons/add_key_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Add Key";
+            string tooltip = "Add new key to the blackboard.";
+            return new GUIContent(text, icon, tooltip);
         }
-        public static Texture2D DeleteIcon(){
-            return Resources.Load("Icons/delete_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent ClearTreeContent(){
+            Texture2D icon = Resources.Load("Icons/delete_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Clear Tree";
+            string tooltip = "Remove all nodes and connections.";
+            return new GUIContent(text, icon, tooltip);
         }
-        public static Texture2D SaveIcon(){
-            return Resources.Load("Icons/save_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent SaveContent(){
+            Texture2D icon = Resources.Load("Icons/save_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Save";
+            string tooltip = "Save changes to .asset file.";
+            return new GUIContent(text, icon, tooltip);
         }
-        public static Texture2D SelectedNodeIcon(){
-            return Resources.Load("Icons/selected_node_icon", typeof(Texture2D)) as Texture2D;
-        }
-
-        public static Texture2D ActionIcon(){
-            return Resources.Load("Icons/action_icon", typeof(Texture2D)) as Texture2D;
-        }
-
-        public static Texture2D CooldownIcon(){
-            return Resources.Load("Icons/cooldown_icon", typeof(Texture2D)) as Texture2D;
-        }
-
-        public static Texture2D DecoratorIcon(){
-            return Resources.Load("Icons/decorator_icon", typeof(Texture2D)) as Texture2D;
-        }
-
-        public static Texture2D PrioritySelectorIcon(){
-            return Resources.Load("Icons/priority_selector_icon", typeof(Texture2D)) as Texture2D;
-        }
-
-        public static Texture2D ProbabilitySelectorIcon(){
-            return Resources.Load("Icons/probability_selector_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent SelectedNodeContent(){
+            Texture2D icon = Resources.Load("Icons/selected_node_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Selected";
+            string tooltip = "Properties of selected node.";
+            return new GUIContent(text, icon, tooltip);
         }
 
-        public static Texture2D SequenceSelectorIcon(){
-            return Resources.Load("Icons/sequence_selector_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent ActionContent(){
+            Texture2D icon = Resources.Load("Icons/action_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Action";
+            string tooltip = "Task for the gameobject to execute.";
+            return new GUIContent(text, icon, tooltip);
         }
 
-        public static Texture2D TimerIcon(){
-            return Resources.Load("Icons/timer_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent CooldownContent(){
+            Texture2D icon = Resources.Load("Icons/cooldown_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Cooldown";
+            string tooltip = "Disable after success for duration.";
+            return new GUIContent(text, icon, tooltip);
         }
 
-        public static Texture2D WaitIcon(){
-            return Resources.Load("Icons/wait_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent DecoratorContent(){
+            Texture2D icon = Resources.Load("Icons/decorator_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Decorator";
+            string tooltip = "Prevent child node running if false.";
+            return new GUIContent(text, icon, tooltip);
         }
 
-        public static Texture2D ProbabilityWeightIcon(){
-            return Resources.Load("Icons/probability_weight_icon", typeof(Texture2D)) as Texture2D;
+        public static GUIContent PrioritySelectorContent(){
+            Texture2D icon = Resources.Load("Icons/priority_selector_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Priority Selector";
+            string tooltip = "Run child nodes in order until one is successful.";
+            return new GUIContent(text, icon, tooltip);
+        }
+
+        public static GUIContent ProbabilitySelectorContent(){
+            Texture2D icon = Resources.Load("Icons/probability_selector_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Probability Selector";
+            string tooltip = "Randomly select which child node to run.";
+            return new GUIContent(text, icon, tooltip);
+        }
+
+        public static GUIContent SequenceSelectorContent(){
+            Texture2D icon = Resources.Load("Icons/sequence_selector_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Sequence Selector";
+            string tooltip = "Run child nodes in order but stop if any fail.";
+            return new GUIContent(text, icon, tooltip);
+        }
+
+        public static GUIContent TimeoutContent(){
+            Texture2D icon = Resources.Load("Icons/timer_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Timeout";
+            string tooltip = "Stop this node if it runs longer than duration.";
+            return new GUIContent(text, icon, tooltip);
+        }
+
+        public static GUIContent WaitContent(){
+            Texture2D icon = Resources.Load("Icons/wait_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Wait";
+            string tooltip = "Gameobject does nothing for duration.";
+            return new GUIContent(text, icon, tooltip);
+        }
+
+        public static GUIContent ProbabilityWeightContent(){
+            Texture2D icon = Resources.Load("Icons/probability_weight_icon", typeof(Texture2D)) as Texture2D;
+            string text = "Probability Weight";
+            string tooltip = "Sets the probability of the child node being selected, relative to other weights.";
+            return new GUIContent(text, icon, tooltip);
+        }
+        public static GUIContent ParentConnectionPointContent(){
+            string text = "";
+            string tooltip = "Click to start creating a connection, click again to create a child node. Right click to cancel.";
+            return new GUIContent(text, tooltip);
+        }
+
+        public static GUIContent ChildConnectionPointContent(){
+            string text = "";
+            string tooltip = "When drawing a connection click to connect the nodes.";
+            return new GUIContent(text, tooltip);
         }
     }
 }

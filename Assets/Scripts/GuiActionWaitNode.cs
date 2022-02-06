@@ -33,7 +33,7 @@ public class GuiActionWaitNode : GuiActionNode
         blackboard:ref blackboard
     ){
         actionWaitNode = (ActionWaitNode)node;
-        iconAndText.image = NodeProperties.WaitIcon();
+        iconAndText = NodeProperties.WaitContent();
     }
 
     public override void DrawDetails()

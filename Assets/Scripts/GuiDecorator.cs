@@ -52,7 +52,7 @@ public class GuiDecorator : CallableGuiNode
         activeStyle = defaultStyle;
         color = NodeProperties.DecoratorColor();
         rect.size = NodeProperties.SubNodeSize();
-        iconAndText.image = NodeProperties.DecoratorIcon();
+        iconAndText = NodeProperties.DecoratorContent();
     }
 
     private void Remove(){

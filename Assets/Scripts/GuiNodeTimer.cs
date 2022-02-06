@@ -59,10 +59,10 @@ public class GuiNodeTimer : GuiNode
         color = NodeProperties.DecoratorColor();
         rect.size = NodeProperties.SubNodeSize();
         if (displayTask == "Timeout"){
-            iconAndText.image = NodeProperties.TimerIcon();
+            iconAndText = NodeProperties.TimeoutContent();
         }
         else{
-            iconAndText.image = NodeProperties.CooldownIcon();
+            iconAndText = NodeProperties.CooldownContent();
         }
     }
 

@@ -108,11 +108,11 @@ namespace Behaviour{
 
         private void LoadIcons(){
 
-            blackboardButton = new GUIContent("Blackboard", NodeProperties.BlackboardIcon());
-            addKeyButton = new GUIContent("Add Key", NodeProperties.AddKeyIcon());
-            clearTreeButton = new GUIContent("Clear Tree", NodeProperties.DeleteIcon());
-            saveButton = new GUIContent("Save", NodeProperties.SaveIcon());
-            selectedNodeButton = new GUIContent("Selected", NodeProperties.SelectedNodeIcon());
+            blackboardButton = NodeProperties.BlackboardContent();
+            addKeyButton = NodeProperties.AddKeyContent();
+            clearTreeButton = NodeProperties.ClearTreeContent();
+            saveButton = NodeProperties.SaveContent();
+            selectedNodeButton = NodeProperties.SelectedNodeContent();
             toolbarButtons = new GUIContent[]{selectedNodeButton, blackboardButton};
         }
 

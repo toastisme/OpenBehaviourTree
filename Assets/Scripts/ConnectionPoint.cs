@@ -15,6 +15,7 @@ namespace Behaviour{
         public CompositeGuiNode node;
 
         public GUIStyle style;
+        GUIContent guiContent;
 
         public Action<ConnectionPoint> OnClickConnectionPoint;
 
@@ -27,6 +28,12 @@ namespace Behaviour{
             this.OnClickConnectionPoint = OnClickConnectionPoint;
             rect = new Rect(0, 0, nodeRect.width -12f, 20f);
             apparentRect = new Rect(0, 0, nodeRect.width -12f, 20f);
+            if (this.type == ConnectionPointType.In){
+                guiContent = NodeProperties.ParentConnectionPointContent();
+            }
+            else{
+                guiContent = NodeProperties.ChildConnectionPointContent();
+            }
 
         }
 
@@ -61,7 +68,7 @@ namespace Behaviour{
                 break;
             }
 
-            if (GUI.Button(apparentRect, "", style))
+            if (GUI.Button(apparentRect, guiContent, style))
             {
                 if (OnClickConnectionPoint != null)
                 {

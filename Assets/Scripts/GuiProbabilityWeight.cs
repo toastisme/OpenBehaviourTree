@@ -45,7 +45,7 @@ public class GuiProbabilityWeight : GuiNode
         selectedStyle = NodeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
         rect.size = NodeProperties.SubNodeSize();
-        iconAndText.image = NodeProperties.ProbabilityWeightIcon();
+        iconAndText = NodeProperties.ProbabilityWeightContent();
     }
 
     

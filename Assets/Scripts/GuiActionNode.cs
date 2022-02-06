@@ -46,7 +46,7 @@ public class GuiActionNode : CompositeGuiNode
         activeTaskStyle = defaultTaskStyle;
         activeStyle = defaultStyle;
         color = NodeProperties.DefaultColor();
-        iconAndText.image = NodeProperties.ActionIcon();
+        iconAndText = NodeProperties.ActionContent();
     }
 
     protected override void ApplyNodeTypeSettings(

@@ -44,7 +44,7 @@ public class GuiSequenceSelector : CompositeGuiNode
         selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
         color = NodeProperties.DefaultColor();
-        iconAndText.image = NodeProperties.SequenceSelectorIcon();
+        iconAndText = NodeProperties.SequenceSelectorContent();
     }
 }
 }
