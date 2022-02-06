@@ -108,6 +108,47 @@ namespace Behaviour{
             return parentPointStyle;
         }
 
+        public static GUIStyle BlackboardIntStyle(){
+            GUIStyle style = new GUIStyle();
+            style.alignment = TextAnchor.MiddleRight;
+            style.fontStyle = FontStyle.Bold;
+            style.normal.textColor = new Color(226f/255f,226f/255f, 223f/255f);
+            return style;
+        }
+
+        public static GUIStyle BlackboardFloatStyle(){
+            GUIStyle style = BlackboardIntStyle();
+            style.normal.textColor = new Color(247f/255f, 217f/255f, 196f/255f);
+            return style;
+        }
+        public static GUIStyle BlackboardBoolStyle(){
+            GUIStyle style = BlackboardIntStyle();
+            style.normal.textColor = new Color(250f/255f,237f/255f, 203f/255f);
+            return style;
+        }
+        public static GUIStyle BlackboardStringStyle(){
+            GUIStyle style = BlackboardIntStyle();
+            style.normal.textColor = new Color(201f/255f, 228f/255f, 222f/255f);
+            return style;
+        }
+        public static GUIStyle BlackboardGameObjectStyle(){
+            GUIStyle style = BlackboardIntStyle();
+            style.normal.textColor = new Color(242f/255f, 198f/255f, 222f/255f);
+            return style;
+        }
+
+        public static GUIStyle BlackboardVector3Style(){
+            GUIStyle style = BlackboardIntStyle();
+            style.normal.textColor = new Color(198f/255f, 222f/255f, 241f/255f);
+            return style;
+        }
+
+        public static GUIStyle BlackboardVector2Style(){
+            GUIStyle style = BlackboardIntStyle();
+            style.normal.textColor = new Color(219f/255f, 205f/255f, 240f/255f);
+            return style;
+        }
+
         public static Vector2 InitDecoratorPos(){
             return new Vector2(0, NodeProperties.GuiNodeSize().y*.21f);
         }

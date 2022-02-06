@@ -59,13 +59,17 @@ namespace Behaviour{
         string[] activeBlackboardKey = {"","",""};
         bool renamingBlackboardKey = false;
 
-        // Icons
+        Dictionary<string, GUIStyle> blackboardTypeStyles;
+
+        // GUIContent
 
         GUIContent blackboardButton;
         GUIContent addKeyButton; 
         GUIContent clearTreeButton;
         GUIContent saveButton;
         GUIContent selectedNodeButton;
+
+
 
         public void SetScriptableObject(
             BehaviourTree behaviourTree,
@@ -90,6 +94,7 @@ namespace Behaviour{
         {
             customTaskNames = GetCustomTaskNames();
             LoadIcons();
+            LoadBlackboardTypeStyles();
             decisionNodeTypes = new List<NodeType>{NodeType.PrioritySelector, 
                                                 NodeType.ProbabilitySelector,
                                                 NodeType.SequenceSelector};
@@ -114,6 +119,17 @@ namespace Behaviour{
             saveButton = NodeProperties.SaveContent();
             selectedNodeButton = NodeProperties.SelectedNodeContent();
             toolbarButtons = new GUIContent[]{selectedNodeButton, blackboardButton};
+        }
+
+        private void LoadBlackboardTypeStyles(){
+            blackboardTypeStyles = new Dictionary<string, GUIStyle>();
+            blackboardTypeStyles["int"] = NodeProperties.BlackboardIntStyle();
+            blackboardTypeStyles["float"] = NodeProperties.BlackboardFloatStyle();
+            blackboardTypeStyles["bool"] = NodeProperties.BlackboardBoolStyle();
+            blackboardTypeStyles["string"] = NodeProperties.BlackboardStringStyle();
+            blackboardTypeStyles["GameObject"] = NodeProperties.BlackboardGameObjectStyle();
+            blackboardTypeStyles["Vector3"] = NodeProperties.BlackboardVector3Style();
+            blackboardTypeStyles["Vector2"] = NodeProperties.BlackboardVector2Style();
         }
 
         private void AddRootNode(){
@@ -312,7 +328,8 @@ namespace Behaviour{
             }
             else{
                 // draw button
-                if (GUILayout.Button(keyName + " (" + keyType + ")")){
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(keyName, GUILayout.MinWidth(175), GUILayout.MaxWidth(175))){
                     GenericMenu menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Rename"), false, () => OnClickRenameBlackboardKey(keyName));
                     if ((keyType == "float" || keyType == "int") && WeightKeyInUse(keyName)){
@@ -326,6 +343,8 @@ namespace Behaviour{
                     }
                     menu.ShowAsContext();
                 }
+                GUILayout.Label(keyType, blackboardTypeStyles[keyType]);
+                GUILayout.EndHorizontal();
             }
         }
 
@@ -338,6 +357,7 @@ namespace Behaviour{
                 }
                 genericMenu.ShowAsContext();
             }
+            GUILayout.Label("Keys");
 
             // Display current keys
             ICollection keyNamesCollection = bt.blackboard.GetAllKeyNames().Keys;
