@@ -74,13 +74,23 @@ public class CompositeGuiNode : CallableGuiNode
             taskRectSize.x,
             taskRectSize.y
         );
-        callNumber.SetPosition(taskRect.position);
+        SetDefaultCallNumberPos();
         ApplyDerivedSettings();
         ApplyNodeTypeSettings(
             OnClickChildPoint:OnClickChildPoint,
             OnClickParentPoint:OnClickParentPoint
             );
     }
+
+        public override void SetDefaultCallNumberPos()
+        {
+            Vector2 callNumberPos = taskRect.position;
+            callNumberPos += new Vector2(taskRect.size.x, 0);
+            callNumberPos -= new Vector2(callNumber.GetRect().width, 0);
+            callNumber.SetPosition(callNumberPos);
+        }
+
+    
 
     public void SetEditorActions(
         Action<GuiNode> UpdatePanelDetails,

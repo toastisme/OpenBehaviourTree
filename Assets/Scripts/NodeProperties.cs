@@ -45,9 +45,9 @@ namespace Behaviour{
             nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/lightskin/images/node0.png") as Texture2D;
             nodeStyle.border = new RectOffset(12, 12, 12, 12);
             nodeStyle.normal.textColor = Color.white;
-            nodeStyle.alignment = TextAnchor.UpperCenter;
+            nodeStyle.alignment = TextAnchor.UpperLeft;
             nodeStyle.fontStyle = FontStyle.Bold;
-            //nodeStyle.padding=new RectOffset(10,0,0,0);
+            nodeStyle.padding=new RectOffset(10,0,0,0);
             return nodeStyle;
         }
 

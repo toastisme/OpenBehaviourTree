@@ -40,5 +40,7 @@ public class CallNumberNode : IGuiNode
         apparentRect.position -= origin;
     }
 
+    public Rect GetRect(){return rect;}
+
 }
 }

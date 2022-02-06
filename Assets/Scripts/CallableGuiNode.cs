@@ -24,7 +24,7 @@ public class CallableGuiNode : GuiNode
     )
     {
         callNumber = new CallNumberNode();
-        callNumber.SetPosition(rect.position);
+        SetDefaultCallNumberPos();
     }
 
     public override void Drag(Vector2 delta){
@@ -41,5 +41,15 @@ public class CallableGuiNode : GuiNode
     public void SetCallNumber(int num){
         callNumber.CallNumber = num;
     }
+
+    public virtual void SetDefaultCallNumberPos(){
+
+        Vector2 callNumberPos = rect.position;
+        callNumberPos += new Vector2(rect.size.x, 0);
+        callNumberPos -= new Vector2(callNumber.GetRect().width, 0);
+        callNumber.SetPosition(callNumberPos);
+    }
+
+
 }
 }
