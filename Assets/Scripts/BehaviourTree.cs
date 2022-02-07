@@ -7,8 +7,8 @@ using UnityEditor;
 namespace Behaviour{
 public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver 
 {
-    public PrioritySelector rootNode;
-    public CompositeGuiNode guiRootNode;
+    public PrioritySelector rootNode; // Actual root node
+    public CompositeGuiNode guiRootNode; // GUI representation in BehaviourTreeEditor
 
     [SerializeField]
     public BehaviourTreeBlackboard blackboard;
@@ -17,12 +17,15 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
     [SerializeField]
     public List<SerializableNode> serializedNodes;
     [SerializeField]
-    public List<GuiNodeData> nodeMetaData;
+    public List<GuiNodeData> nodeMetaData; 
     
     public void LoadTree(MonoBehaviour monoBehaviour){
+
         /**
-        * Loads all actionNode tasks and runs their setup (getting required gameobject components etc.)
+        * Loads all actionNode tasks and runs their setup
+        * (getting required gameobject components etc.)
         */
+
         LoadRuntimeProperties(monoBehaviour, rootNode);
     }
 
@@ -30,6 +33,7 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         MonoBehaviour monoBehaviour,
         ref BehaviourTreeBlackboard blackboard
         ){
+
         /**
         * Loads all actionNode tasks and runs their setup (getting required gameobject components etc.),
         * and updates any nodes that use a blackboard to use blackboard
@@ -47,9 +51,14 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         Node node,
         ref BehaviourTreeBlackboard blackboard
     ){
+
+        /**
+         * Recursively loads properties needed from the gameobject
+         */
+
         if (Node.RequiresBlackboard(node)){
             node.UpdateBlackboard(ref blackboard);
-        }
+         }
 
         node.nodeTimeout?.LoadTask(monoBehaviour);
         node.nodeCooldown?.LoadTask(monoBehaviour);
@@ -72,6 +81,11 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         Node node
     )
     {
+
+        /**
+         * Recursively loads properties needed from the gameobject
+         */
+
         if (node is ActionNode actionNode){
             actionNode.LoadTask(monoBehaviour);
         }
@@ -86,7 +100,7 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
 
     public void ResetTree(){
         /**
-        * Sets the state of all nodes to NodeState.Idle by calling ResetState on all nodes.
+        * Calls ResetState on all nodes.
         */
         rootNode.ResetState();
     }
@@ -110,14 +124,13 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
         }
     }
     public void OnAfterDeserialize() {
-        //Unity has just written new data into the serializedNodes field.
-        //let's populate our actual runtime data with those new values.
         if (serializedNodes.Count > 0) {
             int idx = 0;
-            rootNode = (PrioritySelector)BehaviourTreeLoader.ReadNodeFromSerializedNodes (index:ref idx, 
-                                                            blackboard:blackboard,
-                                                            serializedNodes:serializedNodes
-                                                            );
+            rootNode = (PrioritySelector)BehaviourTreeLoader.ReadNodeFromSerializedNodes (
+                index:ref idx, 
+                blackboard:blackboard,
+                serializedNodes:serializedNodes
+            );
         }
         
     }
@@ -131,15 +144,10 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
     }
 
     public void OnBeforeSerialize() {
-        // Unity is about to read the serializedNodes field's contents.
-        // The correct data must now be written into that field "just in time".
-
         if (CanSaveTree()){
             serializedNodes = new List<SerializableNode>();
-            serializedNodes.Clear();
             if (CanSaveGuiData()){
                 nodeMetaData = new List<GuiNodeData>();
-                nodeMetaData.Clear();
                 BehaviourTreeSaver.SaveTree(
                     guiRootNode:guiRootNode,
                     serializedNodes:ref serializedNodes,
@@ -153,8 +161,6 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
                 );
             }
         }
-        // Now Unity is free to serialize this field, and we should get back the expected 
-        // data when it is deserialized later.
     }
 }
 }
