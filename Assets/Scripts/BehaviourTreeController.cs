@@ -6,9 +6,17 @@ using UnityEditor;
 namespace Behaviour{
 public class BehaviourTreeController : MonoBehaviour
 {
-    public BehaviourTree behaviourTree;
-    private BehaviourTree treeInstance;
-    private BehaviourTreeBlackboard blackboardInstance;
+
+    /**
+    * \class BehaviourTreeController
+    * Component attached to GameObjects to use BehaviourTrees
+    */
+
+    public BehaviourTree behaviourTree; // The template it loads from
+    private BehaviourTree treeInstance; // Runtime copy that is actually modified
+    private BehaviourTreeBlackboard blackboardInstance; //Runtime copy that is actually modified 
+
+    // Bookkeeping for displaying the tree in the editor
     private bool showingTree;
     public bool showTree;
 
@@ -34,6 +42,12 @@ public class BehaviourTreeController : MonoBehaviour
     }
 
     void ShowWindowIfSelected(){
+
+        /**
+         * Displays the behaviour tree in the editor when the object is selected
+         * in the inspector
+         */
+
         if (Selection.activeObject == this.gameObject && !showingTree && showTree){
             showingTree = true;
             ShowTree();

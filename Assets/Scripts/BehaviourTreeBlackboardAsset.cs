@@ -1,14 +1,13 @@
-
 using UnityEngine;
 using UnityEditor;
 using System;
 namespace Behaviour{
-    public class BehaviourTreeBlackboardAsset
+public class BehaviourTreeBlackboardAsset
+{
+    [MenuItem("Assets/Create/BehaviourTreeBlackboard")]
+    public static void CreateAsset ()
     {
-        [MenuItem("Assets/Create/BehaviourTreeBlackboard")]
-        public static void CreateAsset ()
-        {
-            ScriptableObjectUtility.CreateAsset<BehaviourTreeBlackboard>();
-        }
+        ScriptableObjectUtility.CreateAsset<BehaviourTreeBlackboard>();
     }
+}
 }
