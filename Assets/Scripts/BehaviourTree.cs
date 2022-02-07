@@ -7,6 +7,12 @@ using UnityEditor;
 namespace Behaviour{
 public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver 
 {
+
+    /**
+    * \class BehaviourTree
+    * Class to store and run behaviour trees.
+    */
+
     public PrioritySelector rootNode; // Actual root node
     public CompositeGuiNode guiRootNode; // GUI representation in BehaviourTreeEditor
 
