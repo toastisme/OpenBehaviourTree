@@ -134,11 +134,15 @@ public class GuiNodeTimer : GuiNode
 
     public override void Draw()
     {
+        if (IsSelected){
+            GUI.color = NodeProperties.SelectedTint();
+        }
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
         iconAndText.text = "\n\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)";
         GUI.Box(apparentRect, iconAndText, activeStyle);
         GUI.backgroundColor = currentColor;
+        GUI.color = NodeProperties.DefaultTint();
     }
 
     public override void DrawDetails()

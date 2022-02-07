@@ -126,6 +126,9 @@ public class GuiDecorator : CallableGuiNode
 
     public override void Draw()
     {
+        if (IsSelected){
+            GUI.color = NodeProperties.SelectedTint();
+        }
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
         string displayTaskAndCondition = DisplayTask;
@@ -134,6 +137,7 @@ public class GuiDecorator : CallableGuiNode
         GUI.Box(apparentRect, iconAndText, activeStyle);
         callNumber.Draw();
         GUI.backgroundColor = currentColor;
+        GUI.color = NodeProperties.DefaultTint();
     }
 
     public override void DrawDetails()

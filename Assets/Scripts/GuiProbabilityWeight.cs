@@ -144,11 +144,15 @@ public class GuiProbabilityWeight : GuiNode
     }
     public override void Draw()
     {
+        if (IsSelected){
+            GUI.color = NodeProperties.SelectedTint();
+        }
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
         iconAndText.text = "\n" + DisplayName + "\n" + DisplayTask + " : " + probabilityWeight.GetWeight().ToString();
         GUI.Box(apparentRect, iconAndText, activeStyle);
         GUI.backgroundColor = currentColor;
+        GUI.color = NodeProperties.DefaultTint();
     }
     public void SetTask(string newTask){
         DisplayTask = newTask;

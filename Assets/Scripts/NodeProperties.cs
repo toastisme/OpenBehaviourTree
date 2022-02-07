@@ -34,9 +34,10 @@ namespace Behaviour{
         public static Color ProbabilityWeightColor(){return new Color(248f/255.0f, 150f/255.0f, 30f/255.0f);}
         public static Color PrioritySelectorColor(){return new Color(39f/255.0f, 125f/255.0f, 161f/255.0f);}
         public static Color ActionColor(){return new Color(249f/255.0f, 65f/255.0f, 68f/255.0f);}
-        public static Color RunningTint(){return new Color(0f, .9f, 0f);}
+        public static Color RunningTint(){return new Color(0f, .9f, 0);}
         public static Color FailedTint(){return new Color(.9f, 0f, 0f);}
         public static Color DefaultTint(){return new Color(1f, 1f, 1f);}
+        public static Color SelectedTint(){return new Color(.8f, .8f, .8f);}
 
         // Style
 

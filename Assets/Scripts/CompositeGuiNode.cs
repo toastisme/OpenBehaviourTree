@@ -214,11 +214,17 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     protected virtual void DrawSelf(){
+        if (IsSelected){
+            GUI.color = NodeProperties.SelectedTint();
+        }
         GUI.backgroundColor = color;
         GUI.Box(apparentRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor; 
         iconAndText.text ="\n" + DisplayName + "\n" + DisplayTask;
         GUI.Box(apparentTaskRect, iconAndText, activeTaskStyle);
+        if (IsSelected){
+            GUI.color = NodeProperties.DefaultTint();
+        }
     }
 
     void DrawDecorators(){

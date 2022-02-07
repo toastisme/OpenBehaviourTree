@@ -56,6 +56,9 @@ public class GuiActionWaitNode : GuiActionNode
     }
     protected override void DrawSelf()
     {
+        if (IsSelected){
+            GUI.color = NodeProperties.SelectedTint();
+        }
         GUI.backgroundColor = color;
         GUI.Box(apparentRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor;
@@ -64,6 +67,7 @@ public class GuiActionWaitNode : GuiActionNode
         s += actionWaitNode.RandomDeviation.ToString() + " sec)";
         iconAndText.text = s;
         GUI.Box(apparentTaskRect, iconAndText, activeTaskStyle);
+        GUI.color = NodeProperties.DefaultTint();
     }
 
     protected override void ProcessContextMenu()
