@@ -10,7 +10,8 @@ public class ActionWaitNode : ActionNode
 {    
     /**
     * \class ActionWaitNode
-    * Represents an action node in the BehaviourTree class specifically for the Wait BehaviourTreeTask.
+    * Represents an action node in the BehaviourTree class specifically
+    * for the Wait BehaviourTreeTask.
     */
 
     public Wait btWaitTask{get;private set;} // The task class
@@ -30,16 +31,18 @@ public class ActionWaitNode : ActionNode
     }
 
     public override void LoadTask(MonoBehaviour monoBehaviour){
-
         btWaitTask = new Wait(WaitTime, RandomDeviation);
         btWaitTask.SetBlackboard(blackboard:ref blackboard);
         btWaitTask.Setup(monoBehaviour);
         ResetTask();
-        
     }
 
     protected override void ResetTask(){
-        // Stops the underlying coroutine and gets it ready to run again
+
+        /**
+         * Stops the underlying coroutine and gets it ready to run again
+         */
+
         if(executeTask != null){
             if (executeTask.Running){
                 executeTask.Stop();
@@ -87,14 +90,17 @@ public class ActionWaitNode : ActionNode
     }
 
     public override NodeType GetNodeType(){return NodeType.ActionWait;}
+
     public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
         this.blackboard = blackboard;
     }
-    public override void AddMisc2(float timerVal){
-        this.RandomDeviation = timerVal; 
-    }
+
     public override void AddMisc1(float timerVal){
         this.WaitTime = timerVal; 
+    }
+
+    public override void AddMisc2(float timerVal){
+        this.RandomDeviation = timerVal; 
     }
 }
 }
