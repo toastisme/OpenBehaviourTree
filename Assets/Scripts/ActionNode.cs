@@ -38,11 +38,12 @@ public class ActionNode : Node
         * the GameObject's monoBehaviour
         */
 
+        // Get the class
         Type type = TypeUtils.GetType(TaskName); 
         ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
         object[] EMPTY_PARAMETERS = new object[0]; 
         
-        // Invoke the constructor
+        // Setup the class
         btTask =  (BehaviourTreeTask)constructor.Invoke(EMPTY_PARAMETERS);
         btTask.SetBlackboard(blackboard:ref blackboard);
         btTask.Setup(monoBehaviour);
@@ -51,7 +52,11 @@ public class ActionNode : Node
     }
 
     protected virtual void ResetTask(){
-        // Stops the underlying coroutine and gets it ready to run again
+
+        /** 
+         * Stops the underlying coroutine and gets it ready to run again
+         */
+
         if(executeTask != null){
             if (executeTask.Running){
                 executeTask.Stop();
@@ -80,22 +85,24 @@ public class ActionNode : Node
             ResetTimeout();
             StartTimeout();
         }
+
         if (TimeoutExceeded()){
             ResetTask();
             CurrentState = NodeState.Failed;            
             ResetTimeout();
         }
+
         if (CurrentState == NodeState.Succeeded){
             StartCooldown();
         }
         return CurrentState;        
     }
 
-    public override void ResetState(bool resetTimers=false){
+    public override void ResetState(){
 
         /**
         * Stops the action if running.
-        * Sets the CurrentState to Idle.
+        * Sets CurrentState to Idle.
         */
 
         if (executeTask.Running){
@@ -106,6 +113,7 @@ public class ActionNode : Node
     }
 
     public override NodeType GetNodeType(){return NodeType.Action;}
+
     public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
         this.blackboard = blackboard;
     }

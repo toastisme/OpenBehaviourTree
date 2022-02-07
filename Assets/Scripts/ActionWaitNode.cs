@@ -72,7 +72,7 @@ public class ActionWaitNode : ActionNode
         return CurrentState;        
     }
 
-    public override void ResetState(bool resetTimers=false){
+    public override void ResetState(){
 
         /**
         * Stops the action if running.

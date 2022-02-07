@@ -71,27 +71,23 @@ public abstract class Node
         CurrentState = NodeState.Idle;
     }
     public virtual NodeState Evaluate(){return CurrentState;}
-    public virtual void ResetState(bool resetTimers=false){
+    public virtual void ResetState(){
         CurrentState = NodeState.Idle;
-        if (resetTimers){
-            ResetCooldown();
-            ResetTimeout();
-        }
         foreach(Node childNode in ChildNodes){
-            childNode.ResetState(resetTimers:resetTimers);
+            childNode.ResetState();
         }
     }
 
-    public virtual void ResetChildStates(bool resetTimers=false){
+    public virtual void ResetChildStates (){
         foreach(Node childNode in ChildNodes){
-            childNode.ResetState(resetTimers:resetTimers);
+            childNode.ResetState();
         }
     }
 
-    public virtual void ResetOtherStates(Node exceptionNode, bool resetTimers=false){
+    public virtual void ResetOtherStates(Node exceptionNode){
         foreach(Node childNode in ChildNodes){
             if (childNode != exceptionNode){
-                childNode.ResetState(resetTimers:resetTimers);
+                childNode.ResetState();
             }
         }
     }
