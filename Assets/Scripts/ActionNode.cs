@@ -12,11 +12,12 @@ public class ActionNode : Node
     /**
     * \class ActionNode
     * Represents an action node in the BehaviourTree class.
+    * Action nodes run BehaviourTreeTasks when evaluated.
     */
 
-    public BehaviourTreeTask btTask{get;private set;} // The task class
+    public BehaviourTreeTask btTask{get; private set;} // The task class
     Task executeTask; // The actual execute coroutine, within a task wrapper
-    protected BehaviourTreeBlackboard blackboard; // Used find the task class at runtime
+    protected BehaviourTreeBlackboard blackboard; // Cached to give to the task class at runtime
 
     public ActionNode(
         string taskName,
@@ -30,13 +31,14 @@ public class ActionNode : Node
     }
 
     public virtual void LoadTask(MonoBehaviour monoBehaviour){
-        /**
-            * Uses task to obtain the corresponding BehaviourTreeTask class,
-            * calls its constructor and runs the BehaviourTreeTask Setup, using
-            * the GameObject's monoBehaviour
-            */
 
-        Type type = TypeUtils.GetType(TaskName); // Full class name (include the namespaces)
+        /**
+        * Uses TaskName to obtain the corresponding BehaviourTreeTask class,
+        * calls its constructor and runs the BehaviourTreeTask Setup, using
+        * the GameObject's monoBehaviour
+        */
+
+        Type type = TypeUtils.GetType(TaskName); 
         ConstructorInfo constructor = TypeUtils.ResolveEmptyConstructor(type);
         object[] EMPTY_PARAMETERS = new object[0]; 
         
