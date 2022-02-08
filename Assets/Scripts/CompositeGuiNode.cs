@@ -479,8 +479,14 @@ public class CompositeGuiNode : CallableGuiNode
 
     protected virtual void ProcessContextMenu()
     {
-        if (!IsRootNode()){
-            GenericMenu genericMenu = new GenericMenu();
+        if (IsRootNode()){
+            return;
+        }
+        GenericMenu genericMenu = new GenericMenu();
+        if (blackboard == null){
+            genericMenu.AddDisabledItem(new GUIContent("Add a blackboard asset to the behaviour tree to add conditional decorators"));
+        }
+        else{
             Dictionary<string, bool> boolKeys = blackboard.GetBoolKeys();
             if (boolKeys == null || boolKeys.Count == 0){
                 genericMenu.AddDisabledItem(new GUIContent("Add blackboard bool keys to use as decorators"));
@@ -507,9 +513,9 @@ public class CompositeGuiNode : CallableGuiNode
             else{
                 genericMenu.AddDisabledItem(new GUIContent("Add cooldown"));
             }
-            genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
-            genericMenu.ShowAsContext();
         }
+        genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
+        genericMenu.ShowAsContext();
     }
 
     public void AddChildConnection(Connection connection){
