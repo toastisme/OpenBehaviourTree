@@ -752,6 +752,7 @@ public class CompositeGuiNode : CallableGuiNode
             rect.height -= subRectSize[1];
             taskRect.y -= subRectSize[1];
             callNumber.Drag(new Vector2(0, -subRectSize[1]));
+            this.GuiTimeout.SetSelected(false);
             this.GuiTimeout = null;
             BtNode.RemoveTimeout();
             
@@ -766,6 +767,7 @@ public class CompositeGuiNode : CallableGuiNode
             rect.height -= subRectSize[1];
             taskRect.y -= subRectSize[1];
             callNumber.Drag(new Vector2(0, -subRectSize[1]));
+            this.GuiCooldown.SetSelected(false);
             this.GuiCooldown = null;
             BtNode.RemoveCooldown();
         }
