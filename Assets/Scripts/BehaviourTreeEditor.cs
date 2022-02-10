@@ -24,6 +24,9 @@ public class BehaviourTreeEditor : EditorWindow
 
     // Bookkeeping
     private bool saved;
+
+    // Hack to avoid it showing unsaved changes when loading
+    private bool loadingTree; 
     public BehaviourTree bt;
     public List<CompositeGuiNode> guiNodes;
     public List<Connection> connections;
@@ -84,10 +87,12 @@ public class BehaviourTreeEditor : EditorWindow
             AddRootNode();
         }
         else{
+            loadingTree=true;
             LoadFromRoot(
                 rootNode:bt.rootNode,
                 nodeMetaData:bt.nodeMetaData
             );
+            loadingTree=false;
         }
         bt.guiRootNode = guiNodes[0];
         this.mode = mode;
@@ -158,6 +163,7 @@ public class BehaviourTreeEditor : EditorWindow
                             Vector2.zero,
                             null,
                             UpdatePanelDetails,
+                            TreeModified,
                             OnClickRemoveNode,
                             OnClickChildPoint, 
                             OnClickParentPoint, 
@@ -716,6 +722,7 @@ public class BehaviourTreeEditor : EditorWindow
                         pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                         parentConnection:null,
                         UpdatePanelDetails:UpdatePanelDetails,
+                        TreeModified:TreeModified,
                         OnRemoveNode:OnClickRemoveNode,
                         OnClickChildPoint:OnClickChildPoint,
                         OnClickParentPoint:OnClickParentPoint,
@@ -737,6 +744,7 @@ public class BehaviourTreeEditor : EditorWindow
                         pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                         parentConnection:null,
                         UpdatePanelDetails:UpdatePanelDetails,
+                        TreeModified:TreeModified,
                         OnRemoveNode:OnClickRemoveNode,
                         OnClickChildPoint:OnClickChildPoint,
                         OnClickParentPoint:OnClickParentPoint,
@@ -759,6 +767,7 @@ public class BehaviourTreeEditor : EditorWindow
                         pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                         parentConnection:null,
                         UpdatePanelDetails:UpdatePanelDetails,
+                        TreeModified:TreeModified,
                         OnRemoveNode:OnClickRemoveNode,
                         OnClickChildPoint:OnClickChildPoint,
                         OnClickParentPoint:OnClickParentPoint,
@@ -782,6 +791,7 @@ public class BehaviourTreeEditor : EditorWindow
                             pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
+                            TreeModified:TreeModified,
                             OnRemoveNode:OnClickRemoveNode,
                             OnClickChildPoint:OnClickChildPoint,
                             OnClickParentPoint:OnClickParentPoint,
@@ -804,6 +814,7 @@ public class BehaviourTreeEditor : EditorWindow
                             pos:ConvertScreenCoordsToZoomCoords(mousePosition),
                             parentConnection:null,
                             UpdatePanelDetails:UpdatePanelDetails,
+                            TreeModified:TreeModified,
                             OnRemoveNode:OnClickRemoveNode,
                             OnClickChildPoint:OnClickChildPoint,
                             OnClickParentPoint:OnClickParentPoint,
@@ -957,6 +968,7 @@ public class BehaviourTreeEditor : EditorWindow
             displayTask:taskName,
             displayName:displayName,
             UpdatePanelDetails:UpdatePanelDetails,
+            TreeModified:TreeModified,
             blackboard:ref bt.blackboard
         );
         TreeModified();
@@ -1259,7 +1271,8 @@ public class BehaviourTreeEditor : EditorWindow
         else if (node is ProbabilityWeight weightNode){
             probabilityWeight = (GuiProbabilityWeight)guiNode;
             probabilityWeight.SetEditorActions(
-                UpdatePanelDetails:UpdatePanelDetails
+                UpdatePanelDetails:UpdatePanelDetails,
+                TreeModified:TreeModified
             );
             idx++;
             AddNodeAndConnections(
@@ -1294,6 +1307,7 @@ public class BehaviourTreeEditor : EditorWindow
             // Editor specific functions
             cgn.SetEditorActions(
                 UpdatePanelDetails:UpdatePanelDetails,
+                TreeModified:TreeModified,
                 OnRemoveNode:OnClickRemoveNode,
                 OnClickChildPoint:OnClickChildPoint,
                 OnClickParentPoint:OnClickParentPoint
@@ -1330,7 +1344,7 @@ public class BehaviourTreeEditor : EditorWindow
     }
 
     void TreeModified(){
-        if (saved){
+        if (saved && !loadingTree){
             saved = false;
             saveButton.text = "Unsaved Changes";
         }

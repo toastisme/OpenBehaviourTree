@@ -45,6 +45,7 @@ public class CompositeGuiNode : CallableGuiNode
         Vector2 pos,
         Connection parentConnection,
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         Action<CompositeGuiNode> OnRemoveNode,
         Action<ConnectionPoint> OnClickChildPoint,
         Action<ConnectionPoint> OnClickParentPoint,
@@ -55,6 +56,7 @@ public class CompositeGuiNode : CallableGuiNode
         displayName:displayName,
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
+        TreeModified:TreeModified,
         blackboard: ref blackboard
     )
     {
@@ -82,23 +84,23 @@ public class CompositeGuiNode : CallableGuiNode
             );
     }
 
-        public override void SetDefaultCallNumberPos()
-        {
-            Vector2 callNumberPos = taskRect.position;
-            callNumberPos += new Vector2(taskRect.size.x, 0);
-            callNumberPos -= new Vector2(callNumber.GetRect().width, 0);
-            callNumber.SetPosition(callNumberPos);
-        }
-
+    public override void SetDefaultCallNumberPos()
+    {
+        Vector2 callNumberPos = taskRect.position;
+        callNumberPos += new Vector2(taskRect.size.x, 0);
+        callNumberPos -= new Vector2(callNumber.GetRect().width, 0);
+        callNumber.SetPosition(callNumberPos);
+    }
     
-
     public void SetEditorActions(
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         Action<CompositeGuiNode> OnRemoveNode,
         Action<ConnectionPoint> OnClickChildPoint,
         Action<ConnectionPoint> OnClickParentPoint
     ){
         this.UpdatePanelDetails = UpdatePanelDetails;
+        this.TreeModified = TreeModified;
         this.OnRemoveNode = OnRemoveNode;
         ApplyNodeTypeSettings(
             OnClickChildPoint:OnClickChildPoint,
@@ -107,17 +109,20 @@ public class CompositeGuiNode : CallableGuiNode
         foreach(GuiDecorator decorator in Decorators){
             decorator.SetEditorActions(
                 UpdatePanelDetails:UpdatePanelDetails,
+                TreeModified:TreeModified,
                 OnRemoveDecorator:OnClickRemoveDecorator
             );
         }
 
         GuiCooldown?.SetEditorActions(
             UpdatePanelDetails:UpdatePanelDetails,
+            TreeModified:TreeModified,
             OnRemoveTimer:OnRemoveTimer
         );
 
         GuiTimeout?.SetEditorActions(
             UpdatePanelDetails:UpdatePanelDetails,
+            TreeModified:TreeModified,
             OnRemoveTimer:OnRemoveTimer
         );
 
@@ -372,6 +377,7 @@ public class CompositeGuiNode : CallableGuiNode
                 Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber-1);
             }
             GUI.changed = true;
+            TreeModified();
         }
         else{
             throw new Exception("Decorator not found in decorators list.");
@@ -396,6 +402,7 @@ public class CompositeGuiNode : CallableGuiNode
         taskRect.y += subRectSize[1];
         callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
+        TreeModified();
 
     }
 
@@ -433,6 +440,7 @@ public class CompositeGuiNode : CallableGuiNode
             displayName:"",
             pos:pos,
             UpdatePanelDetails:UpdatePanelDetails,
+            TreeModified:TreeModified,
             OnRemoveDecorator:OnClickRemoveDecorator,
             blackboard:ref blackboard,
             parentGuiNode:this
@@ -453,6 +461,7 @@ public class CompositeGuiNode : CallableGuiNode
         taskRect.y += subRectSize[1];
         callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
+        TreeModified();
     }
 
     void ShiftDecoratorsDown(bool iterateCallNumbers=true){
@@ -576,6 +585,7 @@ public class CompositeGuiNode : CallableGuiNode
             foreach(GuiDecorator decorator in Decorators){
                 if (decorator.DisplayTask == oldKeyName){
                     decorator.DisplayTask = newKeyName;
+                    TreeModified();
                 }
             }
         }
@@ -620,6 +630,7 @@ public class CompositeGuiNode : CallableGuiNode
                     displayName:"",
                     pos:pos,
                     UpdatePanelDetails:UpdatePanelDetails,
+                    TreeModified:TreeModified,
                     OnRemoveTimer:OnRemoveTimer,
                     blackboard:ref blackboard,
                     parentGuiNode:this
@@ -645,6 +656,7 @@ public class CompositeGuiNode : CallableGuiNode
                     displayName:"",
                     pos:pos,
                     UpdatePanelDetails:UpdatePanelDetails,
+                    TreeModified:TreeModified,
                     OnRemoveTimer:OnRemoveTimer,
                     blackboard:ref blackboard,
                     parentGuiNode:this
@@ -685,6 +697,7 @@ public class CompositeGuiNode : CallableGuiNode
                     displayName:"",
                     pos:pos,
                     UpdatePanelDetails:UpdatePanelDetails,
+                    TreeModified:TreeModified,
                     OnRemoveTimer:OnRemoveTimer,
                     blackboard:ref blackboard,
                     parentGuiNode:this
@@ -710,6 +723,7 @@ public class CompositeGuiNode : CallableGuiNode
                     displayName:"",
                     pos:pos,
                     UpdatePanelDetails:UpdatePanelDetails,
+                    TreeModified:TreeModified,
                     OnRemoveTimer:OnRemoveTimer,
                     blackboard:ref blackboard,
                     parentGuiNode:this
@@ -724,6 +738,7 @@ public class CompositeGuiNode : CallableGuiNode
         taskRect.y += subRectSize[1];
         callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
+        TreeModified();
     }
 
     public void OnRemoveTimer(GuiNodeTimer guiNodeTimer){
@@ -754,6 +769,8 @@ public class CompositeGuiNode : CallableGuiNode
             this.GuiCooldown = null;
             BtNode.RemoveCooldown();
         }
+        GUI.changed = true;
+        TreeModified();
     }
 
     public Rect GetApparentRect(){return apparentRect;}

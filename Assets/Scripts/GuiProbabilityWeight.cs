@@ -16,6 +16,7 @@ public class GuiProbabilityWeight : GuiNode
         string displayName,
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         ref BehaviourTreeBlackboard blackboard,
         Connection parentConnection
     ): base(
@@ -24,6 +25,7 @@ public class GuiProbabilityWeight : GuiNode
         displayName:displayName,
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
+        TreeModified:TreeModified,
         blackboard:ref blackboard
     )
     {
@@ -33,9 +35,11 @@ public class GuiProbabilityWeight : GuiNode
     }
 
     public void SetEditorActions(
-        Action<GuiNode> UpdatePanelDetails
+        Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified
     ){
         this.UpdatePanelDetails = UpdatePanelDetails;
+        this.TreeModified = TreeModified;
     }
 
     protected override void ApplyDerivedSettings()
@@ -176,6 +180,7 @@ public class GuiProbabilityWeight : GuiNode
         GUILayout.Label(NodeProperties.GetDefaultStringFromNodeType(GetNodeType()));
         GUILayout.Label("Task: " + DisplayTask);
         GUILayout.Label("Name");
+        EditorGUI.BeginChangeCheck();
         DisplayName = GUILayout.TextField(DisplayName, 50);
         if (HasConstantWeight()){
             GUILayout.Label("Constant Weight");
@@ -185,6 +190,9 @@ public class GuiProbabilityWeight : GuiNode
             if (success){
                 probabilityWeight.SetWeight(weight);
             }
+        }
+        if (EditorGUI.EndChangeCheck()){
+            TreeModified();
         }
     }
 

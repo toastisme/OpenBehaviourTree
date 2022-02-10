@@ -38,6 +38,7 @@ namespace Behaviour{
                                          string displayTask,
                                          string displayName,
                                          Action<GuiNode> UpdatePanelDetails,
+                                         Action TreeModified,
                                          ref BehaviourTreeBlackboard blackboard
                                         ){
             Vector2 centrePos = GetCentrePos();
@@ -50,6 +51,7 @@ namespace Behaviour{
                 displayName:displayName,
                 pos:centrePos,
                 UpdatePanelDetails:UpdatePanelDetails,
+                TreeModified:TreeModified,
                 blackboard:ref blackboard,
                 parentConnection:this
                                                             );

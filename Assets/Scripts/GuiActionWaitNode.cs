@@ -16,6 +16,7 @@ public class GuiActionWaitNode : GuiActionNode
         Vector2 pos,
         Connection parentConnection,
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         Action<CompositeGuiNode> OnRemoveNode,
         Action<ConnectionPoint> OnClickChildPoint,
         Action<ConnectionPoint> OnClickParentPoint,
@@ -27,6 +28,7 @@ public class GuiActionWaitNode : GuiActionNode
         pos:pos,
         parentConnection:parentConnection,
         UpdatePanelDetails:UpdatePanelDetails,
+        TreeModified:TreeModified,
         OnRemoveNode:OnRemoveNode,
         OnClickChildPoint:OnClickChildPoint,
         OnClickParentPoint:OnClickParentPoint,
@@ -42,6 +44,7 @@ public class GuiActionWaitNode : GuiActionNode
         float waitTime = actionWaitNode.WaitTime;
 
         GUILayout.Label("Wait time");
+        EditorGUI.BeginChangeCheck();
         bool success = float.TryParse(GUILayout.TextField(actionWaitNode.WaitTime.ToString(), 5), out waitTime);
         if (success){
             actionWaitNode.WaitTime = waitTime;
@@ -52,6 +55,9 @@ public class GuiActionWaitNode : GuiActionNode
         success = float.TryParse(GUILayout.TextField(actionWaitNode.RandomDeviation.ToString(), 5), out randomDeviation);
         if (success){
             actionWaitNode.RandomDeviation = randomDeviation;
+        }
+        if (EditorGUI.EndChangeCheck()){
+            TreeModified();
         }
     }
     protected override void DrawSelf()

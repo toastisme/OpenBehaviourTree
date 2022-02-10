@@ -13,6 +13,7 @@ public class CallableGuiNode : GuiNode
         string displayName,
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         ref BehaviourTreeBlackboard blackboard
     ) :base(
         node:node,
@@ -20,6 +21,7 @@ public class CallableGuiNode : GuiNode
         displayName:displayName,
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
+        TreeModified:TreeModified,
         blackboard: ref blackboard
     )
     {
@@ -43,7 +45,6 @@ public class CallableGuiNode : GuiNode
     }
 
     public virtual void SetDefaultCallNumberPos(){
-
         Vector2 callNumberPos = rect.position;
         callNumberPos += new Vector2(rect.size.x, 0);
         callNumberPos -= new Vector2(callNumber.GetRect().width, 0);

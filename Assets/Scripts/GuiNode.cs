@@ -20,6 +20,7 @@ public abstract class GuiNode : IGuiNode
 
     // Actions
     protected Action<GuiNode> UpdatePanelDetails;
+    protected Action TreeModified;
 
     // Appearance 
     public virtual string DisplayTask{
@@ -51,6 +52,7 @@ public abstract class GuiNode : IGuiNode
         string displayName,
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         ref BehaviourTreeBlackboard blackboard
     ){
         BtNode = node;
@@ -62,15 +64,16 @@ public abstract class GuiNode : IGuiNode
                              size.x, 
                              size.y);
         this.UpdatePanelDetails = UpdatePanelDetails;
+        this.TreeModified = TreeModified;
         this.blackboard = blackboard;
         iconAndText = new GUIContent();
-
     }
 
     protected virtual void ApplyDerivedSettings(){}
 
     public virtual void Drag(Vector2 delta){
         rect.position += delta;
+        TreeModified();
     }
 
     public bool IsRunning(){
@@ -85,15 +88,15 @@ public abstract class GuiNode : IGuiNode
     public virtual bool ProcessEvents(Event e, Vector2 mousePos){return false;}
 
     public virtual void SetSelected(bool selected){
-            if (selected){
-                IsSelected = true;
-                activeStyle = selectedStyle;
-            }
-            else{
-                IsSelected = false;
-                activeStyle = defaultStyle;
-            }
+        if (selected){
+            IsSelected = true;
+            activeStyle = selectedStyle;
         }
+        else{
+            IsSelected = false;
+            activeStyle = defaultStyle;
+        }
+    }
 
     protected virtual bool IsRootNode(){return false;}
 
@@ -124,7 +127,11 @@ public abstract class GuiNode : IGuiNode
         GUILayout.Label(NodeProperties.GetDefaultStringFromNodeType(GetNodeType()));
         GUILayout.Label("Task: " + DisplayTask);
         GUILayout.Label("Name");
+        EditorGUI.BeginChangeCheck();
         DisplayName = GUILayout.TextField(DisplayName, 50);
+        if (EditorGUI.EndChangeCheck()){
+            TreeModified();
+        }
     }
 
     public virtual NodeType GetNodeType(){return BtNode.GetNodeType();}

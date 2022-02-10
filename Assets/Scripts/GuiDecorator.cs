@@ -17,6 +17,7 @@ public class GuiDecorator : CallableGuiNode
         string displayName,
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         Action<GuiDecorator> OnRemoveDecorator,
         ref BehaviourTreeBlackboard blackboard,
         GuiNode parentGuiNode
@@ -26,6 +27,7 @@ public class GuiDecorator : CallableGuiNode
         displayName:displayName,
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
+        TreeModified:TreeModified,
         blackboard: ref blackboard
     )
     {
@@ -41,8 +43,10 @@ public class GuiDecorator : CallableGuiNode
 
     public void SetEditorActions(
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         Action<GuiDecorator> OnRemoveDecorator){
             this.UpdatePanelDetails = UpdatePanelDetails;
+            this.TreeModified = TreeModified;
             this.OnRemoveDecorator = OnRemoveDecorator;
     }
 
@@ -143,8 +147,13 @@ public class GuiDecorator : CallableGuiNode
     public override void DrawDetails()
     {
         base.DrawDetails();
+        bool currentCondition = decorator.invertCondition;
+        EditorGUI.BeginChangeCheck();
         decorator.invertCondition = EditorGUILayout.Toggle("Invert condition", 
                                                             decorator.invertCondition);
+        if (EditorGUI.EndChangeCheck()){
+            TreeModified();
+        }
         
     }
 }

@@ -34,6 +34,7 @@ public class GuiNodeTimer : GuiNode
         string displayName,
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         Action<GuiNodeTimer> OnRemoveTimer,
         ref BehaviourTreeBlackboard blackboard,
         GuiNode parentGuiNode
@@ -43,6 +44,7 @@ public class GuiNodeTimer : GuiNode
         displayName:displayName,
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
+        TreeModified:TreeModified,
         blackboard: ref blackboard
     ){
         this.nodeTimer = nodeTimer;
@@ -150,13 +152,21 @@ public class GuiNodeTimer : GuiNode
         GUILayout.Label("Task: " + DisplayTask);
         GUILayout.Label("Value (sec)");
         float timerVal = defaultTimerVal;
-        float.TryParse(GUILayout.TextField(nodeTimer.GetTimerVal().ToString(), 50), out timerVal);
-        nodeTimer.SetTimerVal(timerVal);
+        EditorGUI.BeginChangeCheck();
+        bool success = float.TryParse(GUILayout.TextField(nodeTimer.GetTimerVal().ToString(), 50), out timerVal);
+        if (success){
+            nodeTimer.SetTimerVal(timerVal);
+        }
+        if (EditorGUI.EndChangeCheck()){
+            TreeModified();
+        }
     }
     public void SetEditorActions(
         Action<GuiNode> UpdatePanelDetails,
+        Action TreeModified,
         Action<GuiNodeTimer> OnRemoveTimer){
             this.UpdatePanelDetails = UpdatePanelDetails;
+            this.TreeModified = TreeModified;
             this.OnRemoveTimer = OnRemoveTimer;
     }
 

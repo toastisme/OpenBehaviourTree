@@ -70,6 +70,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     parentConnection:null,
                     UpdatePanelDetails:null,
+                    TreeModified:null,
                     OnRemoveNode:null,
                     OnClickChildPoint:null,
                     OnClickParentPoint:null,
@@ -83,6 +84,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     parentConnection:null,
                     UpdatePanelDetails:null,
+                    TreeModified:null,
                     OnRemoveNode:null,
                     OnClickChildPoint:null,
                     OnClickParentPoint:null,
@@ -96,6 +98,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     parentConnection:null,
                     UpdatePanelDetails:null,
+                    TreeModified:null,
                     OnRemoveNode:null,
                     OnClickChildPoint:null,
                     OnClickParentPoint:null,
@@ -109,6 +112,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     parentConnection:null,
                     UpdatePanelDetails:null,
+                    TreeModified:null,
                     OnRemoveNode:null,
                     OnClickChildPoint:null,
                     OnClickParentPoint:null,
@@ -122,6 +126,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     parentConnection:null,
                     UpdatePanelDetails:null,
+                    TreeModified:null,
                     blackboard:ref blackboard
                 );
             case NodeType.Action:
@@ -132,6 +137,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     parentConnection:null,
                     UpdatePanelDetails:null,
+                    TreeModified:null,
                     OnRemoveNode:null,
                     OnClickChildPoint:null,
                     OnClickParentPoint:null,
@@ -145,6 +151,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     parentConnection:null,
                     UpdatePanelDetails:null,
+                    TreeModified:null,
                     OnRemoveNode:null,
                     OnClickChildPoint:null,
                     OnClickParentPoint:null,
@@ -157,6 +164,7 @@ public class BehaviourTreeLoader
                     displayName:displayName,
                     pos:pos,
                     UpdatePanelDetails:null,
+                    TreeModified:null,
                     OnRemoveDecorator:null,
                     blackboard:ref blackboard,
                     parentGuiNode:null
