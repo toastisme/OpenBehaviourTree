@@ -55,11 +55,11 @@ namespace Behaviour{
                 blackboard:ref blackboard,
                 parentConnection:this
                                                             );
-            probabilityWeightOffset = new Vector2(size.x*.5f, 0);
+            probabilityWeightOffset = new Vector2(size.x*.5f, size.y);
         }
         public void UpdateWeightPosition(){
             if (HasProbabilityWeight()){
-                probabilityWeight.Move(GetCentrePos() - probabilityWeightOffset);
+                probabilityWeight.Move(childPoint.GetRect().center - probabilityWeightOffset);
             }
         }
 
