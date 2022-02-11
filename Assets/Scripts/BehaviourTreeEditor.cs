@@ -416,7 +416,9 @@ public class BehaviourTreeEditor : EditorWindow
 
     void DrawBlackboardDetails(int unusedWindowID){
 
+        EditorGUI.BeginDisabledGroup(BlackboardInUse());
         bt.blackboard = (BehaviourTreeBlackboard)EditorGUILayout.ObjectField(bt.blackboard, typeof(BehaviourTreeBlackboard), false);
+        EditorGUI.EndDisabledGroup();
 
         if (bt.blackboard == null){
             return;
@@ -1374,6 +1376,27 @@ public class BehaviourTreeEditor : EditorWindow
             }
             activeBlackboard = true;
         }
+    }
+
+    bool BlackboardInUse(){
+        if (!activeBlackboard){
+            return false;
+        }
+        for (int i=0;i<guiNodes.Count;i++){
+            if (guiNodes[i].Decorators!=null && guiNodes[i].Decorators.Count>0){
+                return true;
+            }
+            if (guiNodes[i] is GuiProbabilitySelector ps){
+                if (ps.ChildConnections != null){
+                    for(int j=0; j<ps.ChildConnections.Count; j++){
+                        if (!ps.ChildConnections[j].probabilityWeight.HasConstantWeight()){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

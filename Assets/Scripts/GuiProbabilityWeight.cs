@@ -177,7 +177,7 @@ public class GuiProbabilityWeight : GuiNode
         parentConnection = connection;
     }
 
-    bool HasConstantWeight(){
+    public bool HasConstantWeight(){
         return (probabilityWeight.HasConstantWeight());
     }
 
