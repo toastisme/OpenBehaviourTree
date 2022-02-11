@@ -185,6 +185,10 @@ public class BehaviourTreeEditor : EditorWindow
         // Scale event delta with zoom level
         Event.current.delta /= currentZoom;
 
+        DrawStaticComponents();
+        DrawDynamicComponents();
+        UpdateBlackboard();
+
         if (mode == BehaviourTreeEditorMode.Editor){
             if (MousePosOnGrid(Event.current.mousePosition)){
                 ProcessNodeEvents(Event.current);
@@ -201,9 +205,6 @@ public class BehaviourTreeEditor : EditorWindow
             UpdateCallNumbers(guiNodes[0], 1);
         }
 
-        DrawStaticComponents();
-        DrawDynamicComponents();
-        UpdateBlackboard();
     }
 
 
