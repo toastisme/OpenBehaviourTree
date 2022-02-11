@@ -104,9 +104,15 @@ public class GuiProbabilityWeight : GuiNode
     }
 
     protected void ProcessContextMenu(){
+        GenericMenu genericMenu = new GenericMenu();
+        if (blackboard == null){
+            genericMenu.AddDisabledItem(
+                new GUIContent("Add blackboard asset to the behaviour tree to use variables as weights"));
+            genericMenu.ShowAsContext();
+            return;
+        }
         Dictionary<string, int> intKeys = blackboard.GetIntKeys();
         Dictionary<string, float> floatKeys = blackboard.GetFloatKeys();
-        GenericMenu genericMenu = new GenericMenu();
         if(NoCustomKeys(intKeys, floatKeys)){
             genericMenu.AddDisabledItem(
                 new GUIContent("Add blackboard float or int keys to use as weights")

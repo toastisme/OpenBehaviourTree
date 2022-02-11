@@ -24,6 +24,7 @@ public class BehaviourTreeEditor : EditorWindow
 
     // Bookkeeping
     private bool saved;
+    private bool activeBlackboard;
 
     // Hack to avoid it showing unsaved changes when loading
     private bool loadingTree; 
@@ -97,6 +98,8 @@ public class BehaviourTreeEditor : EditorWindow
         bt.guiRootNode = guiNodes[0];
         this.mode = mode;
         saved = true;
+
+        activeBlackboard = bt.blackboard != null? true : false;
     }
 
     private void OnEnable()
@@ -200,6 +203,7 @@ public class BehaviourTreeEditor : EditorWindow
 
         DrawStaticComponents();
         DrawDynamicComponents();
+        UpdateBlackboard();
     }
 
 
@@ -1347,6 +1351,28 @@ public class BehaviourTreeEditor : EditorWindow
         if (saved && !loadingTree){
             saved = false;
             saveButton.text = "Unsaved Changes";
+        }
+    }
+
+
+    void UpdateBlackboard(){
+        if (activeBlackboard && bt.blackboard == null){
+            for (int i=0; i<guiNodes.Count; i++){
+                guiNodes[i].UpdateBlackboard(ref bt.blackboard);
+            }
+            for (int j=0; j<connections.Count; j++){
+                connections[j].UpdateBlackboard(ref bt.blackboard);
+            }
+            activeBlackboard = false;
+        }
+        else if (!activeBlackboard && bt.blackboard != null){
+            for (int i=0; i<guiNodes.Count; i++){
+                guiNodes[i].UpdateBlackboard(ref bt.blackboard);
+            }
+            for (int j=0; j<connections.Count; j++){
+                connections[j].UpdateBlackboard(ref bt.blackboard);
+            }
+            activeBlackboard = true;
         }
     }
 

@@ -139,5 +139,11 @@ namespace Behaviour{
                 probabilityWeight.SetTask(newKeyName);
             }
         }
+
+        public void UpdateBlackboard(ref BehaviourTreeBlackboard newBlackboard){
+            if (HasProbabilityWeight()){
+                probabilityWeight.UpdateBlackboard(ref newBlackboard);
+            }
+        }
     }
 }

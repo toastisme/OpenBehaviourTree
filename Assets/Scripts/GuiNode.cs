@@ -136,5 +136,10 @@ public abstract class GuiNode : IGuiNode
 
     public virtual NodeType GetNodeType(){return BtNode.GetNodeType();}
     public Rect GetRect(){return rect;}
+    public virtual void UpdateBlackboard(ref BehaviourTreeBlackboard newBlackboard){
+        blackboard = newBlackboard;
+        BtNode.UpdateBlackboard(ref newBlackboard);
+
+    }
 }
 }

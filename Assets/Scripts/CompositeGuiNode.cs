@@ -777,5 +777,16 @@ public class CompositeGuiNode : CallableGuiNode
 
     public Rect GetApparentRect(){return apparentRect;}
 
+    public override void UpdateBlackboard(ref BehaviourTreeBlackboard newBlackboard){
+        base.UpdateBlackboard(ref newBlackboard);
+        if (Decorators != null){
+            for (int i=0; i<Decorators.Count; i++){
+                Decorators[i].UpdateBlackboard(ref newBlackboard);
+            }
+        }
+        GuiCooldown?.UpdateBlackboard(ref newBlackboard);
+        GuiTimeout?.UpdateBlackboard(ref newBlackboard);
+    }
+
 }
 }

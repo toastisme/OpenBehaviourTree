@@ -24,6 +24,8 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
     public List<SerializableNode> serializedNodes;
     [SerializeField]
     public List<GuiNodeData> nodeMetaData; 
+
+    public Action OnSetBlackboard;
     
     public void LoadTree(MonoBehaviour monoBehaviour){
 
@@ -168,5 +170,6 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
             }
         }
     }
+
 }
 }
