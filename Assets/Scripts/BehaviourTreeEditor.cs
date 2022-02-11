@@ -906,7 +906,7 @@ public class BehaviourTreeEditor : EditorWindow
             selectedNode = null;
         }
         // Remove corresponding node on the BehaviourTree
-        node.BtNode.Unlink();
+        node.BtNode.Unlink(false);
         node.BtNode.OnStateChange -= NodeStateChangeHandler;
 
         // Remove the GuiNode
