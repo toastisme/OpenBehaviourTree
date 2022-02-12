@@ -554,13 +554,12 @@ public class BehaviourTreeEditor : EditorWindow
                     else{
                         ClearConnectionSelection();
                     }
+                    renamingBlackboardKey = false;
                 }
 
                 if (e.button == 1)
                 {
-                    if (renamingBlackboardKey){
-                        renamingBlackboardKey = false;
-                    }
+                    renamingBlackboardKey = false;
                     ClearConnectionSelection();
                 }
             break;
@@ -568,6 +567,7 @@ public class BehaviourTreeEditor : EditorWindow
             case EventType.MouseDrag:
                 if (e.button == 0)
                 {
+                    renamingBlackboardKey = false;
 
                     if (MousePosOnGrid(e.mousePosition)){
                         OnDrag(e.delta);
@@ -576,9 +576,7 @@ public class BehaviourTreeEditor : EditorWindow
                 }
             break;
             case EventType.KeyDown:
-                if (renamingBlackboardKey && e.keyCode == KeyCode.Return){
-                    renamingBlackboardKey = false;
-                }
+                renamingBlackboardKey = false;
             break;
         }
     }
@@ -1359,6 +1357,12 @@ public class BehaviourTreeEditor : EditorWindow
 
 
     void UpdateBlackboard(){
+
+        /**
+         * Updates all nodes with the current BehaviourTreeBlackboard
+         * (Used when a different blackboard is added, or its removed)
+         */
+
         if (activeBlackboard && bt.blackboard == null){
             for (int i=0; i<guiNodes.Count; i++){
                 guiNodes[i].UpdateBlackboard(ref bt.blackboard);
@@ -1380,6 +1384,12 @@ public class BehaviourTreeEditor : EditorWindow
     }
 
     bool BlackboardInUse(){
+
+        /**
+         * Checks if any nodes are using blackboard keys
+         * (Used to avoid the blackboard being removed when in use)
+         */
+
         if (!activeBlackboard){
             return false;
         }
