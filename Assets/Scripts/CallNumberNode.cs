@@ -18,6 +18,7 @@ public class CallNumberNode : IGuiNode
         Vector2 size = NodeProperties.CallNumberSize();
         rect = new Rect(0, 0, size.x, size.y);
         apparentRect = new Rect(0, 0, size.x, size.y);
+        CallNumber = -1;
     }
 
     public void Draw(){

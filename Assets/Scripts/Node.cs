@@ -140,7 +140,7 @@ public abstract class Node
                 }
             }
         }
-        ParentNode.RemoveChildNode(this);
+        ParentNode?.RemoveChildNode(this);
         ChildNodes = null;
     }
 
