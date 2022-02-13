@@ -133,23 +133,23 @@ public class BehaviourTreeEditor : EditorWindow
 
     private void LoadButtons(){
 
-        blackboardButton = NodeProperties.BlackboardContent();
-        addKeyButton = NodeProperties.AddKeyContent();
-        clearTreeButton = NodeProperties.ClearTreeContent();
-        saveButton = NodeProperties.SaveContent();
-        selectedNodeButton = NodeProperties.SelectedNodeContent();
+        blackboardButton = BehaviourTreeProperties.BlackboardContent();
+        addKeyButton = BehaviourTreeProperties.AddKeyContent();
+        clearTreeButton = BehaviourTreeProperties.ClearTreeContent();
+        saveButton = BehaviourTreeProperties.SaveContent();
+        selectedNodeButton = BehaviourTreeProperties.SelectedNodeContent();
         toolbarButtons = new GUIContent[]{selectedNodeButton, blackboardButton};
     }
 
     private void LoadBlackboardTypeStyles(){
         blackboardTypeStyles = new Dictionary<string, GUIStyle>();
-        blackboardTypeStyles["int"] = NodeProperties.BlackboardIntStyle();
-        blackboardTypeStyles["float"] = NodeProperties.BlackboardFloatStyle();
-        blackboardTypeStyles["bool"] = NodeProperties.BlackboardBoolStyle();
-        blackboardTypeStyles["string"] = NodeProperties.BlackboardStringStyle();
-        blackboardTypeStyles["GameObject"] = NodeProperties.BlackboardGameObjectStyle();
-        blackboardTypeStyles["Vector3"] = NodeProperties.BlackboardVector3Style();
-        blackboardTypeStyles["Vector2"] = NodeProperties.BlackboardVector2Style();
+        blackboardTypeStyles["int"] = BehaviourTreeProperties.BlackboardIntStyle();
+        blackboardTypeStyles["float"] = BehaviourTreeProperties.BlackboardFloatStyle();
+        blackboardTypeStyles["bool"] = BehaviourTreeProperties.BlackboardBoolStyle();
+        blackboardTypeStyles["string"] = BehaviourTreeProperties.BlackboardStringStyle();
+        blackboardTypeStyles["GameObject"] = BehaviourTreeProperties.BlackboardGameObjectStyle();
+        blackboardTypeStyles["Vector3"] = BehaviourTreeProperties.BlackboardVector3Style();
+        blackboardTypeStyles["Vector2"] = BehaviourTreeProperties.BlackboardVector2Style();
     }
 
     private void AddRootNode(){
@@ -270,6 +270,11 @@ public class BehaviourTreeEditor : EditorWindow
     }
 
     private void DrawDetailsPanel(){
+
+        /**
+         * Side panel with basic controls and info
+         */
+
         BeginWindows();
         detailsPanel = GUILayout.Window(1, 
                                         detailsPanel, 
@@ -646,7 +651,7 @@ public class BehaviourTreeEditor : EditorWindow
 
         GenericMenu genericMenu = new GenericMenu();
         foreach(NodeType nodeType in decisionNodeTypes){
-            string nodeTypeString = NodeProperties.GetDefaultStringFromNodeType(nodeType);
+            string nodeTypeString = BehaviourTreeProperties.GetDefaultStringFromNodeType(nodeType);
             genericMenu.AddItem(new GUIContent(nodeTypeString), false, () => OnClickAddNode(mousePosition, nodeType, nodeTypeString)); 
         }
         foreach(string taskName in customTaskNames){
@@ -681,7 +686,7 @@ public class BehaviourTreeEditor : EditorWindow
     {
         if (selectedChildPoint != null && selectedParentPoint == null)
         {
-            Vector2 startPos = selectedChildPoint.GetApparentRect().center;
+            Vector2 startPos = selectedChildPoint.GetScaledRect().center;
             Handles.DrawBezier(
                 startPos,
                 e.mousePosition,

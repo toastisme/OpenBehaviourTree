@@ -6,6 +6,12 @@ using System;
 namespace Behaviour{
 public class CallableGuiNode : GuiNode
 {
+
+    /**
+     * Class for GuiNodes that can be called in the BehaviourTree,
+     * and so have a CallNumberNode to show its call number.
+     */ 
+
     public CallNumberNode callNumber; // Displays when the node will be called in the tree
     protected CallableGuiNode(
         Node node,

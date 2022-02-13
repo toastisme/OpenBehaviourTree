@@ -5,6 +5,11 @@ using UnityEngine;
 public class Wait : Behaviour.BehaviourTreeTask
 {
 
+    /**
+     * \class Wait
+     * Wait task that can be run by an ActionNode in a BehaviourTree.
+     */
+
     public float waitTime{get;set;}
     public float randomDeviation{get;set;}
     public Wait(){
@@ -20,9 +25,7 @@ public class Wait : Behaviour.BehaviourTreeTask
         float wait = waitTime + Random.Range(-randomDeviation, randomDeviation);
         wait = wait < 0 ? 0 : wait;
         currentState(Behaviour.NodeState.Running);
-        Debug.Log($"Running wait task ({wait})");
         yield return new WaitForSeconds(wait);
-        Debug.Log("Finished task");
         currentState(Behaviour.NodeState.Succeeded);
     }
 }

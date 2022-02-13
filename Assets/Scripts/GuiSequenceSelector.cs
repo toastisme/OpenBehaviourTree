@@ -6,6 +6,11 @@ using System;
 namespace Behaviour{
 public class GuiSequenceSelector : CompositeGuiNode
 {
+    /**
+    * \class GuiSequenceSelector
+    * Displays an SequenceSelector in the BehaviourTree class using the BehaviourTreeEditor.
+    */
+
     SequenceSelector sequenceSelector;
     public GuiSequenceSelector(
         Node node,
@@ -38,15 +43,15 @@ public class GuiSequenceSelector : CompositeGuiNode
     }
     protected override void ApplyDerivedSettings()
     {
-        taskRectColor = NodeProperties.SequenceSelectorColor();
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        taskRectColor = BehaviourTreeProperties.SequenceSelectorColor();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
-        defaultTaskStyle = NodeProperties.TaskNodeStyle();
-        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        defaultTaskStyle = BehaviourTreeProperties.TaskNodeStyle();
+        selectedTaskStyle = BehaviourTreeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
-        color = NodeProperties.DefaultColor();
-        iconAndText = NodeProperties.SequenceSelectorContent();
+        color = BehaviourTreeProperties.DefaultColor();
+        iconAndText = BehaviourTreeProperties.SequenceSelectorContent();
     }
 }
 }

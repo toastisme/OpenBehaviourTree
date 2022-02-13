@@ -8,6 +8,11 @@ using System;
  [Serializable]
  public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
  {
+
+     /**
+      * Wrapper for Dictionary to allow for serialization.
+      */
+
      [SerializeField]
      private List<TKey> keys = new List<TKey>();
      

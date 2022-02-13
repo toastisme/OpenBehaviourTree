@@ -6,7 +6,11 @@ using System;
 namespace Behaviour{
 public class GuiProbabilitySelector : CompositeGuiNode
 {
-    ProbabilitySelector probabilitySelector;
+    /**
+    * \class GuiProbabilitySelector
+    * Displays an ProbabilitySelector in the BehaviourTree class using the BehaviourTreeEditor.
+    */
+    ProbabilitySelector probabilitySelector; // The ProbabilitySelector being displayed
     public GuiProbabilitySelector(
         Node node,
         string displayTask,
@@ -38,15 +42,15 @@ public class GuiProbabilitySelector : CompositeGuiNode
     }
     protected override void ApplyDerivedSettings()
     {
-        taskRectColor = NodeProperties.ProbabilitySelectorColor();
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        taskRectColor = BehaviourTreeProperties.ProbabilitySelectorColor();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
-        defaultTaskStyle = NodeProperties.TaskNodeStyle();
-        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        defaultTaskStyle = BehaviourTreeProperties.TaskNodeStyle();
+        selectedTaskStyle = BehaviourTreeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
-        color = NodeProperties.DefaultColor();
-        iconAndText = NodeProperties.ProbabilitySelectorContent();
+        color = BehaviourTreeProperties.DefaultColor();
+        iconAndText = BehaviourTreeProperties.ProbabilitySelectorContent();
     }
 }
 }

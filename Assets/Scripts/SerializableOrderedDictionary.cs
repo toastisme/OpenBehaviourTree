@@ -8,6 +8,10 @@ using System;
  [Serializable]
  public class SerializableOrderedDictionary : OrderedDictionary, ISerializationCallbackReceiver
  {
+     /**
+      * Wrapper for OrderedDictionary to allow for serialization.
+      */
+
      [SerializeField]
      private List<string> keys = new List<string>();
      

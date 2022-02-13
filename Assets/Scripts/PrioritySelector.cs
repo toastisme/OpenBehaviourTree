@@ -5,7 +5,8 @@ public class PrioritySelector : Node
     /**
     * \class PrioritySelector
     * Represents a priority node in the BehaviourTree class.
-    * Child nodes are evaluated in order, and if any succeed this node evaluates as succeeded.
+    * Child nodes are evaluated in order, and if any succeed
+    * this node evaluates as succeeded.
     * Returns failed if all child nodes return failed.
     */
 
@@ -18,6 +19,12 @@ public class PrioritySelector : Node
     ){}
 
     public override NodeState Evaluate() { 
+
+        /**
+        * Child nodes are evaluated in order, and if any succeed 
+        * this node evaluates as succeeded.
+        * Returns failed if all child nodes return failed.
+        */
 
         if (CooldownActive()){
             CurrentState = NodeState.Failed;

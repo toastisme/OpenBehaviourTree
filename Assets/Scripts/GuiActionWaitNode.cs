@@ -7,6 +7,13 @@ using System;
 namespace Behaviour{
 public class GuiActionWaitNode : GuiActionNode
 {
+    /**
+    * \class GuiActionWaitNode
+    * Displays an ActionNode in the BehaviourTree class using the BehaviourTreeEditor,
+    * specifically for the Wait BehaviourTreeTask.
+    * Users can specify the wait time and random deviation that are then passed to the Wait task at runtime.
+    */
+
     ActionWaitNode actionWaitNode;
     string displayTask;
     public GuiActionWaitNode(
@@ -35,15 +42,18 @@ public class GuiActionWaitNode : GuiActionNode
         blackboard:ref blackboard
     ){
         actionWaitNode = (ActionWaitNode)node;
-        iconAndText = NodeProperties.WaitContent();
+        iconAndText = BehaviourTreeProperties.WaitContent();
     }
 
     public override void DrawDetails()
     {
+        /**
+         * What details are displayed in the details panel of the BehaviourTreeEditor
+         */
         base.DrawDetails();
         float waitTime = actionWaitNode.WaitTime;
 
-        GUILayout.Label("Wait time");
+        GUILayout.Label("Wait Time");
         EditorGUI.BeginChangeCheck();
         bool success = float.TryParse(GUILayout.TextField(actionWaitNode.WaitTime.ToString(), 5), out waitTime);
         if (success){
@@ -51,7 +61,7 @@ public class GuiActionWaitNode : GuiActionNode
         }
         
         float randomDeviation = actionWaitNode.RandomDeviation;
-        GUILayout.Label("Random deviation");
+        GUILayout.Label("Random Deviation");
         success = float.TryParse(GUILayout.TextField(actionWaitNode.RandomDeviation.ToString(), 5), out randomDeviation);
         if (success){
             actionWaitNode.RandomDeviation = randomDeviation;
@@ -63,17 +73,17 @@ public class GuiActionWaitNode : GuiActionNode
     protected override void DrawSelf()
     {
         if (IsSelected){
-            GUI.color = NodeProperties.SelectedTint();
+            GUI.color = BehaviourTreeProperties.SelectedTint();
         }
         GUI.backgroundColor = color;
-        GUI.Box(apparentRect, "", activeStyle);
+        GUI.Box(scaledRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor;
         string s =  "\n" + DisplayName + "\n" + DisplayTask;
         s += " (" + actionWaitNode.WaitTime.ToString() + " +/- ";
         s += actionWaitNode.RandomDeviation.ToString() + " sec)";
         iconAndText.text = s;
-        GUI.Box(apparentTaskRect, iconAndText, activeTaskStyle);
-        GUI.color = NodeProperties.DefaultTint();
+        GUI.Box(scaledTaskRect, iconAndText, activeTaskStyle);
+        GUI.color = BehaviourTreeProperties.DefaultTint();
     }
 
     protected override void ProcessContextMenu()

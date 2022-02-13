@@ -7,6 +7,13 @@ using System;
 namespace Behaviour{
 public class GuiRootNode : GuiPrioritySelector
 {
+
+    /**
+     * \class GuiRootNode
+     * Derived GuiPrioritySelector class with no ParentPoint 
+     * (thereby stopping it being able to be a child to another node).
+     */
+
     public GuiRootNode(
         Node node,
         string displayTask,
@@ -38,15 +45,15 @@ public class GuiRootNode : GuiPrioritySelector
     }
     protected override void ApplyDerivedSettings()
     {
-        taskRectColor = NodeProperties.PrioritySelectorColor();
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        taskRectColor = BehaviourTreeProperties.PrioritySelectorColor();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
-        color = NodeProperties.DefaultColor();
-        defaultTaskStyle = NodeProperties.TaskNodeStyle();
-        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        color = BehaviourTreeProperties.DefaultColor();
+        defaultTaskStyle = BehaviourTreeProperties.TaskNodeStyle();
+        selectedTaskStyle = BehaviourTreeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
-        iconAndText = NodeProperties.PrioritySelectorContent();
+        iconAndText = BehaviourTreeProperties.PrioritySelectorContent();
     }
 
     protected override void ApplyNodeTypeSettings(
@@ -54,11 +61,12 @@ public class GuiRootNode : GuiPrioritySelector
         Action<ConnectionPoint> OnClickParentPoint
     ){
 
-        // Default GuiNode has a child and parent point
         ChildPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.In, 
-                                            NodeProperties.ChildPointStyle(), 
+                                            BehaviourTreeProperties.ChildPointStyle(), 
                                             OnClickChildPoint);
+                                            
+        // Root nodes cannot have parents
         ParentPoint = null;
 
     }

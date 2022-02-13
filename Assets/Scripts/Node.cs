@@ -22,6 +22,12 @@ public enum NodeType{
 
 [Serializable]
 public struct SerializableNode{
+
+    /**
+     * \struct SerializableNode
+     * Used to store Node data.
+     */ 
+
     public int type;
     public string taskName;
     public int childCount;
@@ -32,6 +38,10 @@ public struct SerializableNode{
 }
 public abstract class Node
 {
+    /**
+    * \class Node
+    * Base class for a node in the BehaviourTree class.
+    */
 
     public delegate void OnStateChangeDelegate();
     public event OnStateChangeDelegate OnStateChange;
@@ -47,13 +57,13 @@ public abstract class Node
         }
     }
     /**
-        * If a decision node (SequenceSelector, ProbabilitySelector, PrioritySelector), 
-        * TaskName is the node type.
-        * If a decorator, TaskName is a boolean key in the BehaviourTreeBlackboard.
-        * If a ProbabilityWeight, TaskName is an int or float key 
-        * in the BehaviourTreeBlackboard.
-        * If an ActionNode, TaskName is the name of a BehaviourTreeTask class.
-        */ 
+    * If a decision node (SequenceSelector, ProbabilitySelector, PrioritySelector), 
+    * TaskName is the node type.
+    * If a decorator, TaskName is a boolean key in the BehaviourTreeBlackboard.
+    * If a ProbabilityWeight, TaskName is an int or float key 
+    * in the BehaviourTreeBlackboard.
+    * If an ActionNode, TaskName is the name of a BehaviourTreeTask class.
+    */ 
     public string TaskName {get; set;}
     public List<Node> ChildNodes{get; protected set;}
     public Node ParentNode{get; protected set;}
@@ -71,6 +81,7 @@ public abstract class Node
         CurrentState = NodeState.Idle;
     }
     public virtual NodeState Evaluate(){return CurrentState;}
+
     public virtual void ResetState(){
         CurrentState = NodeState.Idle;
         foreach(Node childNode in ChildNodes){
@@ -125,6 +136,15 @@ public abstract class Node
     }
 
     public void Unlink(bool updateList=true){
+
+        /**
+         * Removes references of self from ParentNode
+         * and ChildNodes.
+         * If updateList, ParentNode is linked to 
+         * ChildNodes (i.e removing self from the chain and 
+         * relinking the chain).
+         */
+
         if (updateList){
             if (ChildNodes != null){
                 foreach(Node childNode in ChildNodes){
@@ -170,10 +190,22 @@ public abstract class Node
     }
 
     public virtual void AddMisc1(float val){
+
+        /**
+         * SerializedNodes have two misc float fields that are
+         * use for different purposes for different nodes
+         */ 
+
         this.nodeTimeout = new NodeTimer(timerVal:val);
     }
 
     public virtual void AddMisc2(float val){
+
+        /**
+         * SerializedNodes have two misc float fields that are
+         * use for different purposes for different nodes
+         */ 
+
         this.nodeCooldown = new NodeTimer(timerVal:val);
     }
 

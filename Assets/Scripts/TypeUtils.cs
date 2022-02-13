@@ -6,10 +6,13 @@ using System.Reflection;
 
 public class TypeUtils 
 {
-    /*
+    /**
+     * \class TypeUtils
+     * Methods for getting a class from a string.
      * Taken from 
      * https://coffeebraingames.wordpress.com/2017/07/16/reflection-series-part-1-from-class-name-to-instance/
      */
+
     public static Type GetType(string typeName) {
         // Try Type.GetType() first. This will work with types defined
         // by the Mono runtime, in the same assembly as the caller, etc.

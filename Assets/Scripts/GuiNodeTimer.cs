@@ -11,9 +11,14 @@ public enum TimerType{
 }
 public class GuiNodeTimer : GuiNode
 {
+    /**
+    * \class GuiNodeTimer
+    * Class for displaying a NodeTimer in the BehaviourTree class, using the BehaviourTreeEditor.
+    */
+
     GuiNode parentGuiNode;
     Action<GuiNodeTimer> OnRemoveTimer;
-    NodeTimer nodeTimer;
+    NodeTimer nodeTimer; // The NodeTimer being displayed
 
     string displayTask;
 
@@ -51,20 +56,20 @@ public class GuiNodeTimer : GuiNode
         this.parentGuiNode = parentGuiNode;
         this.OnRemoveTimer = OnRemoveTimer;
         ApplyDerivedSettings();
-        this.defaultTimerVal = NodeProperties.DefaultTimerVal();
+        this.defaultTimerVal = BehaviourTreeProperties.DefaultTimerVal();
     }
 
     protected override void ApplyDerivedSettings(){
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
-        color = NodeProperties.DecoratorColor();
-        rect.size = NodeProperties.SubNodeSize();
+        color = BehaviourTreeProperties.DecoratorColor();
+        rect.size = BehaviourTreeProperties.SubNodeSize();
         if (displayTask == "Timeout"){
-            iconAndText = NodeProperties.TimeoutContent();
+            iconAndText = BehaviourTreeProperties.TimeoutContent();
         }
         else{
-            iconAndText = NodeProperties.CooldownContent();
+            iconAndText = BehaviourTreeProperties.CooldownContent();
         }
     }
 
@@ -97,7 +102,7 @@ public class GuiNodeTimer : GuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (apparentRect.Contains(mousePos))
+                    if (scaledRect.Contains(mousePos))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -111,7 +116,7 @@ public class GuiNodeTimer : GuiNode
                     }
                 }
 
-                if (e.button == 1 && apparentRect.Contains(mousePos))
+                if (e.button == 1 && scaledRect.Contains(mousePos))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -137,18 +142,22 @@ public class GuiNodeTimer : GuiNode
     public override void Draw()
     {
         if (IsSelected){
-            GUI.color = NodeProperties.SelectedTint();
+            GUI.color = BehaviourTreeProperties.SelectedTint();
         }
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
         iconAndText.text = "\n\n" + DisplayTask + " (" + nodeTimer.GetTimerVal() + " sec)";
-        GUI.Box(apparentRect, iconAndText, activeStyle);
+        GUI.Box(scaledRect, iconAndText, activeStyle);
         GUI.backgroundColor = currentColor;
-        GUI.color = NodeProperties.DefaultTint();
+        GUI.color = BehaviourTreeProperties.DefaultTint();
     }
 
     public override void DrawDetails()
     {
+        /**
+         * What details are displayed in the details panel of the BehaviourTreeEditor
+         */
+
         GUILayout.Label("Task: " + DisplayTask);
         GUILayout.Label("Value (sec)");
         float timerVal = defaultTimerVal;
@@ -162,6 +171,12 @@ public class GuiNodeTimer : GuiNode
         }
     }
     public void SetEditorActions(
+
+        /**
+         * Allows for decoupling editor actions being set from the 
+         * constructor (required e.g when loading from disk in BehaviourTreeLoader)
+         */ 
+
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified,
         Action<GuiNodeTimer> OnRemoveTimer){

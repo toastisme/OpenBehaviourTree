@@ -5,6 +5,13 @@ using UnityEngine;
 namespace Behaviour{
 public class NodeTimer 
 {
+
+    /**
+     * \class NodeTimer
+     * Class used to allow different timer decorators to be added to nodes
+     * in BehaviourTrees (e.g. timeout and cooldown nodes).
+     */
+
     float timerVal;
 
     bool timerExceeded;

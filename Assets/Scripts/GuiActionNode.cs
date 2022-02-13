@@ -7,6 +7,13 @@ using System;
 namespace Behaviour{
 public class GuiActionNode : CompositeGuiNode
 {
+    /**
+    * \class GuiActionNode
+    * Displays an ActionNode in the BehaviourTree class using the BehaviourTreeEditor.
+    * The ActionNode displayTask is the ActionNode.TaskName, and refers to a BehaviourTreeTask.
+    * This contains a coroutine that is executed when the node is evaluated.
+    */
+
     public ActionNode actionNode{get; private set;}
     public GuiActionNode(
         Node node,
@@ -40,15 +47,15 @@ public class GuiActionNode : CompositeGuiNode
     }
     protected override void ApplyDerivedSettings()
     {
-        taskRectColor = NodeProperties.ActionColor();
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
-        defaultTaskStyle = NodeProperties.TaskNodeStyle();
-        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        taskRectColor = BehaviourTreeProperties.ActionColor();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
+        defaultTaskStyle = BehaviourTreeProperties.TaskNodeStyle();
+        selectedTaskStyle = BehaviourTreeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
         activeStyle = defaultStyle;
-        color = NodeProperties.DefaultColor();
-        iconAndText = NodeProperties.ActionContent();
+        color = BehaviourTreeProperties.DefaultColor();
+        iconAndText = BehaviourTreeProperties.ActionContent();
     }
 
     protected override void ApplyNodeTypeSettings(
@@ -56,11 +63,10 @@ public class GuiActionNode : CompositeGuiNode
         Action<ConnectionPoint> OnClickParentPoint
     ){
 
-        // Default GuiNode has a child and parent point
-        ChildPoint = null;
+        ChildPoint = null; // ActionNodes are leaf nodes and so have no children
         ParentPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.Out, 
-                                            NodeProperties.ParentPointStyle(), 
+                                            BehaviourTreeProperties.ParentPointStyle(), 
                                             OnClickParentPoint);
 
     }

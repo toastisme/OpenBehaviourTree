@@ -1,6 +1,9 @@
 using UnityEngine;
 
-// Taken from http://martinecker.com/martincodes/unity-editor-window-zooming/
+/**
+ * Methods for zooming in a specific area of the editor
+ * Taken from http://martinecker.com/martincodes/unity-editor-window-zooming/
+ */
 
 // Helper Rect extension methods
 public static class RectExtensions
@@ -51,8 +54,9 @@ public class EditorZoomArea
     private static Matrix4x4 _prevGuiMatrix;
  
     public static Rect Begin(float zoomScale, Rect screenCoordsArea)
-    {
-        GUI.EndGroup();        // End the group Unity begins automatically for an EditorWindow to clip out the window tab. This allows us to draw outside of the size of the EditorWindow.
+    {   // End the group Unity begins automatically for an EditorWindow to clip out the window tab. 
+        // This allows us to draw outside of the size of the EditorWindow.
+        GUI.EndGroup(); 
  
         Rect clippedArea = screenCoordsArea.ScaleSizeBy(1.0f / zoomScale, screenCoordsArea.TopLeft());
         clippedArea.y += kEditorWindowTabHeight;

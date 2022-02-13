@@ -5,6 +5,12 @@ using UnityEngine;
 namespace Behaviour{
 public class BehaviourTreeSaver
 {
+
+    /**
+    * \class BehaviourTreeSaver
+    * Static methods to save serialized versions of Nodes and GuiNodes.
+    */
+
     public static void AddNodeToSerializedNodes(Node node, 
                                          ref List<SerializableNode> serializedNodes) {
         /**
@@ -59,10 +65,10 @@ public class BehaviourTreeSaver
     }
 
     public static void AddNodeMetaData(CompositeGuiNode node, ref List<GuiNodeData> guiNodeData){
+
         /**
          *Recursive function to write all GuiNode meta data first into guiNodeData
          */
-
         
         // Add decorators
         if (node.Decorators != null){

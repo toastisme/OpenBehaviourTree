@@ -8,9 +8,10 @@ public class ProbabilitySelector : Node
     /**
     * \class ProbabilitySelector
     * Represents a probability node in the BehaviourTree class.
-    * A Child node is selected at random, and if it returns succeed this node evaluates as succeeded.
+    * A Child node is selected at random, and if it returns succeeded
+    * this node evaluates as succeeded.
     * Selection is based off of weights obtained from ProbabilityWeights attached to each
-    child connection.
+    * child node.
     */
 
     private Node selectedNode;
@@ -50,12 +51,13 @@ public class ProbabilitySelector : Node
     public override NodeState Evaluate(){
 
         /**
-        * If selectedNode == null, UpdateWeights is called and 
-        * a node is selected random, weighted by childNodeWeights (SelectNode).
+        * If selectedNode == null, SelectNode is called and 
+        * a node is selected random, weighted by child node ProbabilityWeights.
         * State is then set to selectedNode.Evaluate().
-        * If selectedNode.Evaluate is FAILURE or SUCCESS, 
+        * If selectedNode.Evaluate is Failed or Succeeded, 
         * selectedNode is set to null.
         */
+
         if (CooldownActive()){
             CurrentState = NodeState.Failed;
             return CurrentState;
@@ -86,6 +88,12 @@ public class ProbabilitySelector : Node
     }
 
     List<float> GetWeights(){
+
+        /**
+         * Iterates over all child nodes and gets their
+         * weight values.
+         */ 
+
         List<float> weights = new List<float>();
         foreach(Node childNode in ChildNodes){
             if (childNode is ProbabilityWeight probabilityWeight){

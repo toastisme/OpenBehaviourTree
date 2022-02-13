@@ -4,6 +4,12 @@ using System.IO;
 
 public static class CustomAssetUtility
 {
+    /**
+     * \class CustomAssetUtility
+     * Wrapper for creating assets.
+     * Taken from http://www.jacobpennock.com/Blog/customassetutility-source/
+     */
+
     public static void CreateAsset<T> () where T : ScriptableObject
     {
         T asset = ScriptableObject.CreateInstance<T> ();

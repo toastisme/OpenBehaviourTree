@@ -7,8 +7,13 @@ using UnityEditor;
 namespace Behaviour{
 public class GuiProbabilityWeight : GuiNode
 {
-    Connection parentConnection;
-    ProbabilityWeight probabilityWeight;
+    /**
+    * \class GuiProbabilityWeight
+    * Displays an ProbabilityWeight in the BehaviourTree class using the BehaviourTreeEditor.
+    * These are children of Connections.
+    */
+    Connection parentConnection; // The Connection self is child of 
+    ProbabilityWeight probabilityWeight; // The ProbabilityWeight being displayed
 
     public GuiProbabilityWeight(
         Node node,
@@ -38,18 +43,22 @@ public class GuiProbabilityWeight : GuiNode
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified
     ){
+        /**
+         * Allows for decoupling editor actions being set from the 
+         * constructor (required e.g when loading from disk in BehaviourTreeLoader)
+         */ 
         this.UpdatePanelDetails = UpdatePanelDetails;
         this.TreeModified = TreeModified;
     }
 
     protected override void ApplyDerivedSettings()
     {
-        color = NodeProperties.ProbabilityWeightColor();
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        color = BehaviourTreeProperties.ProbabilityWeightColor();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
-        rect.size = NodeProperties.SubNodeSize();
-        iconAndText = NodeProperties.ProbabilityWeightContent();
+        rect.size = BehaviourTreeProperties.SubNodeSize();
+        iconAndText = BehaviourTreeProperties.ProbabilityWeightContent();
     }
 
     
@@ -67,7 +76,7 @@ public class GuiProbabilityWeight : GuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (apparentRect.Contains(mousePos))
+                    if (scaledRect.Contains(mousePos))
                     {
                         guiChanged = true;
                         SetSelected(true);
@@ -79,7 +88,7 @@ public class GuiProbabilityWeight : GuiNode
                         SetSelected(false);
                     }
                 }
-                if (e.button == 1 && apparentRect.Contains(mousePos))
+                if (e.button == 1 && scaledRect.Contains(mousePos))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -93,6 +102,7 @@ public class GuiProbabilityWeight : GuiNode
     public override void Drag(Vector2 delta){}
 
     bool NoCustomKeys(Dictionary<string, int> intKeys, Dictionary<string,float> floatKeys){
+
         if (intKeys == null && floatKeys == null) {
             return true;
         }
@@ -155,14 +165,14 @@ public class GuiProbabilityWeight : GuiNode
     public override void Draw()
     {
         if (IsSelected){
-            GUI.color = NodeProperties.SelectedTint();
+            GUI.color = BehaviourTreeProperties.SelectedTint();
         }
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
         iconAndText.text = "\n" + DisplayName + "\n" + DisplayTask + " : " + probabilityWeight.GetWeight().ToString();
-        GUI.Box(apparentRect, iconAndText, activeStyle);
+        GUI.Box(scaledRect, iconAndText, activeStyle);
         GUI.backgroundColor = currentColor;
-        GUI.color = NodeProperties.DefaultTint();
+        GUI.color = BehaviourTreeProperties.DefaultTint();
     }
     public void SetTask(string newTask){
         DisplayTask = newTask;
@@ -183,7 +193,10 @@ public class GuiProbabilityWeight : GuiNode
 
 
     public override void DrawDetails(){
-        GUILayout.Label(NodeProperties.GetDefaultStringFromNodeType(GetNodeType()));
+        /**
+         * What details are displayed in the details panel of the BehaviourTreeEditor
+         */
+        GUILayout.Label(BehaviourTreeProperties.GetDefaultStringFromNodeType(GetNodeType()));
         GUILayout.Label("Task: " + DisplayTask);
         GUILayout.Label("Name");
         EditorGUI.BeginChangeCheck();

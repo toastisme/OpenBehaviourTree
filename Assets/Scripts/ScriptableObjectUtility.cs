@@ -4,9 +4,12 @@ using System.IO;
  
 public static class ScriptableObjectUtility
 {
-    /// <summary>
-    //  This makes it easy to create, name and place unique new ScriptableObject asset files.
-    /// </summary>
+    /**
+     * \class ScriptableObjectUtility
+     * Helper functions for using ScirptableObjects.
+     * Taken from https://forum.unity.com/threads/saving-scriptable-objects-solved.551866/
+     */
+
     public static void CreateAsset<T> () where T : ScriptableObject
     {
         T asset = ScriptableObject.CreateInstance<T> ();
@@ -34,15 +37,12 @@ public static class ScriptableObjectUtility
  
     public static void OnDestroy()
     {
- 
-        Debug.Log("SOU on Destory");
         AssetDatabase.SaveAssets();
  
     }
  
     public static void OnApplicationQuit()
     {
-        Debug.Log("SOU on Quit");
         AssetDatabase.SaveAssets();
     }
 }

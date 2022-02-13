@@ -8,10 +8,13 @@ namespace Behaviour{
 public class CompositeGuiNode : CallableGuiNode
 {
     /**
-     * CompositeGuiNodes are nodes made up of GuiNodes (i.e they hold a list of GuiDecorators),
+     * \class CompositeGuiNode
+     * CallableGuiNodes made up of several GuiNodes 
+     * (i.e they hold a list of GuiDecorators and GuiNodeTimers),
      * and have connections to other CompositeGuiNodes.
      */
      
+    // GuiNodes
     public List<GuiDecorator> Decorators{get; set;}
     public GuiNodeTimer GuiTimeout{get; set;}
     public GuiNodeTimer GuiCooldown{get; set;}
@@ -32,11 +35,11 @@ public class CompositeGuiNode : CallableGuiNode
     protected GUIStyle activeTaskStyle;
 
     protected Rect taskRect; // Rect containing the task and display name
-    protected Rect apparentTaskRect; // Rect containing the task and display name
+    protected Rect scaledTaskRect; // taskRect scaled to the current zoom level
     protected Color taskRectColor;
-    protected Vector2 taskRectSize = NodeProperties.TaskNodeSize();
-    protected Vector2 subRectSize = NodeProperties.SubNodeSize();
-    private Vector2 initDecoratorPos = NodeProperties.InitDecoratorPos();
+    protected Vector2 taskRectSize = BehaviourTreeProperties.TaskNodeSize(); // Size of rect showing the node task
+    protected Vector2 subRectSize = BehaviourTreeProperties.SubNodeSize(); // Size of GuiDecorators and GuiNodeTimers
+    private Vector2 initDecoratorPos = BehaviourTreeProperties.InitDecoratorPos();
 
     public CompositeGuiNode(
         Node node,
@@ -70,7 +73,7 @@ public class CompositeGuiNode : CallableGuiNode
             taskRectSize.x,
             taskRectSize.y
         );
-        apparentTaskRect = new Rect(
+        scaledTaskRect = new Rect(
             rect.x,
             rect.y+taskRectSize.y*.5f,
             taskRectSize.x,
@@ -99,13 +102,20 @@ public class CompositeGuiNode : CallableGuiNode
         Action<ConnectionPoint> OnClickChildPoint,
         Action<ConnectionPoint> OnClickParentPoint
     ){
+        /**
+         * Allows for decoupling editor actions being set from the 
+         * constructor (required e.g when loading from disk in BehaviourTreeLoader)
+         */ 
+
         this.UpdatePanelDetails = UpdatePanelDetails;
         this.TreeModified = TreeModified;
         this.OnRemoveNode = OnRemoveNode;
+
         ApplyNodeTypeSettings(
             OnClickChildPoint:OnClickChildPoint,
             OnClickParentPoint:OnClickParentPoint
         );
+
         foreach(GuiDecorator decorator in Decorators){
             decorator.SetEditorActions(
                 UpdatePanelDetails:UpdatePanelDetails,
@@ -129,14 +139,14 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     protected override void ApplyDerivedSettings(){
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
-        defaultTaskStyle = NodeProperties.TaskNodeStyle();
-        selectedTaskStyle = NodeProperties.SelectedTaskNodeStyle();
+        defaultTaskStyle = BehaviourTreeProperties.TaskNodeStyle();
+        selectedTaskStyle = BehaviourTreeProperties.SelectedTaskNodeStyle();
         activeTaskStyle = defaultTaskStyle;
-        color = NodeProperties.DefaultColor();
-        taskRectColor = NodeProperties.DefaultColor();
+        color = BehaviourTreeProperties.DefaultColor();
+        taskRectColor = BehaviourTreeProperties.DefaultColor();
 
     }
 
@@ -145,14 +155,14 @@ public class CompositeGuiNode : CallableGuiNode
         Action<ConnectionPoint> OnClickParentPoint
     ){
 
-        // Default GuiNode has a child and parent point
+        // Default CompositeGuiNode has a child and parent point
         ChildPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.In, 
-                                            NodeProperties.ChildPointStyle(), 
+                                            BehaviourTreeProperties.ChildPointStyle(), 
                                             OnClickChildPoint);
         ParentPoint = new ConnectionPoint(this, 
                                             ConnectionPointType.Out, 
-                                            NodeProperties.ParentPointStyle(), 
+                                            BehaviourTreeProperties.ParentPointStyle(), 
                                             OnClickParentPoint);
 
     }
@@ -160,8 +170,8 @@ public class CompositeGuiNode : CallableGuiNode
     public override void UpdateOrigin(Vector2 origin)
     {
         base.UpdateOrigin(origin);
-        apparentTaskRect = new Rect(taskRect.x, taskRect.y, taskRect.width, taskRect.height);
-        apparentTaskRect.position -= origin;
+        scaledTaskRect = new Rect(taskRect.x, taskRect.y, taskRect.width, taskRect.height);
+        scaledTaskRect.position -= origin;
         ChildPoint?.UpdateOrigin(origin);
         ParentPoint?.UpdateOrigin(origin);
         GuiTimeout?.UpdateOrigin(origin);
@@ -202,12 +212,12 @@ public class CompositeGuiNode : CallableGuiNode
         Color currentColor = GUI.backgroundColor;
         ChildPoint?.Draw();
         ParentPoint?.Draw();
-        GUI.color = NodeProperties.DefaultTint();
+        GUI.color = BehaviourTreeProperties.DefaultTint();
         if (IsRunning()){
-            GUI.color = NodeProperties.RunningTint();
+            GUI.color = BehaviourTreeProperties.RunningTint();
         }
         else if(HasFailed()){
-            GUI.color = NodeProperties.FailedTint();
+            GUI.color = BehaviourTreeProperties.FailedTint();
         }
         DrawSelf();
         callNumber.Draw();
@@ -215,20 +225,20 @@ public class CompositeGuiNode : CallableGuiNode
         GuiTimeout?.Draw();
         GuiCooldown?.Draw();
         GUI.backgroundColor = currentColor;
-        GUI.color = NodeProperties.DefaultTint();
+        GUI.color = BehaviourTreeProperties.DefaultTint();
     }
 
     protected virtual void DrawSelf(){
         if (IsSelected){
-            GUI.color = NodeProperties.SelectedTint();
+            GUI.color = BehaviourTreeProperties.SelectedTint();
         }
         GUI.backgroundColor = color;
-        GUI.Box(apparentRect, "", activeStyle);
+        GUI.Box(scaledRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor; 
         iconAndText.text ="\n" + DisplayName + "\n" + DisplayTask;
-        GUI.Box(apparentTaskRect, iconAndText, activeTaskStyle);
+        GUI.Box(scaledTaskRect, iconAndText, activeTaskStyle);
         if (IsSelected){
-            GUI.color = NodeProperties.DefaultTint();
+            GUI.color = BehaviourTreeProperties.DefaultTint();
         }
     }
 
@@ -241,11 +251,13 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     public override bool ProcessEvents(Event e, Vector2 mousePos){
+
         bool guiChanged = false;
         bool decoratorSelected = false;
         bool timerSelected = false;
 
         guiChanged = ProcessDecoratorEvents(e, mousePos, out decoratorSelected, out timerSelected);
+
         // Only bother processing taskRect events if no decorator was selected
         if (!decoratorSelected && !timerSelected){
             bool guiChangedFromNode =  ProcessTaskRectEvents(e, mousePos);
@@ -317,7 +329,7 @@ public class CompositeGuiNode : CallableGuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (apparentRect.Contains(mousePos))
+                    if (scaledRect.Contains(mousePos))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -331,7 +343,7 @@ public class CompositeGuiNode : CallableGuiNode
                     }
                 }
 
-                if (e.button == 1 && apparentRect.Contains(mousePos))
+                if (e.button == 1 && scaledRect.Contains(mousePos))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -394,10 +406,10 @@ public class CompositeGuiNode : CallableGuiNode
             guiDecorator.SetCallNumber(this.callNumber.CallNumber);
         }
         callNumber.CallNumber++;
-        // Maker room for new decorator
+        // Make room for new decorator
         Decorators.Insert(0, guiDecorator);
                 
-        // Update params to make space for gui decorator
+        // Update params to make space for guiDecorator
         rect.height += subRectSize[1];
         taskRect.y += subRectSize[1];
         callNumber.Drag(new Vector2(0, subRectSize[1]));
@@ -414,25 +426,29 @@ public class CompositeGuiNode : CallableGuiNode
             blackboard:ref blackboard
         );
 
-         if (Decorators != null && Decorators.Count >0){
+        if (Decorators != null && Decorators.Count >0){
+            // Insert as parent of top decorator
             Decorators[0].BtNode.InsertBeforeSelf(decorator);
         }
         else{
+            // Insert as parent of self
             this.BtNode.InsertBeforeSelf(decorator);
         }
-        // Insert before this node in list
 
 
         Vector2 pos = new Vector2(
             rect.x + initDecoratorPos[0],
             rect.y + initDecoratorPos[1]
         );
+
+        // Adjust pos to take into account active GuiNodeTimers
         if (GuiTimeout != null){
             pos += new Vector2(0, subRectSize[1]); 
         }
         if (GuiCooldown != null){
             pos += new Vector2(0, subRectSize[1]); 
         }
+
         // Add gui decorator
         GuiDecorator guiDecorator = new GuiDecorator( 
             decorator:decorator,
@@ -445,14 +461,17 @@ public class CompositeGuiNode : CallableGuiNode
             blackboard:ref blackboard,
             parentGuiNode:this
             );
-         if (Decorators != null && Decorators.Count >0){
+
+        
+        if (Decorators != null && Decorators.Count >0){
             guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
         }
         else{
             guiDecorator.SetCallNumber(this.callNumber.CallNumber);
         }
         callNumber.CallNumber++;
-        // Maker room for new decorator
+
+        // Make room for new decorator
         ShiftDecoratorsDown();
         Decorators.Insert(0, guiDecorator);
                 
@@ -546,9 +565,12 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     public void RefreshChildOrder(){
+
         /**
-        * Orders childConnections by x position
+        * Orders ChildConnections by x position
+        * (Used to ensure the nodes are evaluated from left to right as seen in the editor)
         */
+
         if (ChildConnections != null){
             ChildConnections.Sort((x,y) => x.GetChildNode().GetXPos().CompareTo(y.GetChildNode().GetXPos()));
         }
@@ -570,6 +592,11 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     protected bool DecoratorKeyActive(string boolName){
+
+        /**
+         * Checks to see if a decorator is using boolName
+         */
+
         if (Decorators != null){
             for (int i=0; i < Decorators.Count; i++){
                 if (Decorators[i].DisplayTask == boolName){
@@ -581,6 +608,11 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     public void RefreshDecoratorTasks(string oldKeyName, string newKeyName){
+
+        /**
+         * Updates any decorators using oldKeyName with newKeyName
+         */
+
         if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
                 if (decorator.DisplayTask == oldKeyName){
@@ -607,6 +639,11 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     public void AddExistingTimer(TimerType timerType){
+
+        /**
+         * Add GuiNodetimer without adding a Nodetimer to BtNode
+         */ 
+
         Vector2 pos;
 
         switch(timerType){
@@ -674,8 +711,12 @@ public class CompositeGuiNode : CallableGuiNode
 
     public void AddTimer(TimerType timerType, float timerVal=-1){
 
+        /**
+         * Adds a GuiNodeTimer and a corresponding NodeTimer to BtNode
+         */
+
         Vector2 pos;
-        if (timerVal < 0){timerVal = NodeProperties.DefaultTimerVal();}
+        if (timerVal < 0){timerVal = BehaviourTreeProperties.DefaultTimerVal();}
 
         switch(timerType){
             case TimerType.Timeout:
@@ -742,6 +783,11 @@ public class CompositeGuiNode : CallableGuiNode
     }
 
     public void OnRemoveTimer(GuiNodeTimer guiNodeTimer){
+
+        /**
+         * Remove GuiNodeTimer and corresponding NodeTimer from BtNode
+         */
+
         if (guiNodeTimer == this.GuiTimeout){
             if (this.GuiCooldown != null){
                 if (this.GuiCooldown.GetPos().y > guiNodeTimer.GetPos().y){
@@ -775,9 +821,10 @@ public class CompositeGuiNode : CallableGuiNode
         TreeModified();
     }
 
-    public Rect GetApparentRect(){return apparentRect;}
+    public Rect GetScaledRect(){return scaledRect;}
 
     public override void UpdateBlackboard(ref BehaviourTreeBlackboard newBlackboard){
+
         base.UpdateBlackboard(ref newBlackboard);
         if (Decorators != null){
             for (int i=0; i<Decorators.Count; i++){

@@ -6,25 +6,30 @@ using System;
 namespace Behaviour{
 public class CallNumberNode : IGuiNode
 {
+
+    /**
+     * Class to hold and display the call number of a given GUINode
+     * in a BehaviourTree.
+     */
     GUIStyle style;
     Rect rect;
-    Rect apparentRect;
+    Rect scaledRect;
     Color color;
     public int CallNumber{get; set;}
 
     public CallNumberNode(){
-        style = NodeProperties.CallNumberStyle();
-        color = NodeProperties.CallNumberColor(); 
-        Vector2 size = NodeProperties.CallNumberSize();
+        style = BehaviourTreeProperties.CallNumberStyle();
+        color = BehaviourTreeProperties.CallNumberColor(); 
+        Vector2 size = BehaviourTreeProperties.CallNumberSize();
         rect = new Rect(0, 0, size.x, size.y);
-        apparentRect = new Rect(0, 0, size.x, size.y);
+        scaledRect = new Rect(0, 0, size.x, size.y);
         CallNumber = -1;
     }
 
     public void Draw(){
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
-        GUI.Box(apparentRect, CallNumber.ToString(), style);
+        GUI.Box(scaledRect, CallNumber.ToString(), style);
         GUI.backgroundColor = currentColor;
     }
 
@@ -37,8 +42,8 @@ public class CallNumberNode : IGuiNode
     }
 
     public void UpdateOrigin(Vector2 origin){
-        apparentRect = new Rect(rect.x, rect.y, rect.width, rect.height);
-        apparentRect.position -= origin;
+        scaledRect = new Rect(rect.x, rect.y, rect.width, rect.height);
+        scaledRect.position -= origin;
     }
 
     public Rect GetRect(){return rect;}

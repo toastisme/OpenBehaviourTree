@@ -8,6 +8,11 @@ namespace Behaviour{
 [Serializable]
 public struct GuiNodeData 
 {
+    /**
+     * \struct GuiNodeData
+     * Used to store data specific to GuiNode, decoupled
+     * from Node.
+     */ 
     public string displayName;
     public float xPos;
     public float yPos;
@@ -15,12 +20,24 @@ public struct GuiNodeData
 }
 public abstract class GuiNode : IGuiNode
 {
+
+    /**
+    * \class GuiNode
+    * Base class for displaying a node in the BehaviourTree class, using the BehaviourTreeEditor.
+    */
+
     protected BehaviourTreeBlackboard blackboard;
-    public Node BtNode{get; protected set;}
+
+    // The underlying Node being displayed
+    public Node BtNode{get; protected set;} 
 
     // Actions
-    protected Action<GuiNode> UpdatePanelDetails;
-    protected Action TreeModified;
+
+    // How node details are passed to the BehaviourTreeEditor
+    protected Action<GuiNode> UpdatePanelDetails; 
+
+    // How the BehaviourTreeEditor knows when a change has been made to the node
+    protected Action TreeModified; 
 
     // Appearance 
     public virtual string DisplayTask{
@@ -35,7 +52,7 @@ public abstract class GuiNode : IGuiNode
     
     protected GUIContent iconAndText;
     protected Rect rect; // The base rect decorators and tasks are drawn on
-    protected Rect apparentRect;
+    protected Rect scaledRect; // rect with current zoom taken into account
     public string DisplayName{get; set;}
     protected GUIStyle activeStyle;
     protected GUIStyle defaultStyle;
@@ -58,7 +75,7 @@ public abstract class GuiNode : IGuiNode
         BtNode = node;
         DisplayTask = displayTask;
         DisplayName = displayName;
-        Vector2 size = NodeProperties.GuiNodeSize();
+        Vector2 size = BehaviourTreeProperties.GuiNodeSize();
         this.rect = new Rect(pos.x, 
                              pos.y, 
                              size.x, 
@@ -108,8 +125,8 @@ public abstract class GuiNode : IGuiNode
         return rect.position;
     }
 
-    public Vector2 GetApparentPos(){
-        return apparentRect.position;
+    public Vector2 GetScaledPos(){
+        return scaledRect.position;
     }
 
     public void SetPosition(Vector2 pos){
@@ -118,13 +135,22 @@ public abstract class GuiNode : IGuiNode
     }
 
     public virtual void UpdateOrigin(Vector2 origin){
-        apparentRect = new Rect(rect.x, rect.y, rect.width, rect.height);
-        apparentRect.position -= origin;
+        /**
+         * The origin from which the scaled rect is drawn from to 
+         * factory in zooming
+         */
+        scaledRect = new Rect(rect.x, rect.y, rect.width, rect.height);
+        scaledRect.position -= origin;
 
     }
 
     public virtual void DrawDetails(){
-        GUILayout.Label(NodeProperties.GetDefaultStringFromNodeType(GetNodeType()));
+
+        /**
+         * What details are displayed in the details panel of the BehaviourTreeEditor
+         */
+         
+        GUILayout.Label(BehaviourTreeProperties.GetDefaultStringFromNodeType(GetNodeType()));
         GUILayout.Label("Task: " + DisplayTask);
         GUILayout.Label("Name");
         EditorGUI.BeginChangeCheck();
@@ -135,7 +161,9 @@ public abstract class GuiNode : IGuiNode
     }
 
     public virtual NodeType GetNodeType(){return BtNode.GetNodeType();}
+
     public Rect GetRect(){return rect;}
+
     public virtual void UpdateBlackboard(ref BehaviourTreeBlackboard newBlackboard){
         blackboard = newBlackboard;
         BtNode.UpdateBlackboard(ref newBlackboard);

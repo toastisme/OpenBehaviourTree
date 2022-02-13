@@ -7,6 +7,12 @@ using System;
 namespace Behaviour{
 public class GuiDecorator : CallableGuiNode
 {
+
+    /**
+    * \class GuiDecorator
+    * Displays a Decorator in the BehaviourTree class, using the BehaviourTreeEditor.
+    */
+
     GuiNode parentGuiNode;
     Action<GuiDecorator> OnRemoveDecorator;
     Decorator decorator;
@@ -45,18 +51,24 @@ public class GuiDecorator : CallableGuiNode
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified,
         Action<GuiDecorator> OnRemoveDecorator){
+
+            /**
+            * Allows for decoupling editor actions being set from the 
+            * constructor (required e.g when loading from disk in BehaviourTreeLoader)
+            */ 
+
             this.UpdatePanelDetails = UpdatePanelDetails;
             this.TreeModified = TreeModified;
             this.OnRemoveDecorator = OnRemoveDecorator;
     }
 
     protected override void ApplyDerivedSettings(){
-        defaultStyle = NodeProperties.GUINodeStyle();
-        selectedStyle = NodeProperties.SelectedGUINodeStyle();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
         activeStyle = defaultStyle;
-        color = NodeProperties.DecoratorColor();
-        rect.size = NodeProperties.SubNodeSize();
-        iconAndText = NodeProperties.DecoratorContent();
+        color = BehaviourTreeProperties.DecoratorColor();
+        rect.size = BehaviourTreeProperties.SubNodeSize();
+        iconAndText = BehaviourTreeProperties.DecoratorContent();
     }
 
     private void Remove(){
@@ -91,7 +103,7 @@ public class GuiDecorator : CallableGuiNode
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (apparentRect.Contains(mousePos))
+                    if (scaledRect.Contains(mousePos))
                     {
                         isDragged = true;
                         guiChanged = true;
@@ -105,7 +117,7 @@ public class GuiDecorator : CallableGuiNode
                     }
                 }
 
-                if (e.button == 1 && apparentRect.Contains(mousePos))
+                if (e.button == 1 && scaledRect.Contains(mousePos))
                 {
                     ProcessContextMenu();
                     e.Use();
@@ -131,21 +143,24 @@ public class GuiDecorator : CallableGuiNode
     public override void Draw()
     {
         if (IsSelected){
-            GUI.color = NodeProperties.SelectedTint();
+            GUI.color = BehaviourTreeProperties.SelectedTint();
         }
         Color currentColor = GUI.backgroundColor;
         GUI.backgroundColor = color;
         string displayTaskAndCondition = DisplayTask;
         if (decorator.invertCondition){displayTaskAndCondition = "!" + displayTaskAndCondition;}
         iconAndText.text ="\n" + DisplayName + "\n" + displayTaskAndCondition;
-        GUI.Box(apparentRect, iconAndText, activeStyle);
+        GUI.Box(scaledRect, iconAndText, activeStyle);
         callNumber.Draw();
         GUI.backgroundColor = currentColor;
-        GUI.color = NodeProperties.DefaultTint();
+        GUI.color = BehaviourTreeProperties.DefaultTint();
     }
 
     public override void DrawDetails()
     {
+        /**
+         * What details are displayed in the details panel of the BehaviourTreeEditor
+         */
         base.DrawDetails();
         bool currentCondition = decorator.invertCondition;
         EditorGUI.BeginChangeCheck();

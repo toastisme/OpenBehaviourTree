@@ -4,6 +4,12 @@ using System.Collections.Generic;
 namespace Behaviour{
 public class BehaviourTreeLoader
 {
+
+    /**
+    * \class BehaviourTreeLoader
+    * Static methods to load serialized versions of Nodes and GuiNodes.
+    */
+
     public static Node NodeFactory(NodeType nodeType, 
                             string taskName,
                             ref BehaviourTreeBlackboard blackboard,
@@ -173,6 +179,7 @@ public class BehaviourTreeLoader
                 throw new System.Exception("Unknown node type");
         }
     }
+
     public static Node ReadNodeFromSerializedNodes(
         ref int index,
         List<SerializableNode> serializedNodes,
@@ -200,7 +207,7 @@ public class BehaviourTreeLoader
             node.AddMisc2(val:serializedNode.misc2);
         }
 
-        // The tree needs to be read in depth-first, since that's how we wrote it out.
+        // Depth first  
         for (int i = 0; i != serializedNode.childCount; i++) {
             index++;
             node.ChildNodes.Add(
