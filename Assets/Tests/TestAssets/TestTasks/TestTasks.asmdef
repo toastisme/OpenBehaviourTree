@@ -1,0 +1,16 @@
+{
+    "name": "TestTasks",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3deec5a20c7bd6f43bd4aad25cc6e685"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

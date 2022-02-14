@@ -9,6 +9,44 @@ public class ActionNodeTests
 
     TestMock testMock = new TestMock();
 
+    public class ActionNodeLoadTaskTest: MonoBehaviour, IMonoBehaviourTest{
+
+        /**
+         * \class ActionNodeLoadTaskTest
+         * Tests if ActionNode.LoadTask gives expected results
+         */
+        ActionNode actionNode;
+        TestMock testMock = new TestMock();
+        bool testFinished;
+
+        public bool IsTestFinished{
+            get {return testFinished;}
+        }
+        void Start(){
+            testFinished = false;
+            StartCoroutine(RunTests());
+        }
+
+        IEnumerator RunTests(){
+
+            // Test succeed task loaded correctly
+            actionNode = testMock.GetActionNodeMock(fail:false);
+            actionNode.LoadTask(this);
+            Assert.IsTrue(actionNode.btTask is ActionMockSucceed);
+
+            // Test fail task loaded correctly
+            actionNode = testMock.GetActionNodeMock(fail:true);
+            actionNode.LoadTask(this);
+            Assert.IsTrue(actionNode.btTask is ActionMockFail);
+            testFinished = true;
+            yield return null;
+
+        }
+
+
+
+    }
+
     public class ActionNodeStateTest: MonoBehaviour, IMonoBehaviourTest{
 
         /**
@@ -67,6 +105,8 @@ public class ActionNodeTests
         }
     }
 
+
+
     [Test]
     public void ActionNodeTaskName_Test()
     {
@@ -92,6 +132,15 @@ public class ActionNodeTests
          */
 
         yield return new MonoBehaviourTest<ActionNodeStateTest>();
+    }
+
+    [UnityTest]
+    public IEnumerator ActionNodeLoadTask_Test(){
+        /*
+         * Test if LoadTask gives expected outcome
+         */
+
+         yield return new MonoBehaviourTest<ActionNodeLoadTaskTest>();
     }
 
 }
