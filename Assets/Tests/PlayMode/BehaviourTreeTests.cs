@@ -14,7 +14,7 @@ public class BehaviourTreeTests
          * Tests if BehaviourTree.LoadTree gives expected results
          */
 
-         TestMock testMock = new TestMock();
+        TestMock testMock = new TestMock();
         bool testFinished;
 
         public bool IsTestFinished{
@@ -99,6 +99,92 @@ public class BehaviourTreeTests
          */
 
         yield return new MonoBehaviourTest<BehaviourTreeLoadTreeTest>();
+    }
+
+    public class BehaviourTreeResetTreeTest: MonoBehaviour, IMonoBehaviourTest{
+
+        /**
+         * \class BehaviourTreeResetTreeTest
+         * Tests if BehaviourTree.ResetTree gives expected results
+         */
+
+        TestMock testMock = new TestMock();
+        bool testFinished;
+
+        public bool IsTestFinished{
+            get {return testFinished;}
+        }
+         
+         void Start(){
+             testFinished = false;
+             BehaviourTree bt = testMock.GetTestBehaviourTree();
+             BehaviourTreeBlackboard blackboard = testMock.GetTestBlackboard();
+             bt.LoadTree(monoBehaviour:this, blackboard:ref blackboard);
+             ResetTreeTest(bt);
+         }
+
+         void UpdateStateRecursive(Node node, List<NodeState> ns, int idx){
+             node.SetStateDebug(ns[idx]);
+             idx++;
+             idx = (idx % (ns.Count -1));
+             foreach(Node childNode in node.ChildNodes){
+                 UpdateStateRecursive(
+                     node:childNode,
+                     ns:ns,
+                     idx:idx
+                 );
+             }
+         }
+
+         void CheckIdleRecursive(Node node){
+             Assert.AreEqual(node.CurrentState, NodeState.Idle);
+             foreach(Node childNode in node.ChildNodes){
+                 CheckIdleRecursive(childNode);
+             }
+         }
+
+         void CheckNotIdleRecursive(Node node){
+             Assert.AreNotEqual(node.CurrentState, NodeState.Idle);
+             foreach(Node childNode in node.ChildNodes){
+                 CheckNotIdleRecursive(childNode);
+             }
+         }
+
+         void ResetTreeTest(BehaviourTree bt){
+
+            //Check all are initially idle
+            CheckIdleRecursive(bt.rootNode);
+
+            // Set nodes to different states other than Idle
+            List<NodeState> ns = new List<NodeState>(){
+                NodeState.Failed,
+                NodeState.Succeeded,
+                NodeState.Running,
+                };
+
+            UpdateStateRecursive(bt.rootNode, ns, 0);
+
+            // Check none are now Idle
+            CheckNotIdleRecursive(bt.rootNode);
+
+            bt.ResetTree();
+            //Check all are now idle
+            CheckIdleRecursive(bt.rootNode);
+
+            testFinished = true;
+
+            
+         }
+    }
+
+    [UnityTest]
+    public IEnumerator BehaviourTreeResetTree_Test()
+    {
+        /*
+         * Test if LoadTree gives the expected result
+         */
+
+        yield return new MonoBehaviourTest<BehaviourTreeResetTreeTest>();
     }
 
 

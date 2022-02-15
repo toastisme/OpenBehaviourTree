@@ -289,5 +289,9 @@ public abstract class Node
         return nodeCooldown;
     }
 
+    public void SetStateDebug(NodeState nodeState){
+        CurrentState = nodeState;
+    }
+
 }
 }
