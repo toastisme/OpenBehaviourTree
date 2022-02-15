@@ -990,9 +990,9 @@ public class BehaviourTreeEditor : EditorWindow
                                 ){
 
         // Update behaviour tree
-        Node childNode = connection.GetChildNode().BtNode;
-        Node parentNode = connection.GetParentNode().BtNode;
         if (updateRelationships){
+            Node childNode = connection.GetChildNode().BtNode;
+            Node parentNode = connection.GetParentNode().BtNode;
             parentNode.RemoveChildNode(childNode);
             parentNode.AddChildNode(guiProbabilityWeight.BtNode);
             childNode.SetParentNode(guiProbabilityWeight.BtNode);

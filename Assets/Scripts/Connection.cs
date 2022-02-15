@@ -38,7 +38,7 @@ public class Connection
         probabilityWeight = guiNode;
         guiNode.SetParentConnection(this);
         Vector2 size = BehaviourTreeProperties.SubNodeSize();
-        probabilityWeightOffset = new Vector2(size.x*.5f, 0);
+        probabilityWeightOffset = new Vector2(size.x*.5f, size.y);
     }
 
     public void AddProbabilityWeight(ProbabilityWeight node,
