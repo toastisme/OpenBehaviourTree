@@ -1378,6 +1378,7 @@ public class BehaviourTreeEditor : EditorWindow
             activeBlackboard = false;
         }
         else if (!activeBlackboard && bt.blackboard != null){
+            if (guiNodes!= null){
             for (int i=0; i<guiNodes.Count; i++){
                 guiNodes[i].UpdateBlackboard(ref bt.blackboard);
             }
@@ -1385,6 +1386,7 @@ public class BehaviourTreeEditor : EditorWindow
                 connections[j].UpdateBlackboard(ref bt.blackboard);
             }
             activeBlackboard = true;
+            }
         }
     }
 

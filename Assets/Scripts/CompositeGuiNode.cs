@@ -414,7 +414,12 @@ public class CompositeGuiNode : CallableGuiNode
         taskRect.y += subRectSize[1];
         callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
-        TreeModified();
+
+        // Null check needed here as when loading from disk decorators are loaded
+        // before SetEditorActions is called
+        if (TreeModified != null){
+            TreeModified();
+        }
 
     }
 
