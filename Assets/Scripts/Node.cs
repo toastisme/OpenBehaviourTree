@@ -252,6 +252,13 @@ public abstract class Node
         return false;
     }
 
+    public bool CooldownExceeded(){
+        if (nodeCooldown != null){
+            return nodeCooldown.TimerExceeded();
+        }   
+        return false;
+    }
+
     public bool CooldownActive(){
         if (nodeCooldown != null){
             return nodeCooldown.IsActive();

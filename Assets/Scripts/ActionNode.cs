@@ -72,6 +72,7 @@ public class ActionNode : Node
         * Returns the state of the node.
         */
 
+        // If cooldown is active return Failed
         if (CooldownActive()){
             if (executeTask.Running){
                 ResetTask();
@@ -79,17 +80,32 @@ public class ActionNode : Node
             CurrentState = NodeState.Failed;
             return CurrentState;
         }
+        // If cooldown exceeded set to Idle
+        else if (CooldownExceeded()){
+            CurrentState = NodeState.Idle;
+            ResetTask();
+            ResetCooldown();
+        }
 
+        // If Idle, start the task
         if (CurrentState == NodeState.Idle && !executeTask.Running){
             executeTask.Start();
             ResetTimeout();
             StartTimeout();
         }
 
+        // If timeout exceeded return Failed
         if (TimeoutExceeded()){
-            ResetTask();
-            CurrentState = NodeState.Failed;            
-            ResetTimeout();
+            // Record one evaluate call with Failed before returning to Idle
+            if (CurrentState != NodeState.Failed){
+                ResetTask();
+                CurrentState = NodeState.Failed;            
+            }
+            else{
+                // Next evaluate call will then execute task again
+                CurrentState = NodeState.Idle;
+                ResetTimeout();
+            }
         }
 
         if (CurrentState == NodeState.Succeeded){
