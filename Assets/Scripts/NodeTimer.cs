@@ -40,6 +40,7 @@ public class NodeTimer
         if (timerFunc != null){
             this.monoBehaviour.StopCoroutine(timerFunc);
         }
+        isActive = false;
     }
 
     public void ResetTimer(){

@@ -7,7 +7,6 @@ using UnityEngine.TestTools;
 using Behaviour;
 public class DecoratorTests
 {
-    TestMock testMock = new TestMock();
     public class DecoratorStateTest: MonoBehaviour, IMonoBehaviourTest{
 
         /**
