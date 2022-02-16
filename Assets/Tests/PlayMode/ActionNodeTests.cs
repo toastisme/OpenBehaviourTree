@@ -111,9 +111,9 @@ public class ActionNodeTests
             actionNode.Evaluate();
             Assert.IsTrue(actionNode.CurrentState == expectedCooldownState);
             yield return new WaitForSeconds(cooldownDuration);
-            // Cooldown exceeded, state is reset
+            // Cooldown exceeded, state is reset and task runs on the next evaluate
             actionNode.Evaluate();
-            Assert.IsTrue(actionNode.CurrentState == expectedInitialState);
+            Assert.IsTrue(actionNode.CurrentState == expectedTransientState);
             actionNode.ResetState();
             actionNode.RemoveCooldown();
 

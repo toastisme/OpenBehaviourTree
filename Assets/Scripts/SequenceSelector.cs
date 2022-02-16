@@ -18,6 +18,11 @@ public class SequenceSelector : Node
         bool anyChildRunning = false; 
 
         if (CooldownActive()){
+            foreach(Node childNode in ChildNodes){
+                if (childNode.CurrentState == NodeState.Running){
+                    childNode.ResetState();
+                }
+            }
             CurrentState = NodeState.Failed;
             return CurrentState;
         }

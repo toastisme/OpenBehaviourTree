@@ -92,12 +92,13 @@ public class ActionNode : Node
             executeTask.Start();
             ResetTimeout();
             StartTimeout();
+            CurrentState = NodeState.Running;
         }
 
         // If timeout exceeded return Failed
         if (TimeoutExceeded()){
             // Record one evaluate call with Failed before returning to Idle
-            if (CurrentState != NodeState.Failed){
+            if (CurrentState == NodeState.Running){
                 ResetTask();
                 CurrentState = NodeState.Failed;            
             }
