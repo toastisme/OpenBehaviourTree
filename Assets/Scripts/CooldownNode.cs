@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Linq;
 
 namespace Behaviour{
 public class CooldownNode : TimerNode
@@ -15,17 +16,27 @@ public class CooldownNode : TimerNode
     * are set using these keys whenever StartTimer() is called. 
     */
 
+    NodeState[] coolDownStates;
+
     public CooldownNode(
         string taskName,
         ref BehaviourTreeBlackboard blackboard,
         Node parentNode = null,
-        Node childNode = null
+        Node childNode = null,
+        NodeState[] coolDownStates = null
     ) : base(
         taskName: taskName,
         blackboard: ref blackboard,
         parentNode:parentNode,
         childNode: childNode
-    ){}
+    ){
+        if (coolDownStates != null){
+            this.coolDownStates = coolDownStates;
+        }
+        else{
+            this.coolDownStates = new NodeState[]{NodeState.Succeeded};
+        }
+    }
 
     public override NodeState Evaluate(){
         if (Active){
@@ -33,7 +44,7 @@ public class CooldownNode : TimerNode
             return CurrentState;
         }
         CurrentState = ChildNodes[0].Evaluate();
-        if (CurrentState == NodeState.Succeeded){
+        if (coolDownStates.Contains(CurrentState)){
             StartTimer();
         }
         return CurrentState;
