@@ -28,6 +28,7 @@ public class GuiTimeoutNode : GuiTimerNode
         parentGuiNode: parentGuiNode
     )
     {
+        ApplyDerivedSettings();
     }
 
     protected override void ApplyDerivedSettings(){

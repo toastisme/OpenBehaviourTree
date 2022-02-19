@@ -30,6 +30,7 @@ public class GuiCooldownNode : GuiTimerNode
     )
     {
         cooldownNode = (CooldownNode)timerNode;
+        ApplyDerivedSettings();
     }
 
     protected override void ApplyDerivedSettings(){

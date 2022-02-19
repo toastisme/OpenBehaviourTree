@@ -30,7 +30,7 @@ public class GuiTimerNode : GuiDecorator
         parentGuiNode: parentGuiNode
     )
     {
-        timerNode = (TimerNode)timerNode;
+        this.timerNode = (TimerNode)timerNode;
     }
 
     public override void Draw()
