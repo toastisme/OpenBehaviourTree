@@ -511,18 +511,18 @@ public class CompositeGuiNode : CallableGuiNode
                     }
                 }
             }
-            if (!hasTimeout){
-                genericMenu.AddItem(new GUIContent("Add timeout"), false, () => OnClickAddTimeout());
-            }
-            else{
-                genericMenu.AddDisabledItem(new GUIContent("Add timeout"));
-            }
-            if (!hasCooldown){
-                genericMenu.AddItem(new GUIContent("Add cooldown"), false, () => OnClickAddCooldown());
-            }
-            else{
-                genericMenu.AddDisabledItem(new GUIContent("Add cooldown"));
-            }
+        }
+        if (!hasTimeout){
+            genericMenu.AddItem(new GUIContent("Add timeout"), false, () => OnClickAddTimeout());
+        }
+        else{
+            genericMenu.AddDisabledItem(new GUIContent("Add timeout"));
+        }
+        if (!hasCooldown){
+            genericMenu.AddItem(new GUIContent("Add cooldown"), false, () => OnClickAddCooldown());
+        }
+        else{
+            genericMenu.AddDisabledItem(new GUIContent("Add cooldown"));
         }
         genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
         genericMenu.ShowAsContext();
