@@ -26,12 +26,6 @@ public class PrioritySelector : Node
         * Returns failed if all child nodes return failed.
         */
 
-        if (CooldownActive()){
-            CurrentState = NodeState.Failed;
-            return CurrentState;
-        }
-
-
         foreach (Node node in ChildNodes){
             switch(node.Evaluate()){
                 case NodeState.Idle:
@@ -41,29 +35,13 @@ public class PrioritySelector : Node
                     continue;
                 case NodeState.Succeeded:
                     CurrentState = NodeState.Succeeded;
-                    StartCooldown();
                     return CurrentState;
                 case NodeState.Running:
-                    if (HasTimeout() && !TimeoutActive() && !TimeoutExceeded()){
-                        StartTimeout();
-                    }
-                    if (!HasTimeout() || (TimeoutActive() && !TimeoutExceeded())){
-                        CurrentState = NodeState.Running;
-                    }
-                    else{
-                        CurrentState = NodeState.Failed;
-                        if (!TimeoutActive() && TimeoutExceeded()){
-                            ResetTimeout();
-                        }
-                    }
+                    CurrentState = NodeState.Running;
                     return CurrentState;
                 default:
                     continue;
             }
-        }
-
-        if (!TimeoutActive() && TimeoutExceeded()){
-            ResetTimeout();
         }
 
         CurrentState = NodeState.Failed;

@@ -18,13 +18,20 @@ public class TimeoutNode : TimerNode
     public bool Exceeded{get; protected set;}
 
     public TimeoutNode(
-        string taskName,
         ref BehaviourTreeBlackboard blackboard,
+        float timerValue,
+        float randomDeviation,
+        string valueKey = "",
+        string randomDeviationKey = "",
         Node parentNode = null,
         Node childNode = null
     ) : base(
-        taskName: taskName,
+        taskName: "Timeout",
         blackboard: ref blackboard,
+        timerValue:timerValue,
+        randomDeviation:randomDeviation,
+        valueKey:valueKey,
+        randomDeviationKey:randomDeviationKey,
         parentNode:parentNode,
         childNode: childNode
     ){}

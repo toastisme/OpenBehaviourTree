@@ -15,7 +15,6 @@ public class GuiDecorator : CallableGuiNode
 
     GuiNode parentGuiNode;
     Action<GuiDecorator> OnRemoveDecorator;
-    Decorator decorator;
 
     public GuiDecorator(
         Node decorator,
@@ -37,7 +36,6 @@ public class GuiDecorator : CallableGuiNode
         blackboard: ref blackboard
     )
     {
-        this.decorator = (Decorator)decorator;
         this.parentGuiNode = parentGuiNode;
         this.OnRemoveDecorator = OnRemoveDecorator;
         ApplyDerivedSettings();
@@ -68,10 +66,9 @@ public class GuiDecorator : CallableGuiNode
         activeStyle = defaultStyle;
         color = BehaviourTreeProperties.DecoratorColor();
         rect.size = BehaviourTreeProperties.SubNodeSize();
-        iconAndText = BehaviourTreeProperties.DecoratorContent();
     }
 
-    private void Remove(){
+    protected void Remove(){
         if (OnRemoveDecorator != null){
             OnRemoveDecorator(this);
         }
@@ -140,36 +137,5 @@ public class GuiDecorator : CallableGuiNode
         return guiChanged;
     }
 
-    public override void Draw()
-    {
-        if (IsSelected){
-            GUI.color = BehaviourTreeProperties.SelectedTint();
-        }
-        Color currentColor = GUI.backgroundColor;
-        GUI.backgroundColor = color;
-        string displayTaskAndCondition = DisplayTask;
-        if (decorator.invertCondition){displayTaskAndCondition = "!" + displayTaskAndCondition;}
-        iconAndText.text ="\n" + DisplayName + "\n" + displayTaskAndCondition;
-        GUI.Box(scaledRect, iconAndText, activeStyle);
-        callNumber.Draw();
-        GUI.backgroundColor = currentColor;
-        GUI.color = BehaviourTreeProperties.DefaultTint();
-    }
-
-    public override void DrawDetails()
-    {
-        /**
-         * What details are displayed in the details panel of the BehaviourTreeEditor
-         */
-        base.DrawDetails();
-        bool currentCondition = decorator.invertCondition;
-        EditorGUI.BeginChangeCheck();
-        decorator.invertCondition = EditorGUILayout.Toggle("Invert condition", 
-                                                            decorator.invertCondition);
-        if (EditorGUI.EndChangeCheck()){
-            TreeModified();
-        }
-        
-    }
 }
 }

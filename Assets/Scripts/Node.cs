@@ -17,25 +17,28 @@ public enum NodeType{
     PrioritySelector,
     Action,
     Decorator,
-    ActionWait
+    ActionWait,
+    Timer,
 }
 
 [Serializable]
-public struct SerializableNode{
+public class SerializableNode{
 
     /**
-     * \struct SerializableNode
+     * \class SerializableNode
      * Used to store Node data.
      */ 
 
     public int type;
     public string taskName;
     public int childCount;
-    public int parentIdx;
-    public bool invertCondition;
-    public float misc1;
-    public float misc2;
+    public SerializableNode(int type, string taskName, int childCount){
+        this.type = type;
+        this.taskName = taskName;
+        this.childCount = childCount;
+    }
 }
+
 public abstract class Node
 {
     /**
@@ -67,9 +70,6 @@ public abstract class Node
     public string TaskName {get; set;}
     public List<Node> ChildNodes{get; protected set;}
     public Node ParentNode{get; protected set;}
-
-    public NodeTimer nodeTimeout;
-    public NodeTimer nodeCooldown;
 
     protected Node(
         string taskName,
@@ -185,112 +185,22 @@ public abstract class Node
 
     public virtual void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){}
 
-    public void AddTimeout(NodeTimer nodeTimeout){
-        this.nodeTimeout = nodeTimeout;
-    }
-
-    public virtual void AddMisc1(float val){
-
-        /**
-         * SerializedNodes have two misc float fields that are
-         * use for different purposes for different nodes
-         */ 
-
-        this.nodeTimeout = new NodeTimer(timerVal:val);
-    }
-
-    public virtual void AddMisc2(float val){
-
-        /**
-         * SerializedNodes have two misc float fields that are
-         * use for different purposes for different nodes
-         */ 
-
-        this.nodeCooldown = new NodeTimer(timerVal:val);
-    }
-
-    public void AddCooldown(NodeTimer nodeCooldown){
-        this.nodeCooldown = nodeCooldown;
-    }
-
-    public void RemoveTimeout(){
-        this.nodeTimeout = null;
-    }
-
-    public void ResetTimeout(){
-        nodeTimeout?.ResetTimer();
-    }
-
-    public void ResetCooldown(){
-        nodeCooldown?.ResetTimer();
-    }
-
-    public void StartTimeout(){
-        nodeTimeout?.StartTimer();
-    }
-
-    public void StopTimeout(){
-        nodeTimeout?.StopTimer();
-    }
-
-    public void StartCooldown(){
-        nodeCooldown?.StartTimer();
-    }
-
-    public void StopCooldown(){
-        nodeCooldown?.StopTimer();
-    }
-
-    public void RemoveCooldown(){
-        this.nodeCooldown = null;
-    }
-
-    public bool TimeoutExceeded(){
-        if (nodeTimeout != null){
-            return nodeTimeout.TimerExceeded();
-        }   
-        return false;
-    }
-
-    public bool CooldownExceeded(){
-        if (nodeCooldown != null){
-            return nodeCooldown.TimerExceeded();
-        }   
-        return false;
-    }
-
-    public bool CooldownActive(){
-        if (nodeCooldown != null){
-            return nodeCooldown.IsActive();
-        }
-        return false;
-    }
-
-    public bool TimeoutActive(){
-        if (nodeTimeout != null){
-            return nodeTimeout.IsActive();
-        }
-        return false;
-    }
-
-    public bool HasTimeout(){
-        return (nodeTimeout != null);
-    }
-
-    public bool HasCooldown(){
-        return (nodeCooldown != null);
-    }
-
-    public NodeTimer GetTimeout(){
-        return nodeTimeout;
-    }
-
-    public NodeTimer GetCooldown(){
-        return nodeCooldown;
-    }
-
     public void SetStateDebug(NodeState nodeState){
         CurrentState = nodeState;
+    }
+
+    public virtual void ResetTask(bool fail=false){
+        foreach(Node childNode in ChildNodes){
+            childNode.ResetTask(fail);
+        }
+    }
+
+    public virtual SerializableNode Serialize(){
+        return new SerializableNode(
+            type:(int)GetNodeType(),
+            taskName:TaskName,
+            childCount:ChildNodes.Count
+        );
     }
 
 }

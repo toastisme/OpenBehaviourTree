@@ -68,9 +68,6 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
             node.UpdateBlackboard(ref blackboard);
          }
 
-        node.nodeTimeout?.LoadTask(monoBehaviour);
-        node.nodeCooldown?.LoadTask(monoBehaviour);
-
         if (node is ActionNode actionNode){
             actionNode.LoadTask(monoBehaviour);
         }

@@ -1,4 +1,24 @@
 namespace Behaviour{
+
+public class SerializableProbabilityWeight:SerializableNode{
+
+    public float weight;
+
+    public SerializableProbabilityWeight(
+        int type,
+        string taskName,
+        int childCount,
+        float weight
+    ) : base(
+        type:type,
+        taskName:taskName,
+        childCount:childCount
+    ){
+        this.weight = weight;
+    }
+
+}
+
 public class ProbabilityWeight : Node
 {
 
@@ -44,13 +64,14 @@ public class ProbabilityWeight : Node
         return (TaskName == "Constant Weight");        
     }
 
-    public override void AddMisc1(float val)
+    public override SerializableNode Serialize()
     {
-        SetWeight(val);
-    }
-
-    public override void AddMisc2(float val)
-    {
+        return new SerializableProbabilityWeight(
+            type:(int)GetNodeType(),
+            taskName:TaskName,
+            childCount:ChildNodes.Count,
+            weight:this.weight
+        );
     }
 
 }

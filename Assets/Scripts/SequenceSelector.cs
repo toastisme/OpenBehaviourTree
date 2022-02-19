@@ -17,20 +17,6 @@ public class SequenceSelector : Node
     public override NodeState Evaluate() { 
         bool anyChildRunning = false; 
 
-        if (CooldownActive()){
-            foreach(Node childNode in ChildNodes){
-                if (childNode.CurrentState == NodeState.Running){
-                    childNode.ResetState();
-                }
-            }
-            CurrentState = NodeState.Failed;
-            return CurrentState;
-        }
-
-        if (!TimeoutActive() && !TimeoutExceeded()){
-            StartTimeout();
-        }
-        
         foreach(Node node in ChildNodes) { 
             switch (node.Evaluate()) { 
                 case NodeState.Idle:
@@ -53,25 +39,11 @@ public class SequenceSelector : Node
             }
         } 
         if (anyChildRunning){
-            if (TimeoutExceeded()){
-                CurrentState = NodeState.Failed;
-                ResetChildStates();
-                ResetTimeout();
-            }
-            else{
-                CurrentState = NodeState.Running;                
-            }
+            CurrentState = NodeState.Running;                
+            return CurrentState;
         }
         else{
             CurrentState = NodeState.Succeeded;
-        }
-
-        if (!TimeoutActive() && TimeoutExceeded()){
-            ResetTimeout();
-        }
-
-        if (CurrentState == NodeState.Succeeded){
-            StartCooldown();
         }
 
         return CurrentState; 

@@ -4,8 +4,34 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-
 namespace Behaviour{
+
+public class SerializableTimerNode:SerializableNode{
+    public string valueKey;
+    public string randomDeviationKey;
+    public float value;
+    public float randomDeviation;
+
+    public SerializableTimerNode(
+        int type,
+        string taskName,
+        int childCount,
+        string valueKey,
+        string randomDeviationKey,
+        float value,
+        float randomDeviation        
+    ): base(
+        type:type,
+        taskName:taskName,
+        childCount:childCount
+    ){
+        this.valueKey = valueKey;
+        this.randomDeviationKey = randomDeviationKey;
+        this.value = value;
+        this.randomDeviation = randomDeviation;
+    }
+}
+
 public class TimerNode : Node
 {
     /**
@@ -18,9 +44,8 @@ public class TimerNode : Node
     */
 
     public bool Active{get; protected set;}
-
-    string valueKey = "";
-    string randomDeviationKey = "";
+    public string valueKey = "";
+    public string randomDeviationKey = "";
 
     public float TimerValue{get; set;}
     public float RandomDeviation{get; set;}
@@ -32,6 +57,10 @@ public class TimerNode : Node
     public TimerNode(
         string taskName,
         ref BehaviourTreeBlackboard blackboard,
+        float timerValue,
+        float randomDeviation,
+        string valueKey = "",
+        string randomDeviationKey = "",
         Node parentNode = null,
         Node childNode = null
     ) : base(
@@ -43,6 +72,10 @@ public class TimerNode : Node
             ChildNodes.Add(childNode);
         }
         this.blackboard = blackboard;
+        TimerValue = timerValue;
+        RandomDeviation = randomDeviation;
+        this.valueKey = valueKey;
+        this.randomDeviationKey = randomDeviationKey;
     }
 
     public virtual void LoadTask(MonoBehaviour monoBehaviour){
@@ -62,6 +95,25 @@ public class TimerNode : Node
         if (randomDeviationKey != ""){
             RandomDeviation = blackboard.GetWeightValue(randomDeviationKey);
         }
+    }
+
+    public string AsString(){
+        string s = "";
+        if (valueKey != ""){
+            s += valueKey;
+        }
+        else{
+            s += TimerValue.ToString();
+        }
+        s += " +/- ";
+        if (randomDeviationKey != ""){
+            s += randomDeviationKey;
+        }
+        else{
+            s += RandomDeviation.ToString();
+        }
+        s+= " (sec)";
+        return s;
     }
 
     public void StartTimer(){
@@ -100,6 +152,23 @@ public class TimerNode : Node
     {
         return NodeType.Timer;
     }
+
+    public override SerializableNode Serialize()
+    {
+        return new SerializableTimerNode(
+            type:(int)GetNodeType(),
+            taskName:TaskName,
+            childCount:ChildNodes.Count,
+            valueKey:valueKey,
+            randomDeviationKey:randomDeviationKey,
+            value:TimerValue,
+            randomDeviation:RandomDeviation
+        );
+    }
+
+
+
+    
 
     
 

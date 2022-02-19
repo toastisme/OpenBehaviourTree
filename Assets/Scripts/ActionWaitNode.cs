@@ -6,49 +6,40 @@ using UnityEditor;
 using System.Reflection;
 
 namespace Behaviour{
-public class ActionWaitNode : ActionNode
+
+public class ActionWaitNode : TimerNode
 {    
     /**
     * \class ActionWaitNode
     * Represents an action node in the BehaviourTree class specifically
-    * for the Wait BehaviourTreeTask.
+    * for waiting.
     */
-
-    public Wait btWaitTask{get;private set;} // The task class
-    public float WaitTime{get; set;}
-    public float RandomDeviation{get; set;}
-    Task executeTask; // The actual execute coroutine, within a task wrapper
 
     public ActionWaitNode(
         string taskName,
         ref BehaviourTreeBlackboard blackboard,
-        Node parentNode=null
+        float timerValue,
+        float randomDeviation,
+        string valueKey = "",
+        string randomDeviationKey = "",
+        Node parentNode = null,
+        Node childNode = null
     ) :base(
-        taskName:taskName,
+        taskName: taskName,
         blackboard: ref blackboard,
-        parentNode:parentNode
+        timerValue:timerValue,
+        randomDeviation:randomDeviation,
+        valueKey:valueKey,
+        randomDeviationKey:randomDeviationKey,
+        parentNode:parentNode,
+        childNode: childNode
     ){
     }
 
-    public override void LoadTask(MonoBehaviour monoBehaviour){
-        btWaitTask = new Wait(WaitTime, RandomDeviation);
-        btWaitTask.SetBlackboard(blackboard:ref blackboard);
-        btWaitTask.Setup(monoBehaviour);
-        ResetTask();
-    }
+    public override void ResetTask(bool fail=false){
 
-    protected override void ResetTask(){
-
-        /**
-         * Stops the underlying coroutine and gets it ready to run again
-         */
-
-        if(executeTask != null){
-            if (executeTask.Running){
-                executeTask.Stop();
-            }
-        }
-        executeTask = new Task(btWaitTask.ExecuteTask((x)=>CurrentState=x), false);
+        ResetTimer();
+        if (fail){CurrentState = NodeState.Failed;}      
     }
 
     public override NodeState Evaluate(){
@@ -58,20 +49,14 @@ public class ActionWaitNode : ActionNode
         * Returns the state of the node.
         */
 
-        if (CooldownActive()){
-            if (executeTask.Running){
-                ResetTask();
-            }
-            CurrentState = NodeState.Failed;
-            return CurrentState;
+        if ((CurrentState == NodeState.Idle) && !Active){
+            StartTimer();
+            CurrentState = NodeState.Running;
+        }
+        else if ((CurrentState == NodeState.Running) && !Active){
+            CurrentState = NodeState.Succeeded;
         }
 
-        if (CurrentState == NodeState.Idle && !executeTask.Running){
-            executeTask.Start();
-        }
-        if (CurrentState == NodeState.Succeeded){
-            StartCooldown();
-        }
         return CurrentState;        
     }
 
@@ -81,26 +66,10 @@ public class ActionWaitNode : ActionNode
         * Stops the action if running.
         * Sets the CurrentState to Idle.
         */
-
-        if (executeTask.Running){
-            executeTask.Stop();
-        }
         ResetTask();
         CurrentState = NodeState.Idle;
     }
 
     public override NodeType GetNodeType(){return NodeType.ActionWait;}
-
-    public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
-        this.blackboard = blackboard;
-    }
-
-    public override void AddMisc1(float timerVal){
-        this.WaitTime = timerVal; 
-    }
-
-    public override void AddMisc2(float timerVal){
-        this.RandomDeviation = timerVal; 
-    }
 }
 }

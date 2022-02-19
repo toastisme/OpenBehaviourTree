@@ -88,53 +88,6 @@ public class ActionNodeTests
             actionNode.ResetState();
             Assert.IsTrue(actionNode.CurrentState == expectedInitialState);
 
-
-            // Cooldown test
-            NodeState expectedCooldownState = NodeState.Failed;
-            float cooldownDuration = 1f;
-            NodeTimer cooldown = new NodeTimer(timerVal:cooldownDuration);
-            actionNode.AddCooldown(cooldown);
-            actionNode.nodeCooldown.LoadTask(this);
-
-            actionNode.Evaluate();
-            yield return new WaitForSeconds(.1f);
-            Assert.IsTrue(actionNode.CurrentState == expectedTransientState);
-            yield return new WaitForSeconds(TestMock.ActionDuration());
-            Assert.IsTrue(actionNode.CurrentState == expectedOutcomeState);
-            // Cooldown started on this evaluate call
-            actionNode.Evaluate();
-            Assert.IsTrue(actionNode.CooldownActive());
-            actionNode.Evaluate();
-            Assert.IsTrue(actionNode.CurrentState == expectedCooldownState);
-            yield return new WaitForSeconds(.2f);
-            // Cooldown still active
-            actionNode.Evaluate();
-            Assert.IsTrue(actionNode.CurrentState == expectedCooldownState);
-            yield return new WaitForSeconds(cooldownDuration);
-            // Cooldown exceeded, state is reset and task runs on the next evaluate
-            actionNode.Evaluate();
-            Assert.IsTrue(actionNode.CurrentState == expectedTransientState);
-            actionNode.ResetState();
-            actionNode.RemoveCooldown();
-
-            // Timeout test
-            NodeState expectedTimeoutState = NodeState.Failed;
-            float timeoutDuration = TestMock.ActionDuration()*.5f;
-            NodeTimer timeout = new NodeTimer(timerVal:timeoutDuration);
-            actionNode.AddTimeout(timeout);
-            actionNode.nodeTimeout.LoadTask(this);
-
-            actionNode.Evaluate();
-            yield return new WaitForSeconds(.1f);
-            Assert.IsTrue(actionNode.CurrentState == expectedTransientState);
-            Assert.IsTrue(actionNode.TimeoutActive());
-            yield return new WaitForSeconds(timeoutDuration);
-            Assert.IsTrue(actionNode.TimeoutExceeded());
-            actionNode.Evaluate();
-            Assert.IsTrue(actionNode.CurrentState == expectedTimeoutState);
-            actionNode.Evaluate();
-            Assert.IsTrue(actionNode.CurrentState == expectedInitialState);
-
             // Fail test
             expectedOutcomeState = NodeState.Failed;
             actionNode = testMock.GetActionNodeMock(fail:true);

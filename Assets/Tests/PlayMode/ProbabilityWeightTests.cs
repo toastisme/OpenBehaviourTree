@@ -26,8 +26,6 @@ public class ProbabilityWeightTests
         pw.SetWeight(5f);
         Assert.IsTrue(Mathf.Abs(5f-pw.GetWeight()) < 1e-5);
         
-        pw.AddMisc1(10f);
-        Assert.IsTrue(Mathf.Abs(10f-pw.GetWeight()) < 1e-5);
 
     }
 

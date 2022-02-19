@@ -16,6 +16,7 @@ public class BehaviourTreeProperties
      */ 
 
     public static float DefaultTimerVal(){return 5f;}
+    public static float DefaultRandomDeviationVal(){return 5f;}
 
     // Size
     public static Vector2 GuiNodeSize(){return new Vector2(200, 140);}

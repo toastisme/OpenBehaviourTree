@@ -10,14 +10,14 @@ public class CompositeGuiNode : CallableGuiNode
     /**
      * \class CompositeGuiNode
      * CallableGuiNodes made up of several GuiNodes 
-     * (i.e they hold a list of GuiDecorators and GuiNodeTimers),
+     * (i.e they hold a list of GuiDecorators),
      * and have connections to other CompositeGuiNodes.
      */
      
     // GuiNodes
     public List<GuiDecorator> Decorators{get; set;}
-    public GuiNodeTimer GuiTimeout{get; set;}
-    public GuiNodeTimer GuiCooldown{get; set;}
+    bool hasTimeout = false;
+    bool hasCooldown = false;
 
     Action<CompositeGuiNode> OnRemoveNode;
 
@@ -38,7 +38,7 @@ public class CompositeGuiNode : CallableGuiNode
     protected Rect scaledTaskRect; // taskRect scaled to the current zoom level
     protected Color taskRectColor;
     protected Vector2 taskRectSize = BehaviourTreeProperties.TaskNodeSize(); // Size of rect showing the node task
-    protected Vector2 subRectSize = BehaviourTreeProperties.SubNodeSize(); // Size of GuiDecorators and GuiNodeTimers
+    protected Vector2 subRectSize = BehaviourTreeProperties.SubNodeSize(); // Size of GuiDecorators
     private Vector2 initDecoratorPos = BehaviourTreeProperties.InitDecoratorPos();
 
     public CompositeGuiNode(
@@ -124,18 +124,6 @@ public class CompositeGuiNode : CallableGuiNode
             );
         }
 
-        GuiCooldown?.SetEditorActions(
-            UpdatePanelDetails:UpdatePanelDetails,
-            TreeModified:TreeModified,
-            OnRemoveTimer:OnRemoveTimer
-        );
-
-        GuiTimeout?.SetEditorActions(
-            UpdatePanelDetails:UpdatePanelDetails,
-            TreeModified:TreeModified,
-            OnRemoveTimer:OnRemoveTimer
-        );
-
     }
 
     protected override void ApplyDerivedSettings(){
@@ -174,8 +162,6 @@ public class CompositeGuiNode : CallableGuiNode
         scaledTaskRect.position -= origin;
         ChildPoint?.UpdateOrigin(origin);
         ParentPoint?.UpdateOrigin(origin);
-        GuiTimeout?.UpdateOrigin(origin);
-        GuiCooldown?.UpdateOrigin(origin);
         if (Decorators != null){
             foreach(GuiDecorator decorator in Decorators){
                 decorator.UpdateOrigin(origin);
@@ -195,8 +181,6 @@ public class CompositeGuiNode : CallableGuiNode
                 decorator.DragWithoutParent(delta);
             }
         }
-        GuiTimeout?.DragWithoutParent(delta);
-        GuiCooldown?.DragWithoutParent(delta);
     }
 
     public virtual void DragWithChildren(Vector2 delta){
@@ -222,8 +206,6 @@ public class CompositeGuiNode : CallableGuiNode
         DrawSelf();
         callNumber.Draw();
         DrawDecorators();
-        GuiTimeout?.Draw();
-        GuiCooldown?.Draw();
         GUI.backgroundColor = currentColor;
         GUI.color = BehaviourTreeProperties.DefaultTint();
     }
@@ -301,24 +283,6 @@ public class CompositeGuiNode : CallableGuiNode
                 }
             }
         }
-        if (!decoratorSelected){
-            bool changedFromTimers = false;
-            if (GuiTimeout != null){
-                changedFromTimers = GuiTimeout.ProcessEvents(e, mousePos);
-                if (!timerSelected && GuiTimeout.IsSelected){
-                    timerSelected = true;
-                }
-            }
-            if (!timerSelected && GuiCooldown != null){
-                changedFromTimers = GuiCooldown.ProcessEvents(e, mousePos);
-                if (!timerSelected && GuiCooldown.IsSelected){
-                    timerSelected = true;
-                }
-            }
-            if (!guiChanged && changedFromTimers){
-                guiChanged = true;
-            }
-        }
         return guiChanged;
     }
 
@@ -374,6 +338,13 @@ public class CompositeGuiNode : CallableGuiNode
         int idx = Decorators.FindIndex(a => a==decorator);
         if (idx != -1){
 
+            if (decorator is GuiCooldownNode){
+                hasCooldown = false;
+            }
+            else if (decorator is GuiTimeoutNode){
+                hasTimeout = false;
+            }
+
             Decorators.Remove(decorator);
 
             // Resize node 
@@ -425,7 +396,7 @@ public class CompositeGuiNode : CallableGuiNode
 
     protected void OnClickAddDecorator(string displayTask){
 
-        // Add actual decorator
+        // The underlying decorator
         Decorator decorator = new Decorator(
             taskName:displayTask,
             blackboard:ref blackboard
@@ -446,16 +417,8 @@ public class CompositeGuiNode : CallableGuiNode
             rect.y + initDecoratorPos[1]
         );
 
-        // Adjust pos to take into account active GuiNodeTimers
-        if (GuiTimeout != null){
-            pos += new Vector2(0, subRectSize[1]); 
-        }
-        if (GuiCooldown != null){
-            pos += new Vector2(0, subRectSize[1]); 
-        }
-
         // Add gui decorator
-        GuiDecorator guiDecorator = new GuiDecorator( 
+        GuiBoolDecorator guiDecorator = new GuiBoolDecorator( 
             decorator:decorator,
             displayTask:displayTask,
             displayName:"",
@@ -517,31 +480,45 @@ public class CompositeGuiNode : CallableGuiNode
         }
         GenericMenu genericMenu = new GenericMenu();
         if (blackboard == null){
-            genericMenu.AddDisabledItem(new GUIContent("Add a blackboard asset to the behaviour tree to add conditional decorators"));
+            genericMenu.AddDisabledItem(
+                new GUIContent(
+                    "Add a blackboard asset to the behaviour tree to add conditional decorators"
+                )
+            );
         }
         else{
             Dictionary<string, bool> boolKeys = blackboard.GetBoolKeys();
             if (boolKeys == null || boolKeys.Count == 0){
-                genericMenu.AddDisabledItem(new GUIContent("Add blackboard bool keys to use as decorators"));
+                genericMenu.AddDisabledItem(
+                    new GUIContent(
+                        "Add blackboard bool keys to use as decorators"
+                    )
+                );
             }
             else{            
                 foreach(string boolName in blackboard.GetBoolKeys().Keys){
                     if (!DecoratorKeyActive(boolName)){
-                        genericMenu.AddItem(new GUIContent("Add Decorator/" + boolName), false, () => OnClickAddDecorator(boolName));
+                        genericMenu.AddItem(
+                            new GUIContent(
+                                "Add Decorator/" + boolName
+                            ), 
+                            false, 
+                            () => OnClickAddDecorator(boolName)
+                        );
                     }
                     else{
                         genericMenu.AddDisabledItem(new GUIContent("Add Decorator/" + boolName));
                     }
                 }
             }
-            if (GuiTimeout == null){
-                genericMenu.AddItem(new GUIContent("Add timeout"), false, () => AddTimer(TimerType.Timeout));
+            if (!hasTimeout){
+                genericMenu.AddItem(new GUIContent("Add timeout"), false, () => OnClickAddTimeout());
             }
             else{
                 genericMenu.AddDisabledItem(new GUIContent("Add timeout"));
             }
-            if (GuiCooldown == null){
-                genericMenu.AddItem(new GUIContent("Add cooldown"), false, () => AddTimer(TimerType.Cooldown));
+            if (!hasCooldown){
+                genericMenu.AddItem(new GUIContent("Add cooldown"), false, () => OnClickAddCooldown());
             }
             else{
                 genericMenu.AddDisabledItem(new GUIContent("Add cooldown"));
@@ -643,185 +620,116 @@ public class CompositeGuiNode : CallableGuiNode
         return this.ParentConnection != null;
     }
 
-    public void AddExistingTimer(TimerType timerType){
+    protected void OnClickAddTimeout(){
 
-        /**
-         * Add GuiNodetimer without adding a Nodetimer to BtNode
-         */ 
+        // The underlying node
+        TimeoutNode decorator = new TimeoutNode(
+            blackboard:ref blackboard,
+            timerValue:BehaviourTreeProperties.DefaultTimerVal(),
+            randomDeviation:BehaviourTreeProperties.DefaultRandomDeviationVal()
+        );
 
-        Vector2 pos;
-
-        switch(timerType){
-            case TimerType.Timeout:
-                if (!BtNode.HasTimeout()){
-                    throw new Exception("Trying to add timeout that does not exist.");
-                }
-                if (GuiCooldown != null){
-                    pos = GuiCooldown.GetPos();
-                    GuiCooldown.DragWithoutParent(new Vector2(0, subRectSize[1]));
-                }                   
-                else{
-                    pos = new Vector2(
-                        rect.x + initDecoratorPos[0],
-                        rect.y + initDecoratorPos[1]
-                    );
-                }
-                this.GuiTimeout = new GuiNodeTimer(
-                    nodeTimer:BtNode.GetTimeout(),
-                    displayTask:"Timeout",
-                    displayName:"",
-                    pos:pos,
-                    UpdatePanelDetails:UpdatePanelDetails,
-                    TreeModified:TreeModified,
-                    OnRemoveTimer:OnRemoveTimer,
-                    blackboard:ref blackboard,
-                    parentGuiNode:this
-                );
-                break;
-            case TimerType.Cooldown:
-                if (!BtNode.HasCooldown()){
-                    throw new Exception("Trying to add cooldown that does not exist.");
-                }
-                if (GuiTimeout != null){
-                    pos = GuiTimeout.GetPos();
-                    GuiTimeout.DragWithoutParent(new Vector2(0, subRectSize[1]));
-                }                   
-                else{
-                    pos = new Vector2(
-                        rect.x + initDecoratorPos[0],
-                        rect.y + initDecoratorPos[1]
-                    );
-                }
-                this.GuiCooldown = new GuiNodeTimer(
-                    nodeTimer:BtNode.GetCooldown(),
-                    displayTask:"Cooldown",
-                    displayName:"",
-                    pos:pos,
-                    UpdatePanelDetails:UpdatePanelDetails,
-                    TreeModified:TreeModified,
-                    OnRemoveTimer:OnRemoveTimer,
-                    blackboard:ref blackboard,
-                    parentGuiNode:this
-                );
-                break;
+        if (Decorators != null && Decorators.Count >0){
+            // Insert as parent of top decorator
+            Decorators[0].BtNode.InsertBeforeSelf(decorator);
         }
-        // Update params to make space for timer
-        ShiftDecoratorsDown(iterateCallNumbers:false);
-        rect.height += subRectSize[1];
-        taskRect.y += subRectSize[1];
-        callNumber.Drag(new Vector2(0, subRectSize[1]));
-        GUI.changed = true;
-
-    }
-
-    public void AddTimer(TimerType timerType, float timerVal=-1){
-
-        /**
-         * Adds a GuiNodeTimer and a corresponding NodeTimer to BtNode
-         */
-
-        Vector2 pos;
-        if (timerVal < 0){timerVal = BehaviourTreeProperties.DefaultTimerVal();}
-
-        switch(timerType){
-            case TimerType.Timeout:
-                if (GuiCooldown != null){
-                    pos = GuiCooldown.GetPos();
-                    GuiCooldown.DragWithoutParent(new Vector2(0, subRectSize[1]));
-                }                   
-                else{
-                    pos = new Vector2(
-                        rect.x + initDecoratorPos[0],
-                        rect.y + initDecoratorPos[1]
-                    );
-                }
-                NodeTimer timeout = new NodeTimer(
-                    timerVal:timerVal);
-                this.GuiTimeout = new GuiNodeTimer(
-                    nodeTimer:timeout,
-                    displayTask:"Timeout",
-                    displayName:"",
-                    pos:pos,
-                    UpdatePanelDetails:UpdatePanelDetails,
-                    TreeModified:TreeModified,
-                    OnRemoveTimer:OnRemoveTimer,
-                    blackboard:ref blackboard,
-                    parentGuiNode:this
-                );
-                BtNode.AddTimeout(nodeTimeout:timeout);
-                break;
-            case TimerType.Cooldown:
-                if (GuiTimeout != null){
-                    pos = GuiTimeout.GetPos();
-                    GuiTimeout.DragWithoutParent(new Vector2(0, subRectSize[1]));
-                }                   
-                else{
-                    pos = new Vector2(
-                        rect.x + initDecoratorPos[0],
-                        rect.y + initDecoratorPos[1]
-                    );
-                }
-                NodeTimer cooldown = new NodeTimer(
-                    timerVal:timerVal);
-                this.GuiCooldown = new GuiNodeTimer(
-                    nodeTimer:cooldown,
-                    displayTask:"Cooldown",
-                    displayName:"",
-                    pos:pos,
-                    UpdatePanelDetails:UpdatePanelDetails,
-                    TreeModified:TreeModified,
-                    OnRemoveTimer:OnRemoveTimer,
-                    blackboard:ref blackboard,
-                    parentGuiNode:this
-                );
-                BtNode.AddCooldown(nodeCooldown:cooldown);
-                break;
+        else{
+            // Insert as parent of self
+            this.BtNode.InsertBeforeSelf(decorator);
         }
+
+        Vector2 pos = new Vector2(
+            rect.x + initDecoratorPos[0],
+            rect.y + initDecoratorPos[1]
+        );
+
+        // Add gui decorator
+        GuiTimeoutNode guiDecorator = new GuiTimeoutNode( 
+            timerNode:decorator,
+            displayName:"",
+            pos:pos,
+            UpdatePanelDetails:UpdatePanelDetails,
+            TreeModified:TreeModified,
+            OnRemoveDecorator:OnClickRemoveDecorator,
+            blackboard:ref blackboard,
+            parentGuiNode:this
+            );
+
+        if (Decorators != null && Decorators.Count >0){
+            guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+        }
+        else{
+            guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+        }
+        callNumber.CallNumber++;
+
+        // Make room for new decorator
+        ShiftDecoratorsDown();
+        Decorators.Insert(0, guiDecorator);
                 
-        // Update params to make space for timer
-        ShiftDecoratorsDown(iterateCallNumbers:false);
+        // Update params to make space for gui decorator
         rect.height += subRectSize[1];
         taskRect.y += subRectSize[1];
         callNumber.Drag(new Vector2(0, subRectSize[1]));
+
+        hasTimeout = true;
         GUI.changed = true;
         TreeModified();
     }
 
-    public void OnRemoveTimer(GuiNodeTimer guiNodeTimer){
+    protected void OnClickAddCooldown(){
 
-        /**
-         * Remove GuiNodeTimer and corresponding NodeTimer from BtNode
-         */
+        // The underlying node
+        CooldownNode decorator = new CooldownNode(
+            blackboard:ref blackboard,
+            timerValue:BehaviourTreeProperties.DefaultTimerVal(),
+            randomDeviation:BehaviourTreeProperties.DefaultRandomDeviationVal()
+        );
 
-        if (guiNodeTimer == this.GuiTimeout){
-            if (this.GuiCooldown != null){
-                if (this.GuiCooldown.GetPos().y > guiNodeTimer.GetPos().y){
-                    this.GuiCooldown.DragWithoutParent(new Vector2(0, -subRectSize[1]));                   
-                }
-            }
-            ShiftDecoratorsUp(iterateCallNumbers:false);
-            rect.height -= subRectSize[1];
-            taskRect.y -= subRectSize[1];
-            callNumber.Drag(new Vector2(0, -subRectSize[1]));
-            this.GuiTimeout.SetSelected(false);
-            this.GuiTimeout = null;
-            BtNode.RemoveTimeout();
-            
+        if (Decorators != null && Decorators.Count >0){
+            // Insert as parent of top decorator
+            Decorators[0].BtNode.InsertBeforeSelf(decorator);
         }
-        else if (guiNodeTimer == this.GuiCooldown){
-            if (this.GuiTimeout != null){
-                if (this.GuiTimeout.GetPos().y > guiNodeTimer.GetPos().y){
-                    this.GuiTimeout.DragWithoutParent(new Vector2(0, -subRectSize[1]));                   
-                }
-            }
-            ShiftDecoratorsUp(iterateCallNumbers:false);
-            rect.height -= subRectSize[1];
-            taskRect.y -= subRectSize[1];
-            callNumber.Drag(new Vector2(0, -subRectSize[1]));
-            this.GuiCooldown.SetSelected(false);
-            this.GuiCooldown = null;
-            BtNode.RemoveCooldown();
+        else{
+            // Insert as parent of self
+            this.BtNode.InsertBeforeSelf(decorator);
         }
+
+        Vector2 pos = new Vector2(
+            rect.x + initDecoratorPos[0],
+            rect.y + initDecoratorPos[1]
+        );
+
+        // Add gui decorator
+        GuiCooldownNode guiDecorator = new GuiCooldownNode( 
+            timerNode:decorator,
+            displayName:"",
+            pos:pos,
+            UpdatePanelDetails:UpdatePanelDetails,
+            TreeModified:TreeModified,
+            OnRemoveDecorator:OnClickRemoveDecorator,
+            blackboard:ref blackboard,
+            parentGuiNode:this
+            );
+
+        if (Decorators != null && Decorators.Count >0){
+            guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+        }
+        else{
+            guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+        }
+        callNumber.CallNumber++;
+
+        // Make room for new decorator
+        ShiftDecoratorsDown();
+        Decorators.Insert(0, guiDecorator);
+                
+        // Update params to make space for gui decorator
+        rect.height += subRectSize[1];
+        taskRect.y += subRectSize[1];
+        callNumber.Drag(new Vector2(0, subRectSize[1]));
+
+        hasCooldown = true;
         GUI.changed = true;
         TreeModified();
     }
@@ -836,8 +744,6 @@ public class CompositeGuiNode : CallableGuiNode
                 Decorators[i].UpdateBlackboard(ref newBlackboard);
             }
         }
-        GuiCooldown?.UpdateBlackboard(ref newBlackboard);
-        GuiTimeout?.UpdateBlackboard(ref newBlackboard);
     }
 
 }

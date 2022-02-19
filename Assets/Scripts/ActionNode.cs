@@ -51,7 +51,7 @@ public class ActionNode : Node
         
     }
 
-    protected virtual void ResetTask(){
+    public override void ResetTask(bool failed=false){
 
         /** 
          * Stops the underlying coroutine and gets it ready to run again
@@ -63,6 +63,7 @@ public class ActionNode : Node
             }
         }
         executeTask = new Task(btTask.ExecuteTask((x)=>CurrentState=x), false);
+        if (failed){CurrentState = NodeState.Failed;}
     }
 
     public override NodeState Evaluate(){
@@ -72,46 +73,12 @@ public class ActionNode : Node
         * Returns the state of the node.
         */
 
-        // If cooldown is active return Failed
-        if (CooldownActive()){
-            if (executeTask.Running){
-                ResetTask();
-            }
-            CurrentState = NodeState.Failed;
-            return CurrentState;
-        }
-        // If cooldown exceeded set to Idle
-        else if (CooldownExceeded()){
-            CurrentState = NodeState.Idle;
-            ResetTask();
-            ResetCooldown();
-        }
-
-        // If Idle, start the task
+        // If Idle, start the task and set to Running
         if (CurrentState == NodeState.Idle && !executeTask.Running){
             executeTask.Start();
-            ResetTimeout();
-            StartTimeout();
             CurrentState = NodeState.Running;
         }
 
-        // If timeout exceeded return Failed
-        if (TimeoutExceeded()){
-            // Record one evaluate call with Failed before returning to Idle
-            if (CurrentState == NodeState.Running){
-                ResetTask();
-                CurrentState = NodeState.Failed;            
-            }
-            else{
-                // Next evaluate call will then execute task again
-                CurrentState = NodeState.Idle;
-                ResetTimeout();
-            }
-        }
-
-        if (CurrentState == NodeState.Succeeded){
-            StartCooldown();
-        }
         return CurrentState;        
     }
 

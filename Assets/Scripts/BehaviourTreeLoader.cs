@@ -10,11 +10,13 @@ public class BehaviourTreeLoader
     * Static methods to load serialized versions of Nodes and GuiNodes.
     */
 
-    public static Node NodeFactory(NodeType nodeType, 
-                            string taskName,
-                            ref BehaviourTreeBlackboard blackboard,
-                            bool invertCondition
-                            ){
+    public static Node NodeFactory(
+        SerializableNode serializedNode,
+        ref BehaviourTreeBlackboard blackboard
+    ){
+
+        NodeType nodeType = (NodeType)serializedNode.type;
+        string taskName = serializedNode.taskName;
         switch(nodeType){
             case NodeType.Root:
                 return new PrioritySelector(
@@ -38,10 +40,11 @@ public class BehaviourTreeLoader
                         taskName:taskName
                 );
             case NodeType.Decorator:
+                SerializableDecorator sd = (SerializableDecorator)serializedNode;
                 return new Decorator(
                         taskName:taskName,
                         blackboard:ref blackboard,
-                        invertCondition:invertCondition
+                        invertCondition:sd.invertCondition
                 );
             case NodeType.Action:
                 return new ActionNode(
@@ -49,13 +52,43 @@ public class BehaviourTreeLoader
                         blackboard:ref blackboard
                 );
             case NodeType.ActionWait:
+                SerializableTimerNode aw = (SerializableTimerNode)serializedNode;
                 return new ActionWaitNode(
                         taskName:taskName,
-                        blackboard:ref blackboard
+                        blackboard:ref blackboard,
+                        timerValue:aw.value,
+                        randomDeviation:aw.randomDeviation,
+                        valueKey:aw.valueKey,
+                        randomDeviationKey:aw.randomDeviationKey
                 );
+            case NodeType.Timer:
+                if (taskName == "Timeout"){
+                    SerializableTimerNode stn = (SerializableTimerNode)serializedNode;
+                    return new TimeoutNode(
+                        blackboard: ref blackboard,
+                        timerValue:stn.value,
+                        randomDeviation:stn.randomDeviation,
+                        valueKey:stn.valueKey,
+                        randomDeviationKey:stn.randomDeviationKey
+                    );
+                }
+                else if (taskName == "Cooldown"){
+                    SerializableCooldownNode scn = (SerializableCooldownNode)serializedNode;
+                    return new CooldownNode(
+                        blackboard: ref blackboard,
+                        timerValue:scn.value,
+                        randomDeviation:scn.randomDeviation,
+                        valueKey:scn.valueKey,
+                        randomDeviationKey:scn.randomDeviationKey,
+                        activateOnSuccess:scn.activateOnSuccess,
+                        activateOnFailure:scn.activateOnFailure
+                    );
+                }
+                break;
             default:
                 throw new System.Exception("Unknown node type");
         }
+        throw new System.Exception("Unknown node type");
 
     }
 
@@ -175,9 +208,36 @@ public class BehaviourTreeLoader
                     blackboard:ref blackboard,
                     parentGuiNode:null
                 );
+            case NodeType.Timer:
+                if (displayTask == "Timeout"){
+                    return new GuiTimeoutNode(
+                    timerNode:(TimerNode)node,
+                    displayName:displayName,
+                    pos:pos,
+                    UpdatePanelDetails:null,
+                    TreeModified:null,
+                    OnRemoveDecorator:null,
+                    blackboard:ref blackboard,
+                    parentGuiNode:null
+                    );
+                }
+                else if (displayTask == "Cooldown"){
+                    return new GuiCooldownNode(
+                    timerNode:(TimerNode)node,
+                    displayName:displayName,
+                    pos:pos,
+                    UpdatePanelDetails:null,
+                    TreeModified:null,
+                    OnRemoveDecorator:null,
+                    blackboard:ref blackboard,
+                    parentGuiNode:null
+                    );
+                }
+                break;
             default:
                 throw new System.Exception("Unknown node type");
         }
+        throw new System.Exception("Unknown node type");
     }
 
     public static Node ReadNodeFromSerializedNodes(
@@ -194,18 +254,9 @@ public class BehaviourTreeLoader
         var serializedNode = serializedNodes [index];
 
         var node = BehaviourTreeLoader.NodeFactory(
-            nodeType:(NodeType)serializedNode.type,
-            taskName:serializedNode.taskName,
-            blackboard:ref blackboard,
-            invertCondition: serializedNode.invertCondition
+            serializedNode:serializedNode,
+            blackboard:ref blackboard
         );
-
-        if (serializedNode.misc1 >= 0){
-            node.AddMisc1(val:serializedNode.misc1);
-        }
-        if (serializedNode.misc2 >= 0){
-            node.AddMisc2(val:serializedNode.misc2);
-        }
 
         // Depth first  
         for (int i = 0; i != serializedNode.childCount; i++) {

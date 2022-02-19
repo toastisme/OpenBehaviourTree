@@ -48,6 +48,11 @@ public class ProbabilitySelector : Node
         return null;
     }
 
+    public override void ResetState(){
+        base.ResetState();
+        selectedNode = null;
+    }
+
     public override NodeState Evaluate(){
 
         /**
@@ -58,30 +63,13 @@ public class ProbabilitySelector : Node
         * selectedNode is set to null.
         */
 
-        if (CooldownActive()){
-            CurrentState = NodeState.Failed;
-            return CurrentState;
-        }
-
-        if (!TimeoutActive() && !TimeoutExceeded()){
-            StartTimeout();
-        }
-
         if (selectedNode == null){
             selectedNode = SelectNode();
         }
+
         CurrentState = selectedNode.Evaluate();
         if (CurrentState == NodeState.Failed || CurrentState == NodeState.Succeeded){
             selectedNode = null;
-        }
-        if (TimeoutExceeded()){
-            ResetChildStates();
-            CurrentState = NodeState.Failed;
-            ResetTimeout();
-        }
-
-        if (CurrentState == NodeState.Succeeded){
-            StartCooldown();
         }
 
         return CurrentState;
@@ -114,5 +102,6 @@ public class ProbabilitySelector : Node
     public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
         this.blackboard = blackboard;
     }
+
 }
 }

@@ -6,6 +6,35 @@ using System;
 using System.Linq;
 
 namespace Behaviour{
+
+public class SerializableCooldownNode:SerializableTimerNode{
+    public bool activateOnSuccess;
+    public bool activateOnFailure;
+
+    public SerializableCooldownNode(
+        int type,
+        string taskName,
+        int childCount,
+        string valueKey,
+        string randomDeviationKey,
+        float value,
+        float randomDeviation,
+        bool activateOnSuccess,
+        bool activateOnFailure
+    ): base(
+        type:type,
+        taskName:taskName,
+        childCount:childCount,
+        valueKey:valueKey,
+        randomDeviationKey:randomDeviationKey,
+        value:value,
+        randomDeviation:randomDeviation
+    ){
+        this.activateOnSuccess = activateOnSuccess;
+        this.activateOnFailure = activateOnFailure;
+    }
+}
+
 public class CooldownNode : TimerNode
 {
     /**
@@ -16,26 +45,31 @@ public class CooldownNode : TimerNode
     * are set using these keys whenever StartTimer() is called. 
     */
 
-    NodeState[] coolDownStates;
+    public bool activateOnSuccess;
+    public bool activateOnFailure;
 
     public CooldownNode(
-        string taskName,
         ref BehaviourTreeBlackboard blackboard,
+        float timerValue,
+        float randomDeviation,
+        string valueKey = "",
+        string randomDeviationKey = "",
         Node parentNode = null,
         Node childNode = null,
-        NodeState[] coolDownStates = null
+        bool activateOnSuccess = true,
+        bool activateOnFailure = false
     ) : base(
-        taskName: taskName,
+        taskName: "Cooldown",
         blackboard: ref blackboard,
+        timerValue:timerValue,
+        randomDeviation:randomDeviation,
+        valueKey:valueKey,
+        randomDeviationKey:randomDeviationKey,
         parentNode:parentNode,
         childNode: childNode
     ){
-        if (coolDownStates != null){
-            this.coolDownStates = coolDownStates;
-        }
-        else{
-            this.coolDownStates = new NodeState[]{NodeState.Succeeded};
-        }
+        this.activateOnSuccess = activateOnSuccess;
+        this.activateOnFailure = activateOnFailure;
     }
 
     public override NodeState Evaluate(){
@@ -44,10 +78,28 @@ public class CooldownNode : TimerNode
             return CurrentState;
         }
         CurrentState = ChildNodes[0].Evaluate();
-        if (coolDownStates.Contains(CurrentState)){
+        if (activateOnSuccess && CurrentState == NodeState.Succeeded){
+            StartTimer();
+        }
+        else if (activateOnFailure && CurrentState == NodeState.Failed){
             StartTimer();
         }
         return CurrentState;
+    }
+
+    public override SerializableNode Serialize()
+    {
+        return new SerializableCooldownNode(
+            type:(int)GetNodeType(),
+            taskName:TaskName,
+            childCount:ChildNodes.Count,
+            valueKey:valueKey,
+            randomDeviationKey:randomDeviationKey,
+            value:TimerValue,
+            randomDeviation:RandomDeviation,
+            activateOnSuccess:activateOnSuccess,
+            activateOnFailure:activateOnFailure
+        );
     }
 }
 }

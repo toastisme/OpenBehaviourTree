@@ -21,41 +21,13 @@ public class BehaviourTreeSaver
             throw new Exception("Node is its own parent.");
         }
 
-        bool invertCondition = false;
-        if (node is Decorator decorator){
-            invertCondition = decorator.invertCondition;
-        }
+        serializedNodes.Add(node.Serialize());
 
-        float misc1 = -1f;
-        float misc2 = -1f;
-        if (node.GetNodeType() == NodeType.ActionWait){
-            ActionWaitNode awn = (ActionWaitNode)node;
-            misc1 = awn.WaitTime; 
-            misc2 = awn.RandomDeviation;
-        }
-        else if (node.GetNodeType() == NodeType.ProbabilityWeight){
-            ProbabilityWeight pw = (ProbabilityWeight)node;
-            misc1 = pw.GetWeight();
-        }
-        else{
-            misc1 = node.HasTimeout() ? node.GetTimeout().GetTimerVal() : -1;
-            misc2 = node.HasCooldown() ? node.GetCooldown().GetTimerVal() : -1;
-        }
-
-        var serializedNode = new SerializableNode () {
-            type = (int)node.GetNodeType(),
-            taskName = node.TaskName,
-            childCount = node.ChildNodes.Count,
-            invertCondition = invertCondition,
-            misc1 = misc1,
-            misc2 = misc2
-        }
-        ;
-        serializedNodes.Add (serializedNode);
         foreach (var child in node.ChildNodes) {
             BehaviourTreeSaver.AddNodeToSerializedNodes (child, ref serializedNodes);
         }
     }
+
     public static GuiNodeData GetMetaData(GuiNode node){
         return new GuiNodeData(){
             displayName = node.DisplayName,

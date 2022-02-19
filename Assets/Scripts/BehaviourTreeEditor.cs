@@ -790,6 +790,8 @@ public class BehaviourTreeEditor : EditorWindow
                     ActionWaitNode actionNode = new ActionWaitNode(
                         taskName:displayTask,
                         blackboard:ref bt.blackboard,
+                        timerValue:BehaviourTreeProperties.DefaultTimerVal(),
+                        randomDeviation:BehaviourTreeProperties.DefaultRandomDeviationVal(),
                         parentNode:parentNode
                     );
                     parentNode.AddChildNode(actionNode);
@@ -1298,14 +1300,6 @@ public class BehaviourTreeEditor : EditorWindow
 
             // Assumed to be CompositeNode -> now need to make connections
             CompositeGuiNode cgn = (CompositeGuiNode)guiNode;
-
-            // Timers
-            if (node.HasCooldown()){
-                cgn.AddExistingTimer(TimerType.Cooldown);
-            }
-            if (node.HasTimeout()){
-                cgn.AddExistingTimer(TimerType.Timeout);
-            }
 
             // Decorators
             if (decorators != null){

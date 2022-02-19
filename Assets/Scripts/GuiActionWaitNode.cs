@@ -51,13 +51,13 @@ public class GuiActionWaitNode : GuiActionNode
          * What details are displayed in the details panel of the BehaviourTreeEditor
          */
         base.DrawDetails();
-        float waitTime = actionWaitNode.WaitTime;
+        float waitTime = actionWaitNode.TimerValue;
 
         GUILayout.Label("Wait Time");
         EditorGUI.BeginChangeCheck();
-        bool success = float.TryParse(GUILayout.TextField(actionWaitNode.WaitTime.ToString(), 5), out waitTime);
+        bool success = float.TryParse(GUILayout.TextField(actionWaitNode.TimerValue.ToString(), 5), out waitTime);
         if (success){
-            actionWaitNode.WaitTime = waitTime;
+            actionWaitNode.TimerValue = waitTime;
         }
         
         float randomDeviation = actionWaitNode.RandomDeviation;
@@ -79,7 +79,7 @@ public class GuiActionWaitNode : GuiActionNode
         GUI.Box(scaledRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor;
         string s =  "\n" + DisplayName + "\n" + DisplayTask;
-        s += " (" + actionWaitNode.WaitTime.ToString() + " +/- ";
+        s += " (" + actionWaitNode.TimerValue.ToString() + " +/- ";
         s += actionWaitNode.RandomDeviation.ToString() + " sec)";
         iconAndText.text = s;
         GUI.Box(scaledTaskRect, iconAndText, activeTaskStyle);
