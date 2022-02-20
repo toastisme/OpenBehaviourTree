@@ -151,16 +151,16 @@ public class GuiTimerNode : GuiDecorator
         timerNode.valueKey = newValueKey;
         if (value > 0){
             timerNode.TimerValue = value;
-            NodeUpdated();
         }
+        NodeUpdated();
     }
 
     public void SetRandomDeviationKey(string newKey, float value=-1f){
         timerNode.randomDeviationKey = newKey;
         if (value > 0){
             timerNode.RandomDeviation = value;
-            NodeUpdated();
         }
+        NodeUpdated();
     }
 
     protected bool NoCustomKeys(Dictionary<string, int> intKeys, Dictionary<string,float> floatKeys){
@@ -181,7 +181,7 @@ public class GuiTimerNode : GuiDecorator
          * fit the GuiNode text.
          */
         float dx = BehaviourTreeProperties.ApproximateDecoratorTextWidth();
-        return iconAndText.text.Length * dx;
+        return (DisplayTask + " (" + timerNode.AsString() + ")").Length*dx;
     }
 }
 }
