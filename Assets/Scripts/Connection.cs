@@ -46,6 +46,7 @@ public class Connection
                                         string displayName,
                                         Action<GuiNode> UpdatePanelDetails,
                                         Action TreeModified,
+                                        Action NodeUpdated,
                                         ref BehaviourTreeBlackboard blackboard
                                     ){
         Vector2 centrePos = GetCentrePos();
@@ -59,6 +60,7 @@ public class Connection
             pos:centrePos,
             UpdatePanelDetails:UpdatePanelDetails,
             TreeModified:TreeModified,
+            NodeUpdated:NodeUpdated,
             blackboard:ref blackboard,
             parentConnection:this
                                                         );
@@ -139,6 +141,17 @@ public class Connection
             return probabilityWeight.DisplayTask;
         }
         return "";
+    }
+
+    public void UpdateProbabilityWeightBoxWidth(float newWidth){
+        probabilityWeight?.UpdateBoxWidth(newWidth);
+        probabilityWeightOffset = new Vector2(
+            newWidth*.5f, 
+            probabilityWeightOffset.y);
+    }
+
+    public float GetRequiredProbabilityWeightBoxWidth(){
+        return probabilityWeight.GetRequiredBoxWidth();
     }
 
     public void RefreshProbabilityWeightTask(string oldKeyName, string newKeyName){

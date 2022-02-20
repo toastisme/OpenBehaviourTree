@@ -981,6 +981,7 @@ public class BehaviourTreeEditor : EditorWindow
             displayName:displayName,
             UpdatePanelDetails:UpdatePanelDetails,
             TreeModified:TreeModified,
+            NodeUpdated:connection.GetChildNode().NodeUpdated,
             blackboard:ref bt.blackboard
         );
         TreeModified();

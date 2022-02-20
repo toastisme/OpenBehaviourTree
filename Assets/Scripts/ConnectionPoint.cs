@@ -8,7 +8,7 @@ public class ConnectionPoint
 {
     /**
      * \class ConnectionPoint
-     * Stores and displays a connection point between attached to a CompositeGuiNode.
+     * Stores and displays a connection point attached to a CompositeGuiNode.
      */
     private Rect rect;
     private Rect scaledRect;

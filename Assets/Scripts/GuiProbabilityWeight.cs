@@ -15,6 +15,8 @@ public class GuiProbabilityWeight : GuiNode
     Connection parentConnection; // The Connection self is child of 
     ProbabilityWeight probabilityWeight; // The ProbabilityWeight being displayed
 
+    public Action NodeUpdated;
+
     public GuiProbabilityWeight(
         Node node,
         string displayTask,
@@ -22,6 +24,7 @@ public class GuiProbabilityWeight : GuiNode
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified,
+        Action NodeUpdated,
         ref BehaviourTreeBlackboard blackboard,
         Connection parentConnection
     ): base(
@@ -35,8 +38,10 @@ public class GuiProbabilityWeight : GuiNode
     )
     {
         this.parentConnection = parentConnection;
+        this.NodeUpdated = NodeUpdated;
         this.probabilityWeight = (ProbabilityWeight)node;
         ApplyDerivedSettings();
+        NodeUpdated();
     }
 
     public void SetEditorActions(
@@ -162,6 +167,7 @@ public class GuiProbabilityWeight : GuiNode
         genericMenu.ShowAsContext();
 
     }
+
     public override void Draw()
     {
         if (IsSelected){
@@ -212,8 +218,22 @@ public class GuiProbabilityWeight : GuiNode
         }
         if (EditorGUI.EndChangeCheck()){
             TreeModified();
-            UpdateBoxWidth(GetRequiredBoxWidth());
+            NodeUpdated();
         }
+    }
+    public override float GetRequiredBoxWidth(){
+
+        /**
+         * A dirty way to approximate the width rect needs to
+         * fit the GuiNode text.
+         */
+
+        float dx = BehaviourTreeProperties.ApproximateDecoratorTextWidth();
+        float minWidth = BehaviourTreeProperties.GuiNodeSize().x;
+        string taskString = DisplayTask + " : " + probabilityWeight.GetWeight().ToString();
+        float length = Mathf.Max(DisplayName.Length, taskString.Length)*dx;
+        return Mathf.Max(minWidth, length);
+
     }
 
 }

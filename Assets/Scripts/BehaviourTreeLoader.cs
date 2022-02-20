@@ -166,6 +166,7 @@ public class BehaviourTreeLoader
                     parentConnection:null,
                     UpdatePanelDetails:null,
                     TreeModified:null,
+                    NodeUpdated:null,
                     blackboard:ref blackboard
                 );
             case NodeType.Action:

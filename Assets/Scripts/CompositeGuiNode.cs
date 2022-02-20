@@ -781,6 +781,14 @@ public class CompositeGuiNode : CallableGuiNode
                 }
             }
         }
+
+        if (ParentConnection!= null && ParentConnection.HasProbabilityWeight()){
+            float pwWidth = ParentConnection.GetRequiredProbabilityWeightBoxWidth();
+            if (maxWidth < pwWidth){
+                maxWidth = pwWidth;
+            }
+        }
+
         return maxWidth;
     }
 
@@ -795,6 +803,7 @@ public class CompositeGuiNode : CallableGuiNode
         }
         ChildPoint?.UpdateBoxWidth(newWidth);
         ParentPoint?.UpdateBoxWidth(newWidth);
+        ParentConnection?.UpdateProbabilityWeightBoxWidth(newWidth);
     }
 
 }
