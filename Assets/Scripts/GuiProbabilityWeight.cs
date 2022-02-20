@@ -41,7 +41,9 @@ public class GuiProbabilityWeight : GuiNode
         this.NodeUpdated = NodeUpdated;
         this.probabilityWeight = (ProbabilityWeight)node;
         ApplyDerivedSettings();
-        NodeUpdated();
+        if (NodeUpdated != null){
+            NodeUpdated();
+        }
     }
 
     public void SetEditorActions(

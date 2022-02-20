@@ -5,7 +5,7 @@ using UnityEditor;
 using System;
 
 namespace Behaviour{
-public class GuiActionWaitNode : GuiActionNode
+public class GuiActionWaitNode : CompositeGuiNode
 {
     /**
     * \class GuiActionWaitNode
@@ -42,7 +42,35 @@ public class GuiActionWaitNode : GuiActionNode
         blackboard:ref blackboard
     ){
         actionWaitNode = (ActionWaitNode)node;
+        ApplyDerivedSettings();
+        ApplyNodeTypeSettings(OnClickChildPoint,OnClickParentPoint);
+        NodeUpdated();
+    }
+
+    protected override void ApplyDerivedSettings()
+    {
+        taskRectColor = BehaviourTreeProperties.ActionColor();
+        defaultStyle = BehaviourTreeProperties.GUINodeStyle();
+        selectedStyle = BehaviourTreeProperties.SelectedGUINodeStyle();
+        defaultTaskStyle = BehaviourTreeProperties.TaskNodeStyle();
+        selectedTaskStyle = BehaviourTreeProperties.SelectedTaskNodeStyle();
+        activeTaskStyle = defaultTaskStyle;
+        activeStyle = defaultStyle;
+        color = BehaviourTreeProperties.DefaultColor();
         iconAndText = BehaviourTreeProperties.WaitContent();
+    }
+
+    protected override void ApplyNodeTypeSettings(
+        Action<ConnectionPoint> OnClickChildPoint,
+        Action<ConnectionPoint> OnClickParentPoint
+    ){
+
+        ChildPoint = null; // ActionNodes are leaf nodes and so have no children
+        ParentPoint = new ConnectionPoint(this, 
+                                            ConnectionPointType.Out, 
+                                            BehaviourTreeProperties.ParentPointStyle(), 
+                                            OnClickParentPoint);
+
     }
 
     public override void DrawDetails()
@@ -68,13 +96,16 @@ public class GuiActionWaitNode : GuiActionNode
         }
         if (EditorGUI.EndChangeCheck()){
             TreeModified();
+            NodeUpdated();
         }
     }
 
     string GetDisplayTaskString(){
         string s = DisplayTask;
-        s += " (" + actionWaitNode.TimerValue.ToString() + " +/- ";
-        s += actionWaitNode.RandomDeviation.ToString() + " sec)";
+        if (actionWaitNode != null){
+            s += " (" + actionWaitNode.TimerValue.ToString() + " +/- ";
+            s += actionWaitNode.RandomDeviation.ToString() + " sec)";
+        }
         return s;
     }
     
@@ -124,7 +155,7 @@ public class GuiActionWaitNode : GuiActionNode
          */
 
         float dx = BehaviourTreeProperties.ApproximateNodeTextWidth();
-        return GetDisplayTaskString().Length * dx;
+        return Mathf.Max(GetDisplayTaskString().Length, DisplayName.Length) * dx;
     }
 
 }
