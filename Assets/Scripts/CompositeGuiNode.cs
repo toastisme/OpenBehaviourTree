@@ -85,6 +85,7 @@ public class CompositeGuiNode : CallableGuiNode
             OnClickChildPoint:OnClickChildPoint,
             OnClickParentPoint:OnClickParentPoint
             );
+        NodeUpdated();
     }
 
     public override void SetDefaultCallNumberPos()
@@ -361,6 +362,7 @@ public class CompositeGuiNode : CallableGuiNode
             }
             GUI.changed = true;
             TreeModified();
+            NodeUpdated();
         }
         else{
             throw new Exception("Decorator not found in decorators list.");
@@ -370,6 +372,7 @@ public class CompositeGuiNode : CallableGuiNode
 
     public void AddDecorator(GuiDecorator guiDecorator){
         guiDecorator.SetParentGuiNode(this);
+        guiDecorator.NodeUpdated = this.NodeUpdated;
          if (Decorators != null && Decorators.Count >0){
             guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
         }
@@ -391,6 +394,7 @@ public class CompositeGuiNode : CallableGuiNode
         if (TreeModified != null){
             TreeModified();
         }
+        NodeUpdated();
 
     }
 
@@ -425,6 +429,7 @@ public class CompositeGuiNode : CallableGuiNode
             pos:pos,
             UpdatePanelDetails:UpdatePanelDetails,
             TreeModified:TreeModified,
+            NodeUpdated:NodeUpdated,
             OnRemoveDecorator:OnClickRemoveDecorator,
             blackboard:ref blackboard,
             parentGuiNode:this
@@ -449,6 +454,7 @@ public class CompositeGuiNode : CallableGuiNode
         callNumber.Drag(new Vector2(0, subRectSize[1]));
         GUI.changed = true;
         TreeModified();
+        NodeUpdated();
     }
 
     void ShiftDecoratorsDown(bool iterateCallNumbers=true){
@@ -600,6 +606,7 @@ public class CompositeGuiNode : CallableGuiNode
                 if (decorator.DisplayTask == oldKeyName){
                     decorator.DisplayTask = newKeyName;
                     TreeModified();
+                    NodeUpdated();
                 }
             }
         }
@@ -650,6 +657,7 @@ public class CompositeGuiNode : CallableGuiNode
             pos:pos,
             UpdatePanelDetails:UpdatePanelDetails,
             TreeModified:TreeModified,
+            NodeUpdated:NodeUpdated,
             OnRemoveDecorator:OnClickRemoveDecorator,
             blackboard:ref blackboard,
             parentGuiNode:this
@@ -675,6 +683,7 @@ public class CompositeGuiNode : CallableGuiNode
         hasTimeout = true;
         GUI.changed = true;
         TreeModified();
+        NodeUpdated();
     }
 
     protected void OnClickAddCooldown(){
@@ -707,6 +716,7 @@ public class CompositeGuiNode : CallableGuiNode
             pos:pos,
             UpdatePanelDetails:UpdatePanelDetails,
             TreeModified:TreeModified,
+            NodeUpdated:NodeUpdated,
             OnRemoveDecorator:OnClickRemoveDecorator,
             blackboard:ref blackboard,
             parentGuiNode:this
@@ -732,6 +742,7 @@ public class CompositeGuiNode : CallableGuiNode
         hasCooldown = true;
         GUI.changed = true;
         TreeModified();
+        NodeUpdated();
     }
 
     public Rect GetScaledRect(){return scaledRect;}
@@ -744,6 +755,46 @@ public class CompositeGuiNode : CallableGuiNode
                 Decorators[i].UpdateBlackboard(ref newBlackboard);
             }
         }
+    }
+
+    public void NodeUpdated(){
+        UpdateBoxWidth(GetRequiredBoxWidth());        
+    }
+
+    public override float GetRequiredBoxWidth(){
+
+        /**
+         * A dirty way to approximate the width rect needs to
+         * fit the GuiNode text.
+         */
+
+        float dx = BehaviourTreeProperties.ApproximateNodeTextWidth();
+        float minWidth = BehaviourTreeProperties.GuiNodeSize().x;
+        float length = Mathf.Max(DisplayName.Length, DisplayTask.Length)*dx;
+        float maxWidth =  Mathf.Max(minWidth, length);
+
+        if (Decorators != null){
+            for(int i=0; i<Decorators.Count; i++){
+                float boxWidth = Decorators[i].GetRequiredBoxWidth();
+                if (maxWidth < boxWidth){
+                    maxWidth = boxWidth;
+                }
+            }
+        }
+        return maxWidth;
+    }
+
+    public override void UpdateBoxWidth(float newWidth){
+        rect.width = newWidth;
+        taskRect.width = newWidth;
+        SetCallNumberXPos(taskRect.x + newWidth);
+        if (Decorators != null){
+            for(int i=0; i<Decorators.Count; i++){
+                Decorators[i].UpdateBoxWidth(newWidth);
+            }
+        }
+        ChildPoint?.UpdateBoxWidth(newWidth);
+        ParentPoint?.UpdateBoxWidth(newWidth);
     }
 
 }

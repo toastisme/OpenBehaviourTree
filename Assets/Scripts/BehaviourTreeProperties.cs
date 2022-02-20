@@ -17,6 +17,8 @@ public class BehaviourTreeProperties
 
     public static float DefaultTimerVal(){return 5f;}
     public static float DefaultRandomDeviationVal(){return 5f;}
+    public static float ApproximateNodeTextWidth(){return 11.7647f;}
+    public static float ApproximateDecoratorTextWidth(){return 9.0909f;}
 
     // Size
     public static Vector2 GuiNodeSize(){return new Vector2(200, 140);}

@@ -15,6 +15,7 @@ public class GuiDecorator : CallableGuiNode
 
     GuiNode parentGuiNode;
     Action<GuiDecorator> OnRemoveDecorator;
+    public Action NodeUpdated;
 
     public GuiDecorator(
         Node decorator,
@@ -23,6 +24,7 @@ public class GuiDecorator : CallableGuiNode
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified,
+        Action NodeUpdated,
         Action<GuiDecorator> OnRemoveDecorator,
         ref BehaviourTreeBlackboard blackboard,
         GuiNode parentGuiNode
@@ -38,6 +40,7 @@ public class GuiDecorator : CallableGuiNode
     {
         this.parentGuiNode = parentGuiNode;
         this.OnRemoveDecorator = OnRemoveDecorator;
+        this.NodeUpdated = NodeUpdated;
         ApplyDerivedSettings();
     }
 
@@ -135,6 +138,20 @@ public class GuiDecorator : CallableGuiNode
                 break;
         }
         return guiChanged;
+    }
+
+    public override float GetRequiredBoxWidth(){
+
+        /**
+         * A dirty way to approximate the width rect needs to
+         * fit the GuiNode text.
+         */
+
+        float dx = BehaviourTreeProperties.ApproximateDecoratorTextWidth();
+        float minWidth = BehaviourTreeProperties.SubNodeSize().x;
+        float length = Mathf.Max(DisplayName.Length, DisplayTask.Length)*dx;
+        return Mathf.Max(minWidth, length);
+
     }
 
 }

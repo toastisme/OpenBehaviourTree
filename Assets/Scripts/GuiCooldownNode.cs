@@ -14,6 +14,7 @@ public class GuiCooldownNode : GuiTimerNode
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified,
+        Action NodeUpdated,
         Action<GuiDecorator> OnRemoveDecorator,
         ref BehaviourTreeBlackboard blackboard,
         GuiNode parentGuiNode
@@ -24,6 +25,7 @@ public class GuiCooldownNode : GuiTimerNode
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
         TreeModified:TreeModified,
+        NodeUpdated:NodeUpdated,
         OnRemoveDecorator:OnRemoveDecorator,
         blackboard: ref blackboard,
         parentGuiNode: parentGuiNode
@@ -50,6 +52,7 @@ public class GuiCooldownNode : GuiTimerNode
                                                              cooldownNode.activateOnFailure);
         if (EditorGUI.EndChangeCheck()){
             TreeModified();
+            NodeUpdated();
         }
 
 

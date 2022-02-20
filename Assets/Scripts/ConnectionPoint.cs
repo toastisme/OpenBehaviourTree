@@ -81,5 +81,9 @@ public class ConnectionPoint
             }
         }
     }
+
+    public void UpdateBoxWidth(float newWidth){
+        rect.width = newWidth -12f;
+    }
 }
 }

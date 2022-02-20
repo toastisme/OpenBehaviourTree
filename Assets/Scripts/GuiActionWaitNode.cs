@@ -70,17 +70,23 @@ public class GuiActionWaitNode : GuiActionNode
             TreeModified();
         }
     }
+
+    string GetDisplayTaskString(){
+        string s = DisplayTask;
+        s += " (" + actionWaitNode.TimerValue.ToString() + " +/- ";
+        s += actionWaitNode.RandomDeviation.ToString() + " sec)";
+        return s;
+    }
+    
     protected override void DrawSelf()
     {
         if (IsSelected){
             GUI.color = BehaviourTreeProperties.SelectedTint();
         }
+        string s =  "\n" + DisplayName + "\n" + GetDisplayTaskString();
         GUI.backgroundColor = color;
         GUI.Box(scaledRect, "", activeStyle);
         GUI.backgroundColor = taskRectColor;
-        string s =  "\n" + DisplayName + "\n" + DisplayTask;
-        s += " (" + actionWaitNode.TimerValue.ToString() + " +/- ";
-        s += actionWaitNode.RandomDeviation.ToString() + " sec)";
         iconAndText.text = s;
         GUI.Box(scaledTaskRect, iconAndText, activeTaskStyle);
         GUI.color = BehaviourTreeProperties.DefaultTint();
@@ -108,6 +114,17 @@ public class GuiActionWaitNode : GuiActionNode
         }
         genericMenu.AddItem(new GUIContent("Remove node"), false, OnClickRemoveNode);
         genericMenu.ShowAsContext();
+    }
+
+    public override float GetRequiredBoxWidth(){
+
+        /**
+         * A dirty way to approximate the width rect needs to
+         * fit the GuiNode text.
+         */
+
+        float dx = BehaviourTreeProperties.ApproximateNodeTextWidth();
+        return GetDisplayTaskString().Length * dx;
     }
 
 }

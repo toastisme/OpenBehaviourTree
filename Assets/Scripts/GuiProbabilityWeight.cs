@@ -212,6 +212,7 @@ public class GuiProbabilityWeight : GuiNode
         }
         if (EditorGUI.EndChangeCheck()){
             TreeModified();
+            UpdateBoxWidth(GetRequiredBoxWidth());
         }
     }
 

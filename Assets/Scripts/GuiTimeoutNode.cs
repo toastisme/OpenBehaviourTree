@@ -13,6 +13,7 @@ public class GuiTimeoutNode : GuiTimerNode
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified,
+        Action NodeUpdated,
         Action<GuiDecorator> OnRemoveDecorator,
         ref BehaviourTreeBlackboard blackboard,
         GuiNode parentGuiNode
@@ -23,6 +24,7 @@ public class GuiTimeoutNode : GuiTimerNode
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
         TreeModified:TreeModified,
+        NodeUpdated:NodeUpdated,
         OnRemoveDecorator:OnRemoveDecorator,
         blackboard: ref blackboard,
         parentGuiNode: parentGuiNode

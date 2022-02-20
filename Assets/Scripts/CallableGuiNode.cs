@@ -57,6 +57,17 @@ public class CallableGuiNode : GuiNode
         callNumber.SetPosition(callNumberPos);
     }
 
+    public void SetCallNumberXPos(float xPos){
+        Rect r = callNumber.GetRect();
+        xPos -= r.width;
+        callNumber.SetPosition(new Vector2(xPos, r.y));
+    }
+
+    public override void UpdateBoxWidth(float newWidth){
+        rect.width = newWidth;
+        SetCallNumberXPos(rect.x + newWidth);
+    }
+
 
 }
 }

@@ -197,13 +197,14 @@ public class BehaviourTreeLoader
                     blackboard:ref blackboard
                 );
             case NodeType.Decorator:
-                return new GuiDecorator(
+                return new GuiBoolDecorator(
                     decorator:node,
                     displayTask:displayTask,
                     displayName:displayName,
                     pos:pos,
                     UpdatePanelDetails:null,
                     TreeModified:null,
+                    NodeUpdated:null,
                     OnRemoveDecorator:null,
                     blackboard:ref blackboard,
                     parentGuiNode:null
@@ -216,6 +217,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     UpdatePanelDetails:null,
                     TreeModified:null,
+                    NodeUpdated:null,
                     OnRemoveDecorator:null,
                     blackboard:ref blackboard,
                     parentGuiNode:null
@@ -228,6 +230,7 @@ public class BehaviourTreeLoader
                     pos:pos,
                     UpdatePanelDetails:null,
                     TreeModified:null,
+                    NodeUpdated:null,
                     OnRemoveDecorator:null,
                     blackboard:ref blackboard,
                     parentGuiNode:null

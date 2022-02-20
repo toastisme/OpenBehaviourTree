@@ -21,6 +21,7 @@ public class GuiBoolDecorator : GuiDecorator
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified,
+        Action NodeUpdated,
         Action<GuiDecorator> OnRemoveDecorator,
         ref BehaviourTreeBlackboard blackboard,
         GuiNode parentGuiNode
@@ -31,6 +32,7 @@ public class GuiBoolDecorator : GuiDecorator
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
         TreeModified:TreeModified,
+        NodeUpdated:NodeUpdated,
         OnRemoveDecorator:OnRemoveDecorator,
         blackboard: ref blackboard,
         parentGuiNode:parentGuiNode
@@ -66,7 +68,15 @@ public class GuiBoolDecorator : GuiDecorator
         /**
          * What details are displayed in the details panel of the BehaviourTreeEditor
          */
-        base.DrawDetails();
+        GUILayout.Label(BehaviourTreeProperties.GetDefaultStringFromNodeType(GetNodeType()));
+        GUILayout.Label("Task: " + DisplayTask);
+        GUILayout.Label("Name");
+        EditorGUI.BeginChangeCheck();
+        DisplayName = GUILayout.TextField(DisplayName, 50);
+        if (EditorGUI.EndChangeCheck()){
+            TreeModified();
+            NodeUpdated();
+        }
         bool currentCondition = decorator.invertCondition;
         EditorGUI.BeginChangeCheck();
         decorator.invertCondition = EditorGUILayout.Toggle("Invert condition", 

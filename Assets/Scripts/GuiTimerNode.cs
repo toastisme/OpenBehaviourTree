@@ -15,6 +15,7 @@ public class GuiTimerNode : GuiDecorator
         Vector2 pos,
         Action<GuiNode> UpdatePanelDetails,
         Action TreeModified,
+        Action NodeUpdated,
         Action<GuiDecorator> OnRemoveDecorator,
         ref BehaviourTreeBlackboard blackboard,
         GuiNode parentGuiNode
@@ -25,6 +26,7 @@ public class GuiTimerNode : GuiDecorator
         pos:pos,
         UpdatePanelDetails:UpdatePanelDetails,
         TreeModified:TreeModified,
+        NodeUpdated:NodeUpdated,
         OnRemoveDecorator:OnRemoveDecorator,
         blackboard: ref blackboard,
         parentGuiNode: parentGuiNode
@@ -93,6 +95,7 @@ public class GuiTimerNode : GuiDecorator
 
         if (EditorGUI.EndChangeCheck()){
             TreeModified();
+            NodeUpdated();
         }
     }
 
@@ -148,6 +151,7 @@ public class GuiTimerNode : GuiDecorator
         timerNode.valueKey = newValueKey;
         if (value > 0){
             timerNode.TimerValue = value;
+            NodeUpdated();
         }
     }
 
@@ -155,6 +159,7 @@ public class GuiTimerNode : GuiDecorator
         timerNode.randomDeviationKey = newKey;
         if (value > 0){
             timerNode.RandomDeviation = value;
+            NodeUpdated();
         }
     }
 
@@ -170,5 +175,13 @@ public class GuiTimerNode : GuiDecorator
 
     }
 
+    public override float GetRequiredBoxWidth(){
+        /**
+         * A dirty way to approximate the width rect needs to
+         * fit the GuiNode text.
+         */
+        float dx = BehaviourTreeProperties.ApproximateDecoratorTextWidth();
+        return iconAndText.text.Length * dx;
+    }
 }
 }

@@ -157,6 +157,7 @@ public abstract class GuiNode : IGuiNode
         DisplayName = GUILayout.TextField(DisplayName, 50);
         if (EditorGUI.EndChangeCheck()){
             TreeModified();
+            UpdateBoxWidth(GetRequiredBoxWidth());
         }
     }
 
@@ -168,6 +169,24 @@ public abstract class GuiNode : IGuiNode
         blackboard = newBlackboard;
         BtNode.UpdateBlackboard(ref newBlackboard);
 
+    }
+
+    public virtual float GetRequiredBoxWidth(){
+
+        /**
+         * A dirty way to approximate the width rect needs to
+         * fit the GuiNode text.
+         */
+
+        float dx = BehaviourTreeProperties.ApproximateNodeTextWidth();
+        float minWidth = BehaviourTreeProperties.GuiNodeSize().x;
+        float length = Mathf.Max(DisplayName.Length, DisplayTask.Length)*dx;
+        return Mathf.Max(minWidth, length);
+
+    }
+
+    public virtual void UpdateBoxWidth(float newWidth){
+        rect.width = newWidth;
     }
 }
 }
