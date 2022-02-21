@@ -6,35 +6,6 @@ using System;
 using System.Linq;
 
 namespace Behaviour{
-
-public class SerializableCooldownNode:SerializableTimerNode{
-    public bool activateOnSuccess;
-    public bool activateOnFailure;
-
-    public SerializableCooldownNode(
-        int type,
-        string taskName,
-        int childCount,
-        string valueKey,
-        string randomDeviationKey,
-        float value,
-        float randomDeviation,
-        bool activateOnSuccess,
-        bool activateOnFailure
-    ): base(
-        type:type,
-        taskName:taskName,
-        childCount:childCount,
-        valueKey:valueKey,
-        randomDeviationKey:randomDeviationKey,
-        value:value,
-        randomDeviation:randomDeviation
-    ){
-        this.activateOnSuccess = activateOnSuccess;
-        this.activateOnFailure = activateOnFailure;
-    }
-}
-
 public class CooldownNode : TimerNode
 {
     /**
@@ -89,17 +60,17 @@ public class CooldownNode : TimerNode
 
     public override SerializableNode Serialize()
     {
-        return new SerializableCooldownNode(
-            type:(int)GetNodeType(),
-            taskName:TaskName,
-            childCount:ChildNodes.Count,
-            valueKey:valueKey,
-            randomDeviationKey:randomDeviationKey,
-            value:TimerValue,
-            randomDeviation:RandomDeviation,
-            activateOnSuccess:activateOnSuccess,
-            activateOnFailure:activateOnFailure
-        );
+        return new SerializableNode(){
+            type=(int)GetNodeType(),
+            taskName=TaskName,
+            childCount=ChildNodes.Count,
+            valueKey=valueKey,
+            randomDeviationKey=randomDeviationKey,
+            value=TimerValue,
+            randomDeviation=RandomDeviation,
+            activateOnSuccess=activateOnSuccess,
+            activateOnFailure=activateOnFailure
+        };
     }
 }
 }

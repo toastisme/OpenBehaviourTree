@@ -40,11 +40,10 @@ public class BehaviourTreeLoader
                         taskName:taskName
                 );
             case NodeType.Decorator:
-                SerializableDecorator sd = (SerializableDecorator)serializedNode;
                 return new Decorator(
                         taskName:taskName,
                         blackboard:ref blackboard,
-                        invertCondition:sd.invertCondition
+                        invertCondition:serializedNode.invertCondition
                 );
             case NodeType.Action:
                 return new ActionNode(
@@ -52,36 +51,33 @@ public class BehaviourTreeLoader
                         blackboard:ref blackboard
                 );
             case NodeType.ActionWait:
-                SerializableTimerNode aw = (SerializableTimerNode)serializedNode;
                 return new ActionWaitNode(
                         taskName:taskName,
                         blackboard:ref blackboard,
-                        timerValue:aw.value,
-                        randomDeviation:aw.randomDeviation,
-                        valueKey:aw.valueKey,
-                        randomDeviationKey:aw.randomDeviationKey
+                        timerValue:serializedNode.value,
+                        randomDeviation:serializedNode.randomDeviation,
+                        valueKey:serializedNode.valueKey,
+                        randomDeviationKey:serializedNode.randomDeviationKey
                 );
             case NodeType.Timer:
                 if (taskName == "Timeout"){
-                    SerializableTimerNode stn = (SerializableTimerNode)serializedNode;
                     return new TimeoutNode(
                         blackboard: ref blackboard,
-                        timerValue:stn.value,
-                        randomDeviation:stn.randomDeviation,
-                        valueKey:stn.valueKey,
-                        randomDeviationKey:stn.randomDeviationKey
+                        timerValue:serializedNode.value,
+                        randomDeviation:serializedNode.randomDeviation,
+                        valueKey:serializedNode.valueKey,
+                        randomDeviationKey:serializedNode.randomDeviationKey
                     );
                 }
                 else if (taskName == "Cooldown"){
-                    SerializableCooldownNode scn = (SerializableCooldownNode)serializedNode;
                     return new CooldownNode(
                         blackboard: ref blackboard,
-                        timerValue:scn.value,
-                        randomDeviation:scn.randomDeviation,
-                        valueKey:scn.valueKey,
-                        randomDeviationKey:scn.randomDeviationKey,
-                        activateOnSuccess:scn.activateOnSuccess,
-                        activateOnFailure:scn.activateOnFailure
+                        timerValue:serializedNode.value,
+                        randomDeviation:serializedNode.randomDeviation,
+                        valueKey:serializedNode.valueKey,
+                        randomDeviationKey:serializedNode.randomDeviationKey,
+                        activateOnSuccess:serializedNode.activateOnSuccess,
+                        activateOnFailure:serializedNode.activateOnFailure
                     );
                 }
                 break;

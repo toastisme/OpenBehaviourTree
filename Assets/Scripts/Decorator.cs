@@ -6,23 +6,6 @@ using System;
 
 namespace Behaviour{
 
-public class SerializableDecorator:SerializableNode{
-    public bool invertCondition;
-
-    public SerializableDecorator(
-        int type,
-        string taskName,
-        int childCount,
-        bool invertCondition
-    ): base(
-        type:type,
-        taskName:taskName,
-        childCount:childCount
-    ){
-        this.invertCondition = invertCondition;
-    }
-}
-
 public class Decorator : Node
 {
     /**
@@ -86,12 +69,12 @@ public class Decorator : Node
 
     public override SerializableNode Serialize()
     {
-        return new SerializableDecorator(
-            type:(int)GetNodeType(),
-            taskName:TaskName,
-            childCount:ChildNodes.Count,
-            invertCondition:this.invertCondition
-        );
+        return new SerializableNode(){
+            type=(int)GetNodeType(),
+            taskName=TaskName,
+            childCount=ChildNodes.Count,
+            invertCondition=this.invertCondition
+        };
     }
 }
 }

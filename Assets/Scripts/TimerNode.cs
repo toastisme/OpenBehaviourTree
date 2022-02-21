@@ -6,32 +6,6 @@ using System;
 
 namespace Behaviour{
 
-public class SerializableTimerNode:SerializableNode{
-    public string valueKey;
-    public string randomDeviationKey;
-    public float value;
-    public float randomDeviation;
-
-    public SerializableTimerNode(
-        int type,
-        string taskName,
-        int childCount,
-        string valueKey,
-        string randomDeviationKey,
-        float value,
-        float randomDeviation        
-    ): base(
-        type:type,
-        taskName:taskName,
-        childCount:childCount
-    ){
-        this.valueKey = valueKey;
-        this.randomDeviationKey = randomDeviationKey;
-        this.value = value;
-        this.randomDeviation = randomDeviation;
-    }
-}
-
 public class TimerNode : Node
 {
     /**
@@ -155,15 +129,15 @@ public class TimerNode : Node
 
     public override SerializableNode Serialize()
     {
-        return new SerializableTimerNode(
-            type:(int)GetNodeType(),
-            taskName:TaskName,
-            childCount:ChildNodes.Count,
-            valueKey:valueKey,
-            randomDeviationKey:randomDeviationKey,
-            value:TimerValue,
-            randomDeviation:RandomDeviation
-        );
+        return new SerializableNode(){
+            type=(int)GetNodeType(),
+            taskName=TaskName,
+            childCount=ChildNodes.Count,
+            valueKey=valueKey,
+            randomDeviationKey=randomDeviationKey,
+            value=TimerValue,
+            randomDeviation=RandomDeviation
+        };
     }
 
 

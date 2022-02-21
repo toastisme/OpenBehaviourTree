@@ -22,21 +22,25 @@ public enum NodeType{
 }
 
 [Serializable]
-public class SerializableNode{
+public struct SerializableNode{
 
     /**
-     * \class SerializableNode
+     * \struct SerializableNode
      * Used to store Node data.
      */ 
 
     public int type;
     public string taskName;
     public int childCount;
-    public SerializableNode(int type, string taskName, int childCount){
-        this.type = type;
-        this.taskName = taskName;
-        this.childCount = childCount;
-    }
+    public bool invertCondition;
+    public string valueKey;
+    public string randomDeviationKey;
+    public float value;
+    public float randomDeviation;
+    public bool activateOnSuccess;
+    public bool activateOnFailure;
+    public float weight;
+
 }
 
 public abstract class Node
@@ -196,11 +200,11 @@ public abstract class Node
     }
 
     public virtual SerializableNode Serialize(){
-        return new SerializableNode(
-            type:(int)GetNodeType(),
-            taskName:TaskName,
-            childCount:ChildNodes.Count
-        );
+        return new SerializableNode(){
+            type=(int)GetNodeType(),
+            taskName=TaskName,
+            childCount=ChildNodes.Count
+        };
     }
 
 }
