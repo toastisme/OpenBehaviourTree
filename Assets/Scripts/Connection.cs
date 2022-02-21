@@ -65,6 +65,7 @@ public class Connection
             parentConnection:this
                                                         );
         probabilityWeightOffset = new Vector2(size.x*.5f, size.y);
+        NodeUpdated();
     }
     public void UpdateWeightPosition(){
         if (HasProbabilityWeight()){
