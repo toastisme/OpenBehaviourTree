@@ -1268,11 +1268,11 @@ public class BehaviourTreeEditor : EditorWindow
             blackboard:ref bt.blackboard
         );
 
-        if (node is Decorator decorator){
+        if (guiNode is GuiDecorator guiDecorator){
             if (decorators == null){
                 decorators = new List<GuiDecorator>();
             }
-            decorators.Add((GuiDecorator)guiNode);
+            decorators.Add(guiDecorator);
             idx++;
             AddNodeAndConnections(
                 node:node.ChildNodes[0],
