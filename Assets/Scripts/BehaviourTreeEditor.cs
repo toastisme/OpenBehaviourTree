@@ -1334,6 +1334,7 @@ public class BehaviourTreeEditor : EditorWindow
             }
 
             cgn.BtNode.OnStateChange += NodeStateChangeHandler;
+            cgn.NodeUpdated();
             guiNodes.Add(cgn);
             parentGuiNodeIdx=guiNodes.Count-1;
             idx++;
