@@ -108,10 +108,10 @@ public class BehaviourTreeEditor : EditorWindow
         LoadButtons();
         LoadBlackboardTypeStyles();
         LoadDecisionNodeTypes();
-        SetDefaultLayout();
+        SetPanelLayout();
     }
 
-    private void SetDefaultLayout(){
+    private void SetPanelLayout(){
         detailsPanel = new Rect(position.width*.8f, 
                                     0, 
                                     position.width*.2f, 
@@ -185,6 +185,7 @@ public class BehaviourTreeEditor : EditorWindow
         // Scale event delta with zoom level
         Event.current.delta /= currentZoom;
 
+        SetPanelLayout();
         DrawStaticComponents();
         DrawDynamicComponents();
         UpdateBlackboard();
@@ -202,7 +203,9 @@ public class BehaviourTreeEditor : EditorWindow
 
         if (GUI.changed) {
             Repaint();
-            UpdateCallNumbers(guiNodes[0], 1);
+            if (guiNodes != null){
+                UpdateCallNumbers(guiNodes[0], 1);
+            }
         }
 
     }
