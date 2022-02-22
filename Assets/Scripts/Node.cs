@@ -17,6 +17,7 @@ public enum NodeType{
     PrioritySelector,
     Action,
     Decorator,
+    BoolDecorator,
     ActionWait,
     Timer,
 }

@@ -6,7 +6,7 @@ using System;
 
 namespace Behaviour{
 
-public class TimerNode : Node
+public class TimerNode : Decorator
 {
     /**
     * \class TimerNode
@@ -25,7 +25,6 @@ public class TimerNode : Node
     public float RandomDeviation{get; set;}
 
     MonoBehaviour monoBehaviour;
-    BehaviourTreeBlackboard blackboard;
     Coroutine timer;
 
     public TimerNode(
@@ -39,8 +38,9 @@ public class TimerNode : Node
         Node childNode = null
     ) : base(
         taskName: taskName,
-        parentNode:parentNode
-
+        blackboard: ref blackboard,
+        parentNode:parentNode,
+        childNode:childNode
     ){
         if (childNode != null){
             ChildNodes.Add(childNode);
@@ -118,10 +118,6 @@ public class TimerNode : Node
         OnTimerComplete();
     }
 
-    public override void UpdateBlackboard(ref BehaviourTreeBlackboard blackboard){
-        this.blackboard = blackboard;
-    }
-
     public override NodeType GetNodeType()
     {
         return NodeType.Timer;
@@ -139,12 +135,5 @@ public class TimerNode : Node
             randomDeviation=RandomDeviation
         };
     }
-
-
-
-    
-
-    
-
 }
 }

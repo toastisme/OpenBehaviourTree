@@ -171,10 +171,12 @@ public class BehaviourTreeProperties
                 return "Priority Selector";
             case NodeType.ProbabilitySelector:
                 return "Probability Selector";
-            case NodeType.Decorator:
-                return "Decorator";
+            case NodeType.BoolDecorator:
+                return "BoolDecorator";
             case NodeType.ProbabilityWeight:
                 return "Probability Weight";
+            case NodeType.Timer:
+                return "Timer";
             default:
                 return "Action";
         }
@@ -227,7 +229,7 @@ public class BehaviourTreeProperties
         return new GUIContent(text, icon, tooltip);
     }
 
-    public static GUIContent DecoratorContent(){
+    public static GUIContent BoolDecoratorContent(){
         Texture2D icon = Resources.Load("Icons/decorator_icon", typeof(Texture2D)) as Texture2D;
         string text = "Decorator";
         string tooltip = "Prevent child node running if false.";

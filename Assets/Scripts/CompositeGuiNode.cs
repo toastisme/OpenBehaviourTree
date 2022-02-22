@@ -401,7 +401,7 @@ public class CompositeGuiNode : CallableGuiNode
     protected void OnClickAddDecorator(string displayTask){
 
         // The underlying decorator
-        Decorator decorator = new Decorator(
+        BoolDecorator decorator = new BoolDecorator(
             taskName:displayTask,
             blackboard:ref blackboard
         );

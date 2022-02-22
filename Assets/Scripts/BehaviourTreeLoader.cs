@@ -39,8 +39,8 @@ public class BehaviourTreeLoader
                 return new ProbabilityWeight(
                         taskName:taskName
                 );
-            case NodeType.Decorator:
-                return new Decorator(
+            case NodeType.BoolDecorator:
+                return new BoolDecorator(
                         taskName:taskName,
                         blackboard:ref blackboard,
                         invertCondition:serializedNode.invertCondition
@@ -193,7 +193,7 @@ public class BehaviourTreeLoader
                     OnClickParentPoint:null,
                     blackboard:ref blackboard
                 );
-            case NodeType.Decorator:
+            case NodeType.BoolDecorator:
                 return new GuiBoolDecorator(
                     decorator:node,
                     displayTask:displayTask,

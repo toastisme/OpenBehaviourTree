@@ -9,10 +9,10 @@ public class GuiBoolDecorator : GuiDecorator
 {
     /**
     * \class GuiBoolDecorator
-    * Displays a boolean Decorator in the BehaviourTree class, using the BehaviourTreeEditor.
+    * Displays a boolean in the BehaviourTree class, using the BehaviourTreeEditor.
     */
 
-    Decorator decorator;
+    BoolDecorator decorator;
     
     public  GuiBoolDecorator(
         Node decorator,
@@ -37,14 +37,14 @@ public class GuiBoolDecorator : GuiDecorator
         blackboard: ref blackboard,
         parentGuiNode:parentGuiNode
     ){
-        this.decorator = (Decorator)decorator;
+        this.decorator = (BoolDecorator)decorator;
         ApplyDerivedSettings();
     }
 
     protected override void ApplyDerivedSettings()
     {
         base.ApplyDerivedSettings();
-        iconAndText = BehaviourTreeProperties.DecoratorContent();
+        iconAndText = BehaviourTreeProperties.BoolDecoratorContent();
     }
 
     public override void Draw()

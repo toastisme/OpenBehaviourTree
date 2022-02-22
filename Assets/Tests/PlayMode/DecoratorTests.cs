@@ -14,7 +14,7 @@ public class DecoratorTests
          * Tests if Decorator gives expected states for different configurations
          */
 
-        Decorator decorator;
+        BoolDecorator decorator;
         TestMock testMock = new TestMock();
         bool testFinished;
 
