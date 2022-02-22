@@ -1,0 +1,256 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4627c60f0de877409d0de97dafadec5, type: 3}
+  m_Name: TestTree
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: 11400000, guid: 1774eaef3687c2d4a907b9e65c6dfa3b, type: 2}
+  evaluationDelay: 0.0001
+  serializedNodes:
+  - type: 0
+    taskName: Root
+    childCount: 3
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 7
+    taskName: testBool
+    childCount: 1
+    invertCondition: 1
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 4
+    taskName: Priority Selector
+    childCount: 2
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 8
+    taskName: Wait
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 10
+    randomDeviation: 2
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: ActionMockFail
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 9
+    taskName: Timeout
+    childCount: 1
+    invertCondition: 0
+    valueKey: testInt
+    randomDeviationKey: testFloat
+    value: 5
+    randomDeviation: 5
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 1
+    taskName: Sequence Selector
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: ActionMockSucceed
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 9
+    taskName: Cooldown
+    childCount: 1
+    invertCondition: 0
+    valueKey: testFloat
+    randomDeviationKey: 
+    value: 5
+    randomDeviation: 1
+    activateOnSuccess: 0
+    activateOnFailure: 1
+    weight: 0
+  - type: 2
+    taskName: Probability Selector
+    childCount: 2
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 3
+    taskName: testInt
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: ActionMockFail
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 3
+    taskName: Constant Weight
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 12
+  - type: 9
+    taskName: Cooldown
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 5
+    randomDeviation: 5
+    activateOnSuccess: 1
+    activateOnFailure: 0
+    weight: 0
+  - type: 9
+    taskName: Timeout
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 5
+    randomDeviation: 5
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 7
+    taskName: testBool
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: ActionMockSucceed
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  nodeMetaData:
+  - displayName: TestTree
+    xPos: 436
+    yPos: 29
+  - displayName: TestDecorator
+    xPos: 181
+    yPos: 365.4
+  - displayName: TestPriority
+    xPos: 181
+    yPos: 336
+  - displayName: TestWait
+    xPos: 18
+    yPos: 638
+  - displayName: TestFail
+    xPos: 301
+    yPos: 642
+  - displayName: 
+    xPos: 488
+    yPos: 367.4
+  - displayName: TestSequence
+    xPos: 488
+    yPos: 338
+  - displayName: TestSucceed
+    xPos: 540
+    yPos: 644
+  - displayName: 
+    xPos: 855
+    yPos: 364.4
+  - displayName: TestProbability
+    xPos: 855
+    yPos: 335
+  - displayName: TestProbabilityWeight1
+    xPos: 909
+    yPos: 611
+  - displayName: TestFail2
+    xPos: 909
+    yPos: 671
+  - displayName: TestProbabilityWeight2
+    xPos: 1178
+    yPos: 608
+  - displayName: 
+    xPos: 1178
+    yPos: 697.4
+  - displayName: 
+    xPos: 1178
+    yPos: 757.4
+  - displayName: 
+    xPos: 1178
+    yPos: 817.4
+  - displayName: TestSucceed2
+    xPos: 1178
+    yPos: 668

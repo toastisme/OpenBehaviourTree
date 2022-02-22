@@ -30,61 +30,101 @@ public class BehaviourTreeTests
          }
 
          void CheckTree(BehaviourTree bt){
+
             /*
              * Assumes a fixed layout of TestBehaviourTree
              */
+
+            float epsilon = 1E-5f;
 
             // Test root
             Assert.IsTrue(bt.rootNode is PrioritySelector);
             Assert.AreEqual(bt.rootNode.ChildNodes.Count, 3);
 
-            // Test priority child node
-            Node pcn = bt.rootNode.ChildNodes[0];
-            Assert.IsTrue(pcn is PrioritySelector);
-            //Assert.IsTrue(pcn.HasTimeout());
-            //Assert.AreEqual(pcn.GetTimeout().GetTimerVal(), 2, 1E-5);
-            Assert.AreEqual(pcn.ChildNodes.Count, 1);
-            Assert.IsTrue(pcn.ChildNodes[0] is Decorator);
-            Assert.AreEqual(pcn.ChildNodes[0].TaskName, "testBool");
-            Assert.AreEqual(pcn.ChildNodes[0].ChildNodes.Count, 1);
-            Assert.IsTrue(pcn.ChildNodes[0].ChildNodes[0] is ActionNode);
-            Assert.AreEqual(pcn.ChildNodes[0].ChildNodes[0].TaskName, "ActionMockFail");
+            // Test BoolDecorator
+            Node bd = bt.rootNode.ChildNodes[0];
+            Assert.IsTrue(bd is BoolDecorator);
+            BoolDecorator bdd = (BoolDecorator)bd;
+            Assert.AreEqual(bd.ChildNodes.Count, 1);
+            Assert.IsTrue(bdd.invertCondition == true);
+            Assert.AreEqual(bd.TaskName, "testBool");
 
-            // Test sequence child node
-            Node scn = bt.rootNode.ChildNodes[1];
-            Assert.IsTrue(scn is SequenceSelector);
-            //Assert.IsTrue(scn.HasCooldown());
-            //Assert.AreEqual(scn.GetCooldown().GetTimerVal(), 3, 1E-5);
-            Assert.AreEqual(scn.ChildNodes.Count, 1);
-            Assert.IsTrue(scn.ChildNodes[0] is ActionWaitNode);
-            ActionWaitNode awn = (ActionWaitNode)scn.ChildNodes[0];
-            Assert.AreEqual(awn.TimerValue, 10, 1E-5);
-            Assert.AreEqual(awn.RandomDeviation, 1, 1E-5);
+            // Test PrioritySelector
+            Node ps = bd.ChildNodes[0];
+            Assert.IsTrue(ps is PrioritySelector);
+            PrioritySelector pss = (PrioritySelector)ps;
+            Assert.AreEqual(ps.ChildNodes.Count, 2);
+            Assert.AreEqual(ps.TaskName, "Priority Selector");
 
-            // Test probability child node
-            Node prcn = bt.rootNode.ChildNodes[2];
-            Assert.IsTrue(prcn is ProbabilitySelector);
-            //Assert.IsTrue(prcn.HasCooldown());
-            //Assert.AreEqual(prcn.GetCooldown().GetTimerVal(), 4, 1E-5);
-            //Assert.IsTrue(prcn.HasTimeout());
-            //Assert.AreEqual(prcn.GetTimeout().GetTimerVal(), 2, 1E-5);
-            Assert.AreEqual(prcn.ChildNodes.Count, 2);
-            
-            Assert.IsTrue(prcn.ChildNodes[0] is ProbabilityWeight);
-            ProbabilityWeight pw1 = (ProbabilityWeight)prcn.ChildNodes[0];
-            Assert.IsTrue(pw1.HasConstantWeight());
-            Assert.AreEqual(pw1.GetWeight(), 2);
+            // Test ActionWaitNode
+            Node awn = ps.ChildNodes[0];
+            Assert.IsTrue(awn is ActionWaitNode);
+            ActionWaitNode awnn = (ActionWaitNode) awn;
+            Assert.AreEqual(awnn.ChildNodes.Count, 0);
+            Assert.AreEqual(awnn.TimerValue, 10, epsilon);
+            Assert.AreEqual(awnn.RandomDeviation, 2, epsilon);
+            Assert.AreEqual(awn.TaskName, "Wait");
+
+            // TestActionMockFail
+            Node an1 = ps.ChildNodes[1];
+            Assert.IsTrue(an1 is ActionNode);
+            Assert.AreEqual(an1.TaskName, "ActionMockFail");
+
+            // Test TimeoutNode
+            Node ton = bt.rootNode.ChildNodes[1];
+            Assert.IsTrue(ton is TimeoutNode);
+            TimeoutNode tonn = (TimeoutNode)ton;
+            Assert.AreEqual(tonn.valueKey, "testInt");
+            Assert.AreEqual(tonn.randomDeviationKey, "testFloat");
+            Assert.AreEqual(ton.TaskName, "Timeout");
+            Assert.AreEqual(ton.ChildNodes.Count, 1);
+
+            // Test SequenceSelector
+            Node ss = ton.ChildNodes[0];
+            Assert.IsTrue(ss is SequenceSelector);
+            Assert.AreEqual(ss.TaskName, "Sequence Selector");
+            Assert.AreEqual(ss.ChildNodes.Count, 1);
+
+            // Test ActionMockSucceed
+            Node an2 = ss.ChildNodes[0];
+            Assert.IsTrue(an2 is ActionNode);
+            Assert.AreEqual(an2.TaskName, "ActionMockSucceed");
+
+            // Test CooldownNode
+            Node cn = bt.rootNode.ChildNodes[2];
+            Assert.IsTrue(cn is CooldownNode);
+            CooldownNode cnn = (CooldownNode)cn;
+            Assert.AreEqual(cn.TaskName, "Cooldown");
+            Assert.AreEqual(cn.ChildNodes.Count, 1);
+            Assert.AreEqual(cnn.valueKey, "testFloat");
+            Assert.AreEqual(cnn.RandomDeviation, 1, epsilon);
+
+            // Test ProbabilitySelector
+            Node pbs = cn.ChildNodes[0];
+            Assert.IsTrue(pbs is ProbabilitySelector);
+            Assert.AreEqual(pbs.TaskName, "Probability Selector");
+            Assert.AreEqual(pbs.ChildNodes.Count, 2);
+
+            // Test ProbabilityWeight with blackboard key as weight
+            Node pw1 = pbs.ChildNodes[0];
+            Assert.IsTrue(pw1 is ProbabilityWeight);
+            ProbabilityWeight pww1 = (ProbabilityWeight)pw1;
+            Assert.AreEqual(pww1.TaskName, "testInt");
             Assert.AreEqual(pw1.ChildNodes.Count, 1);
             Assert.IsTrue(pw1.ChildNodes[0] is ActionNode);
-            Assert.AreEqual(pw1.ChildNodes[0].TaskName, "ActionMockSucceed");
 
-            Assert.IsTrue(prcn.ChildNodes[1] is ProbabilityWeight);
-            pw1 = (ProbabilityWeight)prcn.ChildNodes[1];
-            Assert.IsTrue(!pw1.HasConstantWeight());
-            Assert.AreEqual(pw1.GetWeight(), 0);
-            Assert.AreEqual(pw1.ChildNodes.Count, 1);
-            Assert.IsTrue(pw1.ChildNodes[0] is ActionNode);
-            Assert.AreEqual(pw1.ChildNodes[0].TaskName, "ActionMockFail");
+            // Test ProbabilityWeight with constant value as weight
+            Node pw2 = pbs.ChildNodes[1];
+            Assert.IsTrue(pw2 is ProbabilityWeight);
+            ProbabilityWeight pww2 = (ProbabilityWeight)pw2;
+            Assert.AreEqual(pw2.TaskName, "Constant Weight");
+            Assert.AreEqual(pww2.GetWeight(), 1, epsilon);
+            Assert.AreEqual(pw2.ChildNodes.Count, 1);
+
+            // Test node having cooldown, timeout, and bool decorator
+            Assert.IsTrue(pw2.ChildNodes[0] is CooldownNode);
+            Assert.IsTrue(pw2.ChildNodes[0].ChildNodes[0] is TimeoutNode);
+            Assert.IsTrue(pw2.ChildNodes[0].ChildNodes[0].ChildNodes[0] is BoolDecorator);
 
             testFinished=true;
 
