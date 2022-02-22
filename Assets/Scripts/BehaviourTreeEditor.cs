@@ -361,11 +361,13 @@ public class BehaviourTreeEditor : EditorWindow
 
         void DrawEditNameField(){
             GUILayout.BeginHorizontal();
+            GUI.SetNextControlName("EditKey");
             activeBlackboardKey[1] = GUILayout.TextField(
                 activeBlackboardKey[1], 
                 50,
                 GUILayout.MinWidth(175),
                 GUILayout.MaxWidth(175));
+            GUI.FocusControl("EditKey");
             GUILayout.Label(keyType, blackboardTypeStyles[keyType]);
             GUILayout.EndHorizontal();
         }
