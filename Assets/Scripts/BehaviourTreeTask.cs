@@ -18,7 +18,7 @@ public abstract class BehaviourTreeTask
     * NodeState.Succeeded when finishing successfully)
     */
 
-    BehaviourTreeBlackboard blackboard;
+    protected BehaviourTreeBlackboard blackboard;
     MonoBehaviour monoBehaviour;
 
     public void SetBlackboard(ref BehaviourTreeBlackboard blackboard){
