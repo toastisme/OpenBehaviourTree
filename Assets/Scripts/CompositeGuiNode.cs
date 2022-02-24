@@ -352,13 +352,22 @@ public class CompositeGuiNode : CallableGuiNode
             rect.height -= subRectSize[1];
             taskRect.y -= subRectSize[1];
             callNumber.Drag(new Vector2(0, -subRectSize[1]));
-            SetCallNumber(callNumber.CallNumber-1);
 
-            // Move all decorators below the removed one up
             Vector2 moveVec = new Vector2(0, -subRectSize[1]);
-            for (int i = idx; i < Decorators.Count; i++){
-                Decorators[i].DragWithoutParent(moveVec);
-                Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber-1);
+            if (callNumber.CallNumber != -1){
+                SetCallNumber(callNumber.CallNumber-1);
+
+                // Move all decorators below the removed one up
+                for (int i = idx; i < Decorators.Count; i++){
+                    Decorators[i].DragWithoutParent(moveVec);
+                    Decorators[i].SetCallNumber(Decorators[i].callNumber.CallNumber-1);
+                }
+            }
+            else{
+                // Move all decorators below the removed one up
+                for (int i = idx; i < Decorators.Count; i++){
+                    Decorators[i].DragWithoutParent(moveVec);
+                }
             }
             GUI.changed = true;
             TreeModified();
@@ -373,13 +382,15 @@ public class CompositeGuiNode : CallableGuiNode
     public void AddDecorator(GuiDecorator guiDecorator){
         guiDecorator.SetParentGuiNode(this);
         guiDecorator.NodeUpdated = this.NodeUpdated;
-         if (Decorators != null && Decorators.Count >0){
-            guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+        if (callNumber.CallNumber != -1){
+            if (Decorators != null && Decorators.Count >0){
+                guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+            }
+            else{
+                guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+            }
+            callNumber.CallNumber++;
         }
-        else{
-            guiDecorator.SetCallNumber(this.callNumber.CallNumber);
-        }
-        callNumber.CallNumber++;
         // Make room for new decorator
         Decorators.Insert(0, guiDecorator);
                 
@@ -436,16 +447,21 @@ public class CompositeGuiNode : CallableGuiNode
             );
 
         
-        if (Decorators != null && Decorators.Count >0){
-            guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+        if (callNumber.CallNumber != -1){
+            if (Decorators != null && Decorators.Count >0){
+                guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+            }
+            else{
+                guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+            }
+            callNumber.CallNumber++;
+            ShiftDecoratorsDown(true);
         }
         else{
-            guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+            ShiftDecoratorsDown(false);
         }
-        callNumber.CallNumber++;
 
         // Make room for new decorator
-        ShiftDecoratorsDown();
         Decorators.Insert(0, guiDecorator);
                 
         // Update params to make space for gui decorator
@@ -665,16 +681,21 @@ public class CompositeGuiNode : CallableGuiNode
             parentGuiNode:this
             );
 
-        if (Decorators != null && Decorators.Count >0){
-            guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+        if (callNumber.CallNumber != -1){
+            if (Decorators != null && Decorators.Count >0){
+                guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+            }
+            else{
+                guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+            }
+            callNumber.CallNumber++;
+            ShiftDecoratorsDown(true);
         }
         else{
-            guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+            ShiftDecoratorsDown(false);
         }
-        callNumber.CallNumber++;
 
         // Make room for new decorator
-        ShiftDecoratorsDown();
         Decorators.Insert(0, guiDecorator);
                 
         // Update params to make space for gui decorator
@@ -724,16 +745,21 @@ public class CompositeGuiNode : CallableGuiNode
             parentGuiNode:this
             );
 
-        if (Decorators != null && Decorators.Count >0){
-            guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+        if (callNumber.CallNumber != -1){
+            if (Decorators != null && Decorators.Count >0){
+                guiDecorator.SetCallNumber(Decorators[0].callNumber.CallNumber);
+            }
+            else{
+                guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+            }
+            callNumber.CallNumber++;
+            // Make room for new decorator
+            ShiftDecoratorsDown(true);
         }
         else{
-            guiDecorator.SetCallNumber(this.callNumber.CallNumber);
+            ShiftDecoratorsDown(false);
         }
-        callNumber.CallNumber++;
 
-        // Make room for new decorator
-        ShiftDecoratorsDown();
         Decorators.Insert(0, guiDecorator);
                 
         // Update params to make space for gui decorator
