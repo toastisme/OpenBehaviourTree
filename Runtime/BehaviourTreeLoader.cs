@@ -6,7 +6,7 @@ public class BehaviourTreeLoader
 {
 
     /**
-    * \class BehaviourTreeLoader
+    * \class Behaviour.BehaviourTreeLoader
     * Static methods to load serialized versions of Nodes and GuiNodes.
     */
 

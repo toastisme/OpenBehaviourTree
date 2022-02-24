@@ -9,7 +9,7 @@ public class GuiRootNode : GuiPrioritySelector
 {
 
     /**
-     * \class GuiRootNode
+     * \class Behaviour.GuiRootNode
      * Derived GuiPrioritySelector class with no ParentPoint 
      * (thereby stopping it being able to be a child to another node).
      */

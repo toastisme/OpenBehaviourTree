@@ -8,7 +8,7 @@ namespace Behaviour{
 public class GuiActionWaitNode : CompositeGuiNode
 {
     /**
-    * \class GuiActionWaitNode
+    * \class Behaviour.GuiActionWaitNode
     * Displays an ActionNode in the BehaviourTree class using the BehaviourTreeEditor,
     * specifically for the Wait BehaviourTreeTask.
     * Users can specify the wait time and random deviation that are then passed to the Wait task at runtime.

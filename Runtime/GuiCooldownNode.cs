@@ -7,6 +7,11 @@ using UnityEditor;
 namespace Behaviour{
 public class GuiCooldownNode : GuiTimerNode
 {
+    /**
+    * \class Behaviour.GuiCooldownNode
+    * Displays a CooldownNode in the BehaviourTree class, using the BehaviourTreeEditor.
+    */
+
     CooldownNode cooldownNode;
     public GuiCooldownNode(
         Node timerNode,

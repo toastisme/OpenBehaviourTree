@@ -10,7 +10,7 @@ namespace Behaviour{
 public class ActionWaitNode : TimerNode
 {    
     /**
-    * \class ActionWaitNode
+    * \class Behaviour.ActionWaitNode
     * Represents an action node in the BehaviourTree class specifically
     * for waiting.
     */

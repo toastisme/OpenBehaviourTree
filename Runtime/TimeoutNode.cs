@@ -8,8 +8,8 @@ namespace Behaviour{
 public class TimeoutNode : TimerNode
 {
     /**
-    * \class TimeoutNode
-    * Represents a timeout in the BehaviourTreeClass
+    * \class Behaviour.TimeoutNode
+    * Represents a timeout in the BehaviourTree class
     * The timer runs for TimerValue +/- RandomDeviation. 
     * If valueKey or RandomDeviationKey set, TimerValue and RandomDeviation
     * are set using these keys whenever StartTimer() is called. 

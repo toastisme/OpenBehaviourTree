@@ -7,6 +7,11 @@ using UnityEditor;
 namespace Behaviour{
 public class GuiTimerNode : GuiDecorator
 {
+    /**
+    * \class Behaviour.GuiTimerNode
+    * Base class for displaying Decorators that use timers (e.g. timeout and cooldown nodes)
+    */
+
     TimerNode timerNode;
     public GuiTimerNode(
         Node timerNode,

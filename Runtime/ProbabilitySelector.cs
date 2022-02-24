@@ -6,7 +6,7 @@ namespace Behaviour{
 public class ProbabilitySelector : Node
 {    
     /**
-    * \class ProbabilitySelector
+    * \class Behaviour.ProbabilitySelector
     * Represents a probability node in the BehaviourTree class.
     * A Child node is selected at random, and if it returns succeeded
     * this node evaluates as succeeded.

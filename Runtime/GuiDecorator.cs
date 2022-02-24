@@ -9,7 +9,7 @@ public class GuiDecorator : CallableGuiNode
 {
 
     /**
-    * \class GuiDecorator
+    * \class Behaviour.GuiDecorator
     * Displays a Decorator in the BehaviourTree class, using the BehaviourTreeEditor.
     */
 

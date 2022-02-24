@@ -9,7 +9,7 @@ public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver
 {
 
     /**
-    * \class BehaviourTree
+    * \class Behaviour.BehaviourTree
     * Class to store and run behaviour trees.
     */
 

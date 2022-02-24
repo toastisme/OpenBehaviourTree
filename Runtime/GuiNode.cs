@@ -9,7 +9,7 @@ namespace Behaviour{
 public struct GuiNodeData 
 {
     /**
-     * \struct GuiNodeData
+     * \struct Behaviour.GuiNodeData
      * Used to store data specific to GuiNode, decoupled
      * from Node.
      */ 
@@ -22,7 +22,7 @@ public abstract class GuiNode : IGuiNode
 {
 
     /**
-    * \class GuiNode
+    * \class Behaviour.GuiNode
     * Base class for displaying a node in the BehaviourTree class, using the BehaviourTreeEditor.
     */
 

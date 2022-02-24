@@ -9,7 +9,7 @@ public class TestMock
 {
 
     /**
-     * \class TestMock
+     * \class Behaviour.TestMock
      * Holds mock objects for tests
      */
 

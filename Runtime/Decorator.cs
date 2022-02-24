@@ -9,7 +9,7 @@ namespace Behaviour{
 public class Decorator : Node
 {
     /**
-    * \class Decorator
+    * \class Behaviour.Decorator
     * Represents a decorator node in the BehaviourTree class.
     */
 

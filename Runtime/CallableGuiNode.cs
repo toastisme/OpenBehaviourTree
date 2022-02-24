@@ -8,6 +8,7 @@ public class CallableGuiNode : GuiNode
 {
 
     /**
+     * \class Behaviour.CallableGuiNode
      * Class for GuiNodes that can be called in the BehaviourTree,
      * and so have a CallNumberNode to show its call number.
      */ 

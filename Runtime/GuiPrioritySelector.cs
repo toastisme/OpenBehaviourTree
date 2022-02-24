@@ -7,7 +7,7 @@ namespace Behaviour{
 public class GuiPrioritySelector : CompositeGuiNode
 {
     /**
-    * \class GuiPrioritySelector
+    * \class Behaviour.GuiPrioritySelector
     * Displays an PrioritySelector in the BehaviourTree class using the BehaviourTreeEditor.
     */
 

@@ -8,7 +8,7 @@ namespace Behaviour{
 public class GuiProbabilityWeight : GuiNode
 {
     /**
-    * \class GuiProbabilityWeight
+    * \class Behaviour.GuiProbabilityWeight
     * Displays an ProbabilityWeight in the BehaviourTree class using the BehaviourTreeEditor.
     * These are children of Connections.
     */

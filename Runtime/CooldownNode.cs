@@ -9,8 +9,8 @@ namespace Behaviour{
 public class CooldownNode : TimerNode
 {
     /**
-    * \class CooldownNode
-    * Represents a cooldown in the BehaviourTreeClass
+    * \class Behaviour.CooldownNode
+    * Represents a cooldown in the BehaviourTree class
     * The timer runs for TimerValue +/- RandomDeviation. 
     * If valueKey or RandomDeviationKey set, TimerValue and RandomDeviation
     * are set using these keys whenever StartTimer() is called. 

@@ -5,7 +5,7 @@ namespace Behaviour{
 interface INode
 {
     /**
-     * \interface INode
+     * \interface Behaviour.INode
      * Basic interface that all Nodes need to provide.
      */
 

@@ -4,7 +4,7 @@ public class ProbabilityWeight : Node
 {
 
     /**
-     * \class ProbabilityWeight
+     * \class Behaviour.ProbabilityWeight
      * Node placed between a ProbabilitySelector and its
      * child nodes. Holds either a constant weight, or a blackboard
      * key that links to an int or float variable.

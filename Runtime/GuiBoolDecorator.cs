@@ -8,8 +8,8 @@ namespace Behaviour{
 public class GuiBoolDecorator : GuiDecorator
 {
     /**
-    * \class GuiBoolDecorator
-    * Displays a boolean in the BehaviourTree class, using the BehaviourTreeEditor.
+    * \class Behaviour.GuiBoolDecorator
+    * Displays a BoolDecorator in the BehaviourTree class, using the BehaviourTreeEditor.
     */
 
     BoolDecorator decorator;

@@ -8,6 +8,7 @@ public class CallNumberNode : IGuiNode
 {
 
     /**
+     * \class Behaviour.CallNumberNode
      * Class to hold and display the call number of a given GUINode
      * in a BehaviourTree.
      */

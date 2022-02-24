@@ -8,7 +8,7 @@ namespace Behaviour{
 public class CompositeGuiNode : CallableGuiNode
 {
     /**
-     * \class CompositeGuiNode
+     * \class Behaviour.CompositeGuiNode
      * CallableGuiNodes made up of several GuiNodes 
      * (i.e they hold a list of GuiDecorators),
      * and have connections to other CompositeGuiNodes.

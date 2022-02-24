@@ -7,7 +7,7 @@ public abstract class BehaviourTreeTask
 {
 
     /**
-    * \class BehaviourTreeTask
+    * \class Behaviour.BehaviourTreeTask
     * Base class for all BehaviourTree tasks called from ActionNodes.
     * Setup is used to get GameObject components needed at runtime
     * (e.g. NavMeshAgent, RigidBody etc.).

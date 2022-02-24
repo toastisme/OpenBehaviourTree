@@ -8,9 +8,10 @@ namespace Behaviour{
 
 public class TimerNode : Decorator
 {
+
     /**
-    * \class TimerNode
-    * Represents a timer in the BehaviourTreeClass
+    * \class Behaviour.TimerNode
+    * Represents a timer in the BehaviourTree class
     * (that things like timeouts and cooldowns can derive from)
     * The timer runs for TimerValue +/- RandomDeviation. 
     * If valueKey or RandomDeviationKey set, TimerValue and RandomDeviation

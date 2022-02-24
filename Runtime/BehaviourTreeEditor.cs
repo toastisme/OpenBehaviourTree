@@ -15,7 +15,7 @@ public enum BehaviourTreeEditorMode{
 public class BehaviourTreeEditor : EditorWindow
 {
     /**
-    * \class BehaviourTreeEditor
+    * \class Behaviour.BehaviourTreeEditor
     * Class to edit and visualise BehaviourTree assets.
     */
 

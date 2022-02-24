@@ -10,7 +10,7 @@ namespace Behaviour{
 public class ActionNode : Node
 {    
     /**
-    * \class ActionNode
+    * \class Behaviour.ActionNode
     * Represents an action node in the BehaviourTree class.
     * Action nodes run BehaviourTreeTasks when evaluated.
     */

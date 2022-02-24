@@ -26,7 +26,7 @@ public enum NodeType{
 public struct SerializableNode{
 
     /**
-     * \struct SerializableNode
+     * \struct Behaviour.SerializableNode
      * Used to store Node data.
      */ 
 
@@ -47,7 +47,7 @@ public struct SerializableNode{
 public abstract class Node
 {
     /**
-    * \class Node
+    * \class Behaviour.Node
     * Base class for a node in the BehaviourTree class.
     */
 

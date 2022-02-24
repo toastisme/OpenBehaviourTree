@@ -9,7 +9,7 @@ namespace Behaviour{
 public class BoolDecorator : Decorator
 {
     /**
-    * \class BoolDecorator
+    * \class Behaviour.BoolDecorator
     * Represents a boolean decorator node in the BehaviourTree class.
     * The decorator node refers to a boolean (blackboard.GetBoolKeys()[displayTask]),
     * the current value of which dictates the the node's Nodestate.

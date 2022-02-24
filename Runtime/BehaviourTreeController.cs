@@ -8,7 +8,7 @@ public class BehaviourTreeController : MonoBehaviour
 {
 
     /**
-    * \class BehaviourTreeController
+    * \class Behaviour.BehaviourTreeController
     * Component attached to GameObjects to use BehaviourTrees
     */
 

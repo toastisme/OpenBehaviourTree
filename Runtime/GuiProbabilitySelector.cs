@@ -7,7 +7,7 @@ namespace Behaviour{
 public class GuiProbabilitySelector : CompositeGuiNode
 {
     /**
-    * \class GuiProbabilitySelector
+    * \class Behaviour.GuiProbabilitySelector
     * Displays an ProbabilitySelector in the BehaviourTree class using the BehaviourTreeEditor.
     */
     ProbabilitySelector probabilitySelector; // The ProbabilitySelector being displayed

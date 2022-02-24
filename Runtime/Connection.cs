@@ -6,7 +6,7 @@ namespace Behaviour{
 public class Connection
 {
     /**
-     * \class Connection
+     * \class Behaviour.Connection
      * Stores and displays a connection between CompositeGuiNodes,
      * and a GuiProbabilyWeight if a connection with a GuiProbabilitySelector
      * parent node.

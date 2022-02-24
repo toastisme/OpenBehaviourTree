@@ -11,6 +11,7 @@ public class BehaviourTreeProperties
 {
 
     /**
+     * \class Behaviour.BehaviourTreeProperties
      * Static methods to store general properties for 
      * visualising BehaviourTrees
      */ 

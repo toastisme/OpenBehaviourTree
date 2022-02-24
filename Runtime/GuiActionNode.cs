@@ -8,7 +8,7 @@ namespace Behaviour{
 public class GuiActionNode : CompositeGuiNode
 {
     /**
-    * \class GuiActionNode
+    * \class Behaviour.GuiActionNode
     * Displays an ActionNode in the BehaviourTree class using the BehaviourTreeEditor.
     * The ActionNode displayTask is the ActionNode.TaskName, and refers to a BehaviourTreeTask.
     * This contains a coroutine that is executed when the node is evaluated.

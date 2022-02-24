@@ -11,7 +11,7 @@ public class BehaviourTreeBlackboard : ScriptableObject
 {
 
     /**
-    * \class BehaviourTreeBlackboard
+    * \class Behaviour.BehaviourTreeBlackboard
     * Blackboard for the BehaviourTree class.
     * Allows nodes to share variables.
     */

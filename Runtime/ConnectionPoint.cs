@@ -7,7 +7,7 @@ public enum ConnectionPointType { In, Out }
 public class ConnectionPoint
 {
     /**
-     * \class ConnectionPoint
+     * \class Behaviour.ConnectionPoint
      * Stores and displays a connection point attached to a CompositeGuiNode.
      */
     private Rect rect;

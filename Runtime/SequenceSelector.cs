@@ -2,7 +2,7 @@ namespace Behaviour{
 public class SequenceSelector : Node
 {    
     /**
-    * \class SequenceSelector
+    * \class Behaviour.SequenceSelector
     * Represents a sequence node in the BehaviourTree class.
     * Child nodes are evaluated in order, and if any fail this node evaluates as failed.
     */

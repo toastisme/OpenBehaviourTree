@@ -7,7 +7,7 @@ namespace Behaviour{
 public class GuiSequenceSelector : CompositeGuiNode
 {
     /**
-    * \class GuiSequenceSelector
+    * \class Behaviour.GuiSequenceSelector
     * Displays an SequenceSelector in the BehaviourTree class using the BehaviourTreeEditor.
     */
 

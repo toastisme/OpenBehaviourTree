@@ -3,7 +3,7 @@ namespace Behaviour{
 public class PrioritySelector : Node
 {    
     /**
-    * \class PrioritySelector
+    * \class Behaviour.PrioritySelector
     * Represents a priority node in the BehaviourTree class.
     * Child nodes are evaluated in order, and if any succeed
     * this node evaluates as succeeded.

@@ -7,7 +7,7 @@ public class BehaviourTreeSaver
 {
 
     /**
-    * \class BehaviourTreeSaver
+    * \class Behaviour.BehaviourTreeSaver
     * Static methods to save serialized versions of Nodes and GuiNodes.
     */
 
