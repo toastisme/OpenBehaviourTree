@@ -1,0 +1,242 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4627c60f0de877409d0de97dafadec5, type: 3}
+  m_Name: New Behaviour.BehaviourTree
+  m_EditorClassIdentifier: 
+  blackboard: {fileID: 11400000, guid: f6dc595fb06bec2489277e27d64daf82, type: 2}
+  evaluationDelay: 0.0001
+  serializedNodes:
+  - type: 0
+    taskName: Root
+    childCount: 2
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 7
+    taskName: PlayerSpotted
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 4
+    taskName: Priority Selector
+    childCount: 3
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 7
+    taskName: PlayerInRange
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: ShootAtPlayer
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 9
+    taskName: Timeout
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 10
+    randomDeviation: 5
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: MoveTowardsPlayer
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: LookAround
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 2
+    taskName: Probability Selector
+    childCount: 2
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 3
+    taskName: Constant Weight
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 1
+  - type: 1
+    taskName: Sequence Selector
+    childCount: 2
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: Patrol
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: LookAround
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 3
+    taskName: Fatigue
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  - type: 9
+    taskName: Cooldown
+    childCount: 1
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 30
+    randomDeviation: 10
+    activateOnSuccess: 1
+    activateOnFailure: 0
+    weight: 0
+  - type: 5
+    taskName: Rest
+    childCount: 0
+    invertCondition: 0
+    valueKey: 
+    randomDeviationKey: 
+    value: 0
+    randomDeviation: 0
+    activateOnSuccess: 0
+    activateOnFailure: 0
+    weight: 0
+  nodeMetaData:
+  - displayName: BasicEnemy
+    xPos: 682
+    yPos: -133
+  - displayName: 
+    xPos: 203.4082
+    yPos: 146.85846
+  - displayName: AttackPlayer
+    xPos: 203.4082
+    yPos: 117.45845
+  - displayName: 
+    xPos: -55.486237
+    yPos: 460.52112
+  - displayName: 
+    xPos: -55.486237
+    yPos: 431.1211
+  - displayName: 
+    xPos: 212.8269
+    yPos: 461.5643
+  - displayName: 
+    xPos: 212.8269
+    yPos: 432.1643
+  - displayName: 
+    xPos: 506.46802
+    yPos: 441.05142
+  - displayName: 
+    xPos: 907.71313
+    yPos: 140.83856
+  - displayName: 
+    xPos: 759.7294
+    yPos: 361.05374
+  - displayName: PatrolRoot
+    xPos: 759.7294
+    yPos: 421.05374
+  - displayName: 
+    xPos: 608.0812
+    yPos: 655.255
+  - displayName: 
+    xPos: 894.56494
+    yPos: 659.52124
+  - displayName: 
+    xPos: 1091.227
+    yPos: 360.3987
+  - displayName: 
+    xPos: 1091.2269
+    yPos: 449.7987
+  - displayName: 
+    xPos: 1091.2269
+    yPos: 420.3987

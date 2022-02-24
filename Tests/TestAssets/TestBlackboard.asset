@@ -29,6 +29,9 @@ MonoBehaviour:
     - testGameObject
     - testVector3
     - testVector2
+    - PlayerSpotted
+    - PlayerInRange
+    - Fatigue
     values:
     - int
     - float
@@ -37,6 +40,9 @@ MonoBehaviour:
     - GameObject
     - Vector3
     - Vector2
+    - bool
+    - bool
+    - float
   intKeys:
     keys:
     - testInt
@@ -44,12 +50,16 @@ MonoBehaviour:
   floatKeys:
     keys:
     - testFloat
+    - Fatigue
     values:
+    - 0
     - 0
   boolKeys:
     keys:
     - testBool
-    values: 00
+    - PlayerSpotted
+    - PlayerInRange
+    values: 000000
   vector3Keys:
     keys:
     - testVector3

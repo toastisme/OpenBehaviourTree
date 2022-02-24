@@ -1,0 +1,24 @@
+{
+  "name": "com.davidmcdonagh-openbehaviourtree",
+  "version": "0.1.0",
+  "displayName": "OpenBehaviourTree",
+  "description": "An open source tool to design and monitor behaviour trees visually in Unity",
+  "unity": "2021.2",
+  "unityRelease": "11f1",
+  "documentationUrl": "https://github.com/toastisme/OpenBehaviourTree/Documentation/index.html",
+  "changelogUrl": "https://github.com/toastisme/OpenBehaviourTree/CHANGELOG.md",
+  "licensesUrl": "https://github.com/toastisme/OpenBehaviourTree/LICENSE.md",
+  "keywords": [
+    "behaviour trees",
+    "artifical intelligence",
+    "npc"
+  ],
+  "author": {
+    "name": "David McDonagh",
+    "email": "dnmcdonagh@protonmail.com",
+    "url": "https://www.github.com/toastisme"
+  },
+  "type": "tool",
+  "dependencies": {
+  }
+}
