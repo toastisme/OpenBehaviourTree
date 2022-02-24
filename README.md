@@ -2,6 +2,8 @@
 
 OpenBehaviourTree is an open source tool to design and monitor behaviour trees visually in Unity. 
 
+![OpenBehaviourTree](https://media.githubusercontent.com/media/toastisme/OpenBehaviourTree/main/Runtime/Resources/Screenshots/ExampleTree.PNG?token=AOQPGDSRNMAR3CIUOX5I4B3CDARAK)
+
 ## Features
 - Custom editor window to design trees, and watch nodes being evaluated in real time during Play Mode
 - Priority, sequence, and probability selector nodes
@@ -106,6 +108,8 @@ public class ExampleTask : Behaviour.BehaviourTreeTask
 - In `Play Mode`, when selecting a `GameObject` that has a `BehaviourTreeController`, the `BehaviourTree` will be shown in the editor window, with active/disabled nodes highlighted.
 
 ### Core Node Types
+
+![OpenBehaviourTree](https://media.githubusercontent.com/media/toastisme/OpenBehaviourTree/main/Runtime/Resources/Screenshots/NodeTypes.PNG?token=AOQPGDXCHQSWSHT5XVMS3I3CDARCW)
 
 - **Priority Selector**: Calls child nodes in the order they were connected. If any return `Succeeded` when evaluated the remaining child nodes are not called and the node returns `Succeeded` to its parent.
 - **Probability Selector**: Selects a single child node to call at random, based on probabilities defined by probability weights. Returns the result of the selected node to its parent.
