@@ -550,6 +550,8 @@ public class CompositeGuiNode : CallableGuiNode
             this.ParentConnection.GetParentNode().RemoveChildConnection(this.ParentConnection);
             this.ParentConnection = null;
         }
+        callNumber.CallNumber = -1;
+        
     }
 
     public void RefreshChildOrder(){
