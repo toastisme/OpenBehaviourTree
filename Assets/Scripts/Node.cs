@@ -171,7 +171,7 @@ public abstract class Node
 
     public void InsertBeforeSelf(Node node){
         node.SetParentNode(ParentNode);
-        ParentNode.RemoveChildNode(this);
+        ParentNode?.RemoveChildNode(this);
         node.AddChildNode(this);
     }
 
