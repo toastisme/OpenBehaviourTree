@@ -2,7 +2,8 @@
     "name": "TestTasks",
     "rootNamespace": "",
     "references": [
-        "GUID:3deec5a20c7bd6f43bd4aad25cc6e685"
+        "GUID:3deec5a20c7bd6f43bd4aad25cc6e685",
+        "GUID:e34c90578874ce24aa5f91ae9092ec8f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
