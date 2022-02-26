@@ -1,4 +1,4 @@
-BehaviourTreeDesigner
+OpenBehaviourTree
  
 Copyright (c) 2022 David McDonagh
  
