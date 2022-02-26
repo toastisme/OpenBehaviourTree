@@ -1214,8 +1214,26 @@ public class BehaviourTreeEditor : EditorWindow
 
     List<string> GetCustomTaskNames(){
         List<string> taskNames = new List<string>();
-        GetCustomTasks().ForEach(x => taskNames.Add(x.GetType().ToString()));
+        List<string> testTaskNames = GetTestTaskNames();
+        List<BehaviourTreeTask> customTasks = GetCustomTasks();
+        for (int i=0; i<customTasks.Count; i++){
+            string name = customTasks[i].GetType().ToString();
+            if (!testTaskNames.Contains(name)){
+                taskNames.Add(name);
+            }
+        }
         return taskNames;
+    }
+
+    List<string> GetTestTaskNames(){
+        /**
+         * Classes used in testing (and so not to be included in
+         getting custom task names)
+         */
+        return new List<string>(){
+            "ActionMockFail",
+            "ActionMockSucceed"
+        }
     }
 
     void LoadFromRoot(Node rootNode, List<GuiNodeData> nodeMetaData){

@@ -13,8 +13,8 @@ public class TestMock
      * Holds mock objects for tests
      */
 
-    string testBlackboardPath = "Assets/Tests/TestAssets/TestBlackboard.asset";
-    string testBehaviourTreePath = "Assets/Tests/TestAssets/TestTree.asset";
+    string testBlackboardPath = "Tests/TestAssets/TestBlackboard.asset";
+    string testBehaviourTreePath = "Tests/TestAssets/TestTree.asset";
 
     public static float ActionDuration(){
         return .5f;
