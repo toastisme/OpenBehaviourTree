@@ -1233,7 +1233,7 @@ public class BehaviourTreeEditor : EditorWindow
         return new List<string>(){
             "ActionMockFail",
             "ActionMockSucceed"
-        }
+        };
     }
 
     void LoadFromRoot(Node rootNode, List<GuiNodeData> nodeMetaData){
