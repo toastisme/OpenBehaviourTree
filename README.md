@@ -8,7 +8,7 @@ OpenBehaviourTree is an open source tool to design and monitor behaviour trees v
 - Custom editor window to design trees, and watch nodes being evaluated in real time during Play Mode
 - Priority, sequence, and probability selector nodes
 - Action nodes that can run user-defined class coroutines
-- A blackboard to share vairables between nodes
+- A blackboard to share variables between nodes
 - Boolean, timeout, and cooldown decorators 
 - User-defined probability weights for all children of probability selector nodes
 - Decorators and probability weights can use constant values or values from the blackboard 
@@ -16,6 +16,7 @@ OpenBehaviourTree is an open source tool to design and monitor behaviour trees v
 ## Installation
 
 Tested on Windows 10 using Unity 2021.2.11f1 
+- Install Git (e.g. for Windows https://gitforwindows.org/)
 - In Unity open the package manager (`Window` --> `Package Manager`)
 - Use the plus button to add a new package, and choose `Add package from git URL`
 - Add the URL `https://github.com/toastisme/OpenBehaviourTree.git`
