@@ -131,4 +131,5 @@ public class ExampleTask : Behaviour.BehaviourTreeTask
 - Undo/Redo
 
 ## Further Info
-[Full documentation](https://toastisme.github.io/OpenBehaviourTree/)
+- [Full documentation](https://toastisme.github.io/OpenBehaviourTree/)
+- See also [OpenGOAP](https://github.com/toastisme/OpenGOAP)
