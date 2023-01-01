@@ -4,11 +4,11 @@ using UnityEngine;
 using System;
 using UnityEditor;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiBoolDecorator : GuiDecorator
 {
     /**
-    * \class Behaviour.GuiBoolDecorator
+    * \class OpenBehaviourTree.GuiBoolDecorator
     * Displays a BoolDecorator in the BehaviourTree class, using the BehaviourTreeEditor.
     */
 

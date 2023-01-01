@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 interface INode
 {
     /**
-     * \interface Behaviour.INode
+     * \interface OpenBehaviourTree.INode
      * Basic interface that all Nodes need to provide.
      */
 

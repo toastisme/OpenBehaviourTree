@@ -1,10 +1,10 @@
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 public class ProbabilityWeight : Node
 {
 
     /**
-     * \class Behaviour.ProbabilityWeight
+     * \class OpenBehaviourTree.ProbabilityWeight
      * Node placed between a ProbabilitySelector and its
      * child nodes. Holds either a constant weight, or a blackboard
      * key that links to an int or float variable.

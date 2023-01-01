@@ -1,8 +1,8 @@
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class SequenceSelector : Node
 {    
     /**
-    * \class Behaviour.SequenceSelector
+    * \class OpenBehaviourTree.SequenceSelector
     * Represents a sequence node in the BehaviourTree class.
     * Child nodes are evaluated in order, and if any fail this node evaluates as failed.
     */

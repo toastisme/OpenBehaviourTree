@@ -4,11 +4,11 @@ using UnityEngine;
 using System;
 using UnityEditor;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiTimeoutNode : GuiTimerNode
 {
     /**
-    * \class Behaviour.GuiTimeoutNode
+    * \class OpenBehaviourTree.GuiTimeoutNode
     * Base class for displaying TimeoutNodes in the BehaviourTree class
     */
 

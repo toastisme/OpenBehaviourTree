@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 public class BoolDecorator : Decorator
 {
     /**
-    * \class Behaviour.BoolDecorator
+    * \class OpenBehaviourTree.BoolDecorator
     * Represents a boolean decorator node in the BehaviourTree class.
     * The decorator node refers to a boolean (blackboard.GetBoolKeys()[displayTask]),
     * the current value of which dictates the the node's Nodestate.

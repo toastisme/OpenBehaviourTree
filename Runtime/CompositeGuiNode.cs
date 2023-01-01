@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class CompositeGuiNode : CallableGuiNode
 {
     /**
-     * \class Behaviour.CompositeGuiNode
+     * \class OpenBehaviourTree.CompositeGuiNode
      * CallableGuiNodes made up of several GuiNodes 
      * (i.e they hold a list of GuiDecorators),
      * and have connections to other CompositeGuiNodes.

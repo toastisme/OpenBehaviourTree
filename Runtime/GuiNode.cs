@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 [Serializable]
 public struct GuiNodeData 
 {
     /**
-     * \struct Behaviour.GuiNodeData
+     * \struct OpenBehaviourTree.GuiNodeData
      * Used to store data specific to GuiNode, decoupled
      * from Node.
      */ 
@@ -22,7 +22,7 @@ public abstract class GuiNode : IGuiNode
 {
 
     /**
-    * \class Behaviour.GuiNode
+    * \class OpenBehaviourTree.GuiNode
     * Base class for displaying a node in the BehaviourTree class, using the BehaviourTreeEditor.
     */
 

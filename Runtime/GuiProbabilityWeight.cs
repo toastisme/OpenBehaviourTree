@@ -4,11 +4,11 @@ using UnityEngine;
 using System;
 using UnityEditor;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiProbabilityWeight : GuiNode
 {
     /**
-    * \class Behaviour.GuiProbabilityWeight
+    * \class OpenBehaviourTree.GuiProbabilityWeight
     * Displays an ProbabilityWeight in the BehaviourTree class using the BehaviourTreeEditor.
     * These are children of Connections.
     */

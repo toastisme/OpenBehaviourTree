@@ -2,11 +2,11 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class Connection
 {
     /**
-     * \class Behaviour.Connection
+     * \class OpenBehaviourTree.Connection
      * Stores and displays a connection between CompositeGuiNodes,
      * and a GuiProbabilyWeight if a connection with a GuiProbabilitySelector
      * parent node.

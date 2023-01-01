@@ -4,11 +4,11 @@ using UnityEngine;
 using System;
 using UnityEditor;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiCooldownNode : GuiTimerNode
 {
     /**
-    * \class Behaviour.GuiCooldownNode
+    * \class OpenBehaviourTree.GuiCooldownNode
     * Displays a CooldownNode in the BehaviourTree class, using the BehaviourTreeEditor.
     */
 

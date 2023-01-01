@@ -5,11 +5,11 @@ using UnityEditor;
 using System;
 using System.Linq;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class CooldownNode : TimerNode
 {
     /**
-    * \class Behaviour.CooldownNode
+    * \class OpenBehaviourTree.CooldownNode
     * Represents a cooldown in the BehaviourTree class
     * The timer runs for TimerValue +/- RandomDeviation. 
     * If valueKey or RandomDeviationKey set, TimerValue and RandomDeviation

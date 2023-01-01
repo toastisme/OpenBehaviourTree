@@ -5,13 +5,13 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 [Serializable]
 public class BehaviourTreeBlackboard : ScriptableObject
 {
 
     /**
-    * \class Behaviour.BehaviourTreeBlackboard
+    * \class OpenBehaviourTree.BehaviourTreeBlackboard
     * Blackboard for the BehaviourTree class.
     * Allows nodes to share variables.
     */

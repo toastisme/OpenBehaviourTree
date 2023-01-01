@@ -1,13 +1,13 @@
 using System;
 using UnityEngine;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public enum ConnectionPointType { In, Out }
 
 public class ConnectionPoint
 {
     /**
-     * \class Behaviour.ConnectionPoint
+     * \class OpenBehaviourTree.ConnectionPoint
      * Stores and displays a connection point attached to a CompositeGuiNode.
      */
     private Rect rect;

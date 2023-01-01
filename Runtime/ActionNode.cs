@@ -6,11 +6,11 @@ using System;
 using UnityEditor;
 using System.Reflection;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class ActionNode : Node
 {    
     /**
-    * \class Behaviour.ActionNode
+    * \class OpenBehaviourTree.ActionNode
     * Represents an action node in the BehaviourTree class.
     * Action nodes run BehaviourTreeTasks when evaluated.
     */

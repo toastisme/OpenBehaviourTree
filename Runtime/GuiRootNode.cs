@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiRootNode : GuiPrioritySelector
 {
 
     /**
-     * \class Behaviour.GuiRootNode
+     * \class OpenBehaviourTree.GuiRootNode
      * Derived GuiPrioritySelector class with no ParentPoint 
      * (thereby stopping it being able to be a child to another node).
      */

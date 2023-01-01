@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public enum NodeState{
     Running,
     Failed,
@@ -26,7 +26,7 @@ public enum NodeType{
 public struct SerializableNode{
 
     /**
-     * \struct Behaviour.SerializableNode
+     * \struct OpenBehaviourTree.SerializableNode
      * Used to store Node data.
      */ 
 
@@ -47,7 +47,7 @@ public struct SerializableNode{
 public abstract class Node
 {
     /**
-    * \class Behaviour.Node
+    * \class OpenBehaviourTree.Node
     * Base class for a node in the BehaviourTree class.
     */
 

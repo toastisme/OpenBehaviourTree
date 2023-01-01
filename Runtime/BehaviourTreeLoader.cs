@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class BehaviourTreeLoader
 {
 
     /**
-    * \class Behaviour.BehaviourTreeLoader
+    * \class OpenBehaviourTree.BehaviourTreeLoader
     * Static methods to load serialized versions of Nodes and GuiNodes.
     */
 

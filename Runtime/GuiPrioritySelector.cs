@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiPrioritySelector : CompositeGuiNode
 {
     /**
-    * \class Behaviour.GuiPrioritySelector
+    * \class OpenBehaviourTree.GuiPrioritySelector
     * Displays an PrioritySelector in the BehaviourTree class using the BehaviourTreeEditor.
     */
 

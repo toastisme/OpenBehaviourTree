@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class CallableGuiNode : GuiNode
 {
 
     /**
-     * \class Behaviour.CallableGuiNode
+     * \class OpenBehaviourTree.CallableGuiNode
      * Class for GuiNodes that can be called in the BehaviourTree,
      * and so have a CallNumberNode to show its call number.
      */ 

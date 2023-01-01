@@ -4,12 +4,12 @@ using UnityEngine;
 using System;
 using UnityEditor;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class TestMock 
 {
 
     /**
-     * \class Behaviour.TestMock
+     * \class OpenBehaviourTree.TestMock
      * Holds mock objects for tests
      */
 

@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiDecorator : CallableGuiNode
 {
 
     /**
-    * \class Behaviour.GuiDecorator
+    * \class OpenBehaviourTree.GuiDecorator
     * Displays a Decorator in the BehaviourTree class, using the BehaviourTreeEditor.
     */
 

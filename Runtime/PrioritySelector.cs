@@ -1,9 +1,9 @@
 using UnityEngine;
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class PrioritySelector : Node
 {    
     /**
-    * \class Behaviour.PrioritySelector
+    * \class OpenBehaviourTree.PrioritySelector
     * Represents a priority node in the BehaviourTree class.
     * Child nodes are evaluated in order, and if any succeed
     * this node evaluates as succeeded.

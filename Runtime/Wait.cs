@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wait : Behaviour.BehaviourTreeTask
+public class Wait : OpenBehaviourTree.BehaviourTreeTask
 {
 
     /**
@@ -21,11 +21,11 @@ public class Wait : Behaviour.BehaviourTreeTask
         this.waitTime = waitTime;
         this.randomDeviation = randomDeviation;
     }
-    public override IEnumerator ExecuteTask(System.Action<Behaviour.NodeState> currentState){
+    public override IEnumerator ExecuteTask(System.Action<OpenBehaviourTree.NodeState> currentState){
         float wait = waitTime + Random.Range(-randomDeviation, randomDeviation);
         wait = wait < 0 ? 0 : wait;
-        currentState(Behaviour.NodeState.Running);
+        currentState(OpenBehaviourTree.NodeState.Running);
         yield return new WaitForSeconds(wait);
-        currentState(Behaviour.NodeState.Succeeded);
+        currentState(OpenBehaviourTree.NodeState.Succeeded);
     }
 }

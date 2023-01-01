@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 public class TimerNode : Decorator
 {
 
     /**
-    * \class Behaviour.TimerNode
+    * \class OpenBehaviourTree.TimerNode
     * Represents a timer in the BehaviourTree class
     * (that things like timeouts and cooldowns can derive from)
     * The timer runs for TimerValue +/- RandomDeviation. 

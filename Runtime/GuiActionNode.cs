@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiActionNode : CompositeGuiNode
 {
     /**
-    * \class Behaviour.GuiActionNode
+    * \class OpenBehaviourTree.GuiActionNode
     * Displays an ActionNode in the BehaviourTree class using the BehaviourTreeEditor.
     * The ActionNode displayTask is the ActionNode.TaskName, and refers to a BehaviourTreeTask.
     * This contains a coroutine that is executed when the node is evaluated.

@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 public class Decorator : Node
 {
     /**
-    * \class Behaviour.Decorator
+    * \class OpenBehaviourTree.Decorator
     * Represents a decorator node in the BehaviourTree class.
     */
 

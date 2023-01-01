@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class TimeoutNode : TimerNode
 {
     /**
-    * \class Behaviour.TimeoutNode
+    * \class OpenBehaviourTree.TimeoutNode
     * Represents a timeout in the BehaviourTree class
     * The timer runs for TimerValue +/- RandomDeviation. 
     * If valueKey or RandomDeviationKey set, TimerValue and RandomDeviation

@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class ProbabilitySelector : Node
 {    
     /**
-    * \class Behaviour.ProbabilitySelector
+    * \class OpenBehaviourTree.ProbabilitySelector
     * Represents a probability node in the BehaviourTree class.
     * A Child node is selected at random, and if it returns succeeded
     * this node evaluates as succeeded.

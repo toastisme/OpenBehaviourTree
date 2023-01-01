@@ -5,13 +5,13 @@ using System.Collections;
 using System.Linq;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 public class BehaviourTreeProperties
 {
 
     /**
-     * \class Behaviour.BehaviourTreeProperties
+     * \class OpenBehaviourTree.BehaviourTreeProperties
      * Static methods to store general properties for 
      * visualising BehaviourTrees
      */ 

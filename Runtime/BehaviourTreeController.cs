@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class BehaviourTreeController : MonoBehaviour
 {
 
     /**
-    * \class Behaviour.BehaviourTreeController
+    * \class OpenBehaviourTree.BehaviourTreeController
     * Component attached to GameObjects to use BehaviourTrees
     */
 

@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class BehaviourTreeSaver
 {
 
     /**
-    * \class Behaviour.BehaviourTreeSaver
+    * \class OpenBehaviourTree.BehaviourTreeSaver
     * Static methods to save serialized versions of Nodes and GuiNodes.
     */
 

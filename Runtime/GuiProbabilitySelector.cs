@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiProbabilitySelector : CompositeGuiNode
 {
     /**
-    * \class Behaviour.GuiProbabilitySelector
+    * \class OpenBehaviourTree.GuiProbabilitySelector
     * Displays an ProbabilitySelector in the BehaviourTree class using the BehaviourTreeEditor.
     */
     ProbabilitySelector probabilitySelector; // The ProbabilitySelector being displayed

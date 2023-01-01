@@ -4,12 +4,12 @@ using UnityEngine;
 using System;
 using UnityEditor;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class BehaviourTree : ScriptableObject,  ISerializationCallbackReceiver 
 {
 
     /**
-    * \class Behaviour.BehaviourTree
+    * \class OpenBehaviourTree.BehaviourTree
     * Class to store and run behaviour trees.
     */
 

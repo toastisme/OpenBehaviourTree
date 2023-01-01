@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public abstract class BehaviourTreeTask  
 {
 
     /**
-    * \class Behaviour.BehaviourTreeTask
+    * \class OpenBehaviourTree.BehaviourTreeTask
     * Base class for all BehaviourTree tasks called from ActionNodes.
     * Setup is used to get GameObject components needed at runtime
     * (e.g. NavMeshAgent, RigidBody etc.).

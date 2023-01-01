@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 public class GuiSequenceSelector : CompositeGuiNode
 {
     /**
-    * \class Behaviour.GuiSequenceSelector
+    * \class OpenBehaviourTree.GuiSequenceSelector
     * Displays an SequenceSelector in the BehaviourTree class using the BehaviourTreeEditor.
     */
 

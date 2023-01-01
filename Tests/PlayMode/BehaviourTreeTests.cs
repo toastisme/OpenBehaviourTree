@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using Behaviour;
+using OpenBehaviourTree;
 
 public class BehaviourTreeTests 
 {

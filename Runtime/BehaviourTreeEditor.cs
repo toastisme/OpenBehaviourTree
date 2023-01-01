@@ -5,7 +5,7 @@ using System.Collections;
 using System.Linq;
 using System;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 public enum BehaviourTreeEditorMode{
     Editor,
@@ -15,7 +15,7 @@ public enum BehaviourTreeEditorMode{
 public class BehaviourTreeEditor : EditorWindow
 {
     /**
-    * \class Behaviour.BehaviourTreeEditor
+    * \class OpenBehaviourTree.BehaviourTreeEditor
     * Class to edit and visualise BehaviourTree assets.
     */
 

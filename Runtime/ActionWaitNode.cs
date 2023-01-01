@@ -5,12 +5,12 @@ using System;
 using UnityEditor;
 using System.Reflection;
 
-namespace Behaviour{
+namespace OpenBehaviourTree{
 
 public class ActionWaitNode : TimerNode
 {    
     /**
-    * \class Behaviour.ActionWaitNode
+    * \class OpenBehaviourTree.ActionWaitNode
     * Represents an action node in the BehaviourTree class specifically
     * for waiting.
     */
