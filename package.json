@@ -1,6 +1,6 @@
 {
   "name": "com.davidmcdonagh-openbehaviourtree",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "OpenBehaviourTree",
   "description": "An open source tool to design and monitor behaviour trees visually in Unity",
   "unity": "2021.2",
